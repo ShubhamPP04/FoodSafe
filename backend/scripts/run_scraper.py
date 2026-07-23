@@ -13,6 +13,7 @@ What it does:
 Run from inside backend/:
     python scripts/run_scraper.py
 """
+
 import asyncio
 import logging
 import sys
@@ -31,11 +32,11 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
+    from app.db.database import _get_database, init_db
+    from models.models import FSSAI_VIOLATIONS
     from scrapers.fssai_scraper import scrape_all_sources
     from services.ai_service import extract_fssai_violation
     from services.rag_service import rag
-    from app.db.database import _get_database, init_db
-    from models.models import FSSAI_VIOLATIONS
 
     print("\n🌿 FoodSafe FSSAI Scraper")
     print("=" * 50)
@@ -53,7 +54,9 @@ async def main():
         return
 
     # ── Step 2: Load existing records for dedup ───────────────────────────────
-    existing = await database[FSSAI_VIOLATIONS].find({}, {"raw_text": 1}).to_list(length=None)
+    existing = (
+        await database[FSSAI_VIOLATIONS].find({}, {"raw_text": 1}).to_list(length=None)
+    )
     existing_texts = {d.get("raw_text") for d in existing if d.get("raw_text")}
     print(f"\n📦 Existing DB records: {len(existing)}")
 
@@ -106,22 +109,26 @@ async def main():
         if not record_date:
             record_date = datetime.utcnow()
 
-        to_insert.append({
-            "id":         str(uuid.uuid4()),
-            "brand":      parsed.get("brand") or "Unknown",
-            "product":    parsed.get("product"),
-            "violation":  parsed.get("adulterant") or parsed.get("violation_type") or raw[:300],
-            "state":      parsed.get("state") or "Unknown",
-            "date":       record_date,
-            "source_url": item.get("source_url", ""),
-            "raw_text":   raw,
-            "created_at": datetime.utcnow(),
-        })
+        to_insert.append(
+            {
+                "id": str(uuid.uuid4()),
+                "brand": parsed.get("brand") or "Unknown",
+                "product": parsed.get("product"),
+                "violation": parsed.get("adulterant")
+                or parsed.get("violation_type")
+                or raw[:300],
+                "state": parsed.get("state") or "Unknown",
+                "date": record_date,
+                "source_url": item.get("source_url", ""),
+                "raw_text": raw,
+                "created_at": datetime.utcnow(),
+            }
+        )
         existing_texts.add(raw)
         added += 1
 
         product_name = (parsed.get("product") or "?")[:30]
-        state_name   = (parsed.get("state")   or "?")[:15]
+        state_name = (parsed.get("state") or "?")[:15]
         print(f"   [{i:03d}] ✅ {product_name:<32} {state_name:<18} [{source}]")
 
     if to_insert:
@@ -135,15 +142,17 @@ async def main():
     for v in all_violations:
         doc = f"{v.get('product', '')} {v.get('brand') or ''} {v.get('violation') or ''} {v.get('state') or ''} {v.get('raw_text') or ''}"
         meta = {
-            "brand":      v.get("brand") or "",
-            "product":    v.get("product") or "",
-            "violation":  (v.get("violation") or "")[:500],
-            "state":      v.get("state") or "",
-            "date":       str(v["date"].date()) if v.get("date") else "",
+            "brand": v.get("brand") or "",
+            "product": v.get("product") or "",
+            "violation": (v.get("violation") or "")[:500],
+            "state": v.get("state") or "",
+            "date": str(v["date"].date()) if v.get("date") else "",
             "source_url": v.get("source_url") or "",
         }
         try:
-            rag.index_violation(str(v.get("id") or v.get("_id")), doc.strip(), meta)
+            await rag.index_violation(
+                str(v.get("id") or v.get("_id")), doc.strip(), meta
+            )
             indexed += 1
         except Exception as e:
             logger.warning("RAG index failed: %s", e)

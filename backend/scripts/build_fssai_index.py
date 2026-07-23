@@ -1,8 +1,8 @@
 """
 scripts/build_fssai_index.py
 
-Indexes all fssai_violations documents from MongoDB into the flat JSON store
-used by rag_service.py.
+Indexes all fssai_violations documents from MongoDB into the `rag_index`
+MongoDB collection used by rag_service.py.
 
 Run from the backend/ directory:
     python scripts/build_fssai_index.py
@@ -24,18 +24,23 @@ from services.rag_service import rag
 
 
 def _build_document(v: dict) -> str:
-    parts = [v.get("product") or "", v.get("brand") or "", v.get("violation") or "",
-             v.get("raw_text") or "", v.get("state") or ""]
+    parts = [
+        v.get("product") or "",
+        v.get("brand") or "",
+        v.get("violation") or "",
+        v.get("raw_text") or "",
+        v.get("state") or "",
+    ]
     return " ".join(p.strip() for p in parts if p.strip())
 
 
 def _build_metadata(v: dict) -> dict:
     return {
-        "brand":      v.get("brand") or "",
-        "product":    v.get("product") or "",
-        "violation":  (v.get("violation") or "")[:500],
-        "state":      v.get("state") or "",
-        "date":       str(v["date"].date()) if v.get("date") else "",
+        "brand": v.get("brand") or "",
+        "product": v.get("product") or "",
+        "violation": (v.get("violation") or "")[:500],
+        "state": v.get("state") or "",
+        "date": str(v["date"].date()) if v.get("date") else "",
         "source_url": v.get("source_url") or "",
     }
 
@@ -62,7 +67,9 @@ async def build_index() -> None:
         if not doc.strip():
             skipped += 1
             continue
-        rag.index_violation(str(v.get("id") or v.get("_id")), doc, _build_metadata(v))
+        await rag.index_violation(
+            str(v.get("id") or v.get("_id")), doc, _build_metadata(v)
+        )
         indexed += 1
         if indexed % 50 == 0:
             print(f"   ... {indexed}/{len(violations)}")
@@ -71,8 +78,8 @@ async def build_index() -> None:
         f"\n✅ Done.\n"
         f"   Indexed : {indexed}\n"
         f"   Skipped : {skipped} (empty records)\n"
-        f"   Total in store: {rag.record_count}\n"
-        f"   Location: backend/data/fssai_violations.json"
+        f"   Total in store: {await rag.count()}\n"
+        f"   Location: MongoDB collection 'rag_index'"
     )
 
 

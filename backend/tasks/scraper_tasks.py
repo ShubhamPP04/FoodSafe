@@ -6,6 +6,7 @@ save to MongoDB, and re-index into the RAG store.
 
 Runs automatically every Monday at 6am IST via Celery beat.
 """
+
 from tasks import celery_app
 
 
@@ -24,11 +25,11 @@ def run_fssai_scraper(self):
     import uuid
     from datetime import datetime
 
+    from app.db.database import _get_database
+    from models.models import FSSAI_VIOLATIONS
     from scrapers.fssai_scraper import scrape_all_sources
     from services.ai_service import extract_fssai_violation
     from services.rag_service import rag
-    from app.db.database import _get_database
-    from models.models import FSSAI_VIOLATIONS
 
     logger = logging.getLogger(__name__)
 
@@ -43,7 +44,11 @@ def run_fssai_scraper(self):
         database = _get_database()
 
         # ── 2. Load existing dedup keys from DB ───────────────────────────────
-        existing = await database[FSSAI_VIOLATIONS].find({}, {"raw_text": 1}).to_list(length=None)
+        existing = (
+            await database[FSSAI_VIOLATIONS]
+            .find({}, {"raw_text": 1})
+            .to_list(length=None)
+        )
         existing_texts = {d.get("raw_text") for d in existing if d.get("raw_text")}
 
         # ── 3. Parse + save new records ───────────────────────────────────────
@@ -87,24 +92,32 @@ def run_fssai_scraper(self):
             else:
                 record_date = datetime.utcnow()
 
-            to_insert.append({
-                "id":         str(uuid.uuid4()),
-                "brand":      parsed.get("brand") or "Unknown",
-                "product":    parsed.get("product"),
-                "violation":  parsed.get("adulterant") or parsed.get("violation_type") or raw[:300],
-                "state":      parsed.get("state") or "Unknown",
-                "date":       record_date,
-                "source_url": item.get("source_url", ""),
-                "raw_text":   raw,
-                "created_at": datetime.utcnow(),
-            })
+            to_insert.append(
+                {
+                    "id": str(uuid.uuid4()),
+                    "brand": parsed.get("brand") or "Unknown",
+                    "product": parsed.get("product"),
+                    "violation": parsed.get("adulterant")
+                    or parsed.get("violation_type")
+                    or raw[:300],
+                    "state": parsed.get("state") or "Unknown",
+                    "date": record_date,
+                    "source_url": item.get("source_url", ""),
+                    "raw_text": raw,
+                    "created_at": datetime.utcnow(),
+                }
+            )
             existing_texts.add(raw)
             added += 1
 
         if to_insert:
             await database[FSSAI_VIOLATIONS].insert_many(to_insert)
-        logger.info("Saved %d new records (skipped: %d dupes, %d parse fails)",
-                    added, skipped_dupe, skipped_parse)
+        logger.info(
+            "Saved %d new records (skipped: %d dupes, %d parse fails)",
+            added,
+            skipped_dupe,
+            skipped_parse,
+        )
 
         # ── 4. Re-index everything into RAG ──────────────────────────────────
         all_violations = await database[FSSAI_VIOLATIONS].find({}).to_list(length=None)
@@ -114,14 +127,16 @@ def run_fssai_scraper(self):
             try:
                 doc = f"{v.get('product', '')} {v.get('brand') or ''} {v.get('violation') or ''} {v.get('state') or ''} {v.get('raw_text') or ''}"
                 meta = {
-                    "brand":      v.get("brand") or "",
-                    "product":    v.get("product") or "",
-                    "violation":  (v.get("violation") or "")[:500],
-                    "state":      v.get("state") or "",
-                    "date":       str(v["date"].date()) if v.get("date") else "",
+                    "brand": v.get("brand") or "",
+                    "product": v.get("product") or "",
+                    "violation": (v.get("violation") or "")[:500],
+                    "state": v.get("state") or "",
+                    "date": str(v["date"].date()) if v.get("date") else "",
                     "source_url": v.get("source_url") or "",
                 }
-                rag.index_violation(str(v.get("id") or v.get("_id")), doc.strip(), meta)
+                await rag.index_violation(
+                    str(v.get("id") or v.get("_id")), doc.strip(), meta
+                )
                 indexed += 1
             except Exception as e:
                 logger.warning("RAG index failed: %s", e)

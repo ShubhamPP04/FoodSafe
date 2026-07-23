@@ -24,17 +24,17 @@ GEMINI_KEY = settings.GEMINI_API_KEY
 GEMINI_MODEL = settings.GEMINI_MODEL
 
 # Synthetic fallback (OpenAI-compatible): https://api.synthetic.new/v1/chat/completions
-SYNTHETIC_URL    = "https://api.synthetic.new/v1/chat/completions"
-SYNTHETIC_KEY    = settings.SYNTHETIC_API_KEY
-SYNTHETIC_MODEL  = settings.SYNTHETIC_MODEL
+SYNTHETIC_URL = "https://api.synthetic.new/v1/chat/completions"
+SYNTHETIC_KEY = settings.SYNTHETIC_API_KEY
+SYNTHETIC_MODEL = settings.SYNTHETIC_MODEL
 SYNTHETIC_VISION_MODEL = settings.SYNTHETIC_VISION_MODEL
 
 # Retry config — tuned for the Gemini→Synthetic fallback chain.
 # Because a working fallback exists, we keep retries low: 2 attempts with
 # short waits means worst-case ~3s of Gemini probing before Synthetic kicks in.
 MAX_RETRIES = 2
-BASE_WAIT   = 0.6
-MAX_WAIT    = 4.0
+BASE_WAIT = 0.6
+MAX_WAIT = 4.0
 
 # ── Lazy semaphore ────────────────────────────────────────────────────────────
 # DO NOT create asyncio.Semaphore at module level — it binds to the event loop
@@ -52,6 +52,7 @@ def _get_semaphore() -> asyncio.Semaphore:
 
 
 # ── Provider helpers ──────────────────────────────────────────────────────────
+
 
 def _jitter(base: float) -> float:
     return random.uniform(0, base)
@@ -90,37 +91,57 @@ async def _hit_provider(
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            t0   = time.monotonic()
-            resp = await client.post(url, headers=headers, json=payload, timeout=timeout)
+            t0 = time.monotonic()
+            resp = await client.post(
+                url, headers=headers, json=payload, timeout=timeout
+            )
 
             if resp.status_code == 429 or resp.status_code >= 500:
                 wait = _jitter(min(MAX_WAIT, BASE_WAIT * (2 ** (attempt - 1))))
-                logger.warning("%s %d attempt %d/%d — retry %.1fs",
-                               label, resp.status_code, attempt, MAX_RETRIES, wait)
+                logger.warning(
+                    "%s %d attempt %d/%d — retry %.1fs",
+                    label,
+                    resp.status_code,
+                    attempt,
+                    MAX_RETRIES,
+                    wait,
+                )
                 if attempt < MAX_RETRIES:
                     await asyncio.sleep(wait)
                     continue
                 # Out of retries on this provider — bubble up so caller can fall back.
-                raise _ProviderExhausted(f"{label} {resp.status_code} after {MAX_RETRIES} attempts")
+                raise _ProviderExhausted(
+                    f"{label} {resp.status_code} after {MAX_RETRIES} attempts"
+                )
 
             resp.raise_for_status()
             elapsed = int((time.monotonic() - t0) * 1000)
-            data    = resp.json()
-            usage   = data.get("usage", {})
-            logger.info("%s OK: %dms, %d in / %d out tokens",
-                        label, elapsed,
-                        usage.get("prompt_tokens", 0),
-                        usage.get("completion_tokens", 0))
+            data = resp.json()
+            usage = data.get("usage", {})
+            logger.info(
+                "%s OK: %dms, %d in / %d out tokens",
+                label,
+                elapsed,
+                usage.get("prompt_tokens", 0),
+                usage.get("completion_tokens", 0),
+            )
             return data["choices"][0]["message"]["content"]
 
         except httpx.TimeoutException:
             wait = _jitter(min(MAX_WAIT, BASE_WAIT * (2 ** (attempt - 1))))
-            logger.warning("%s timeout attempt %d/%d, retry %.1fs",
-                           label, attempt, MAX_RETRIES, wait)
+            logger.warning(
+                "%s timeout attempt %d/%d, retry %.1fs",
+                label,
+                attempt,
+                MAX_RETRIES,
+                wait,
+            )
             if attempt < MAX_RETRIES:
                 await asyncio.sleep(wait)
             else:
-                raise _ProviderExhausted(f"{label} timeout after {MAX_RETRIES} attempts")
+                raise _ProviderExhausted(
+                    f"{label} timeout after {MAX_RETRIES} attempts"
+                )
 
     raise _ProviderExhausted(f"{label} exhausted retries")
 
@@ -139,8 +160,10 @@ async def _chat_completion(
     Returns the raw 'content' string from the chosen provider's response.
     Raises RuntimeError if both providers fail (or none are configured).
     """
-    gemini_model = GEMINI_MODEL  # Gemini serves both text and vision with the same model name
-    synth_model  = SYNTHETIC_VISION_MODEL if vision else SYNTHETIC_MODEL
+    gemini_model = (
+        GEMINI_MODEL  # Gemini serves both text and vision with the same model name
+    )
+    synth_model = SYNTHETIC_VISION_MODEL if vision else SYNTHETIC_MODEL
 
     async with _get_semaphore():
         async with httpx.AsyncClient(timeout=timeout) as client:
@@ -148,8 +171,15 @@ async def _chat_completion(
             if GEMINI_KEY:
                 try:
                     return await _hit_provider(
-                        client, GEMINI_URL, GEMINI_KEY, gemini_model,
-                        messages, max_tokens, temperature, timeout, "Gemini",
+                        client,
+                        GEMINI_URL,
+                        GEMINI_KEY,
+                        gemini_model,
+                        messages,
+                        max_tokens,
+                        temperature,
+                        timeout,
+                        "Gemini",
                     )
                 except _ProviderExhausted as e:
                     if not SYNTHETIC_KEY:
@@ -164,18 +194,30 @@ async def _chat_completion(
                     # tokens count against max_tokens, so give the vision path a much
                     # larger budget. Non-reasoning text models (gpt-oss-120b) don't
                     # need the boost and stay fast at the caller's original budget.
-                    synth_max_tokens = max(max_tokens * 4, 3000) if vision else max_tokens
+                    synth_max_tokens = (
+                        max(max_tokens * 4, 3000) if vision else max_tokens
+                    )
                     return await _hit_provider(
-                        client, SYNTHETIC_URL, SYNTHETIC_KEY, synth_model,
-                        messages, synth_max_tokens, temperature, timeout, "Synthetic",
+                        client,
+                        SYNTHETIC_URL,
+                        SYNTHETIC_KEY,
+                        synth_model,
+                        messages,
+                        synth_max_tokens,
+                        temperature,
+                        timeout,
+                        "Synthetic",
                     )
                 except _ProviderExhausted as e:
                     raise RuntimeError(f"All providers exhausted. Last error: {e}")
 
-    raise RuntimeError("No AI provider configured (set GEMINI_API_KEY or SYNTHETIC_API_KEY)")
+    raise RuntimeError(
+        "No AI provider configured (set GEMINI_API_KEY or SYNTHETIC_API_KEY)"
+    )
 
 
 # ── Public helpers (kept for backwards-compat with existing routers) ─────────
+
 
 async def _call_gemini(
     system: str,
@@ -184,7 +226,7 @@ async def _call_gemini(
 ) -> dict:
     messages = [
         {"role": "system", "content": system},
-        {"role": "user",   "content": user},
+        {"role": "user", "content": user},
     ]
     text = await _chat_completion(messages, max_tokens, temperature=0.3)
     return _parse(text)
@@ -208,9 +250,11 @@ async def _call_gemini_vision(
     ]
     messages = [
         {"role": "system", "content": system},
-        {"role": "user",   "content": user_content},
+        {"role": "user", "content": user_content},
     ]
-    text = await _chat_completion(messages, max_tokens, temperature=0.2, timeout=60, vision=True)
+    text = await _chat_completion(
+        messages, max_tokens, temperature=0.2, timeout=60, vision=True
+    )
     return _parse(text)
 
 
@@ -243,7 +287,7 @@ def _parse(text: str) -> dict:
         start = clean.find(opener)
         end = clean.rfind(closer)
         if start != -1 and end != -1 and end > start:
-            candidate = clean[start:end + 1]
+            candidate = clean[start : end + 1]
             try:
                 parsed = json.loads(candidate)
                 # Always wrap arrays in an envelope so callers can do result.get(...)
@@ -268,20 +312,48 @@ def _parse(text: str) -> dict:
 
 # ── Market adulteration rate data (FSSAI + ICMR surveys) ─────────────────────
 _MARKET_FAKE_RATES: dict[str, dict] = {
-    "turmeric":        {"rate": 68, "source": "FSSAI 2023 survey — 1538 samples", "trend": "rising"},
-    "turmeric powder": {"rate": 68, "source": "FSSAI 2023 survey — 1538 samples", "trend": "rising"},
-    "chilli powder":   {"rate": 54, "source": "FSSAI random sampling report 2023", "trend": "stable"},
-    "chilli":          {"rate": 54, "source": "FSSAI random sampling report 2023", "trend": "stable"},
-    "milk":            {"rate": 38, "source": "FSSAI national milk survey 2022",   "trend": "falling"},
-    "honey":           {"rate": 77, "source": "CSE NMR test study 2021 — 13 brands", "trend": "rising"},
-    "ghee":            {"rate": 41, "source": "FSSAI dairy survey 2023",           "trend": "stable"},
-    "mustard oil":     {"rate": 62, "source": "ICMR cooking oil study 2022",       "trend": "rising"},
-    "paneer":          {"rate": 48, "source": "FSSAI dairy panel 2023",            "trend": "stable"},
-    "dal":             {"rate": 31, "source": "FSSAI pulse survey 2022",           "trend": "stable"},
-    "rice":            {"rate": 22, "source": "FSSAI grain survey 2022",           "trend": "stable"},
-    "wheat flour":     {"rate": 36, "source": "FSSAI flour survey 2023",           "trend": "stable"},
-    "spices":          {"rate": 55, "source": "FSSAI spice report 2023",           "trend": "rising"},
-    "edible oil":      {"rate": 47, "source": "ICMR oil survey 2022",             "trend": "stable"},
+    "turmeric": {
+        "rate": 68,
+        "source": "FSSAI 2023 survey — 1538 samples",
+        "trend": "rising",
+    },
+    "turmeric powder": {
+        "rate": 68,
+        "source": "FSSAI 2023 survey — 1538 samples",
+        "trend": "rising",
+    },
+    "chilli powder": {
+        "rate": 54,
+        "source": "FSSAI random sampling report 2023",
+        "trend": "stable",
+    },
+    "chilli": {
+        "rate": 54,
+        "source": "FSSAI random sampling report 2023",
+        "trend": "stable",
+    },
+    "milk": {
+        "rate": 38,
+        "source": "FSSAI national milk survey 2022",
+        "trend": "falling",
+    },
+    "honey": {
+        "rate": 77,
+        "source": "CSE NMR test study 2021 — 13 brands",
+        "trend": "rising",
+    },
+    "ghee": {"rate": 41, "source": "FSSAI dairy survey 2023", "trend": "stable"},
+    "mustard oil": {
+        "rate": 62,
+        "source": "ICMR cooking oil study 2022",
+        "trend": "rising",
+    },
+    "paneer": {"rate": 48, "source": "FSSAI dairy panel 2023", "trend": "stable"},
+    "dal": {"rate": 31, "source": "FSSAI pulse survey 2022", "trend": "stable"},
+    "rice": {"rate": 22, "source": "FSSAI grain survey 2022", "trend": "stable"},
+    "wheat flour": {"rate": 36, "source": "FSSAI flour survey 2023", "trend": "stable"},
+    "spices": {"rate": 55, "source": "FSSAI spice report 2023", "trend": "rising"},
+    "edible oil": {"rate": 47, "source": "ICMR oil survey 2022", "trend": "stable"},
 }
 
 
@@ -292,11 +364,16 @@ def _get_market_rate(food_name: str) -> dict:
     for k, v in _MARKET_FAKE_RATES.items():
         if k in key or key in k:
             return v
-    return {"rate": 35, "source": "FSSAI general food safety survey", "trend": "unknown"}
+    return {
+        "rate": 35,
+        "source": "FSSAI general food safety survey",
+        "trend": "unknown",
+    }
 
 
 # ── Simple TTL cache ──────────────────────────────────────────────────────────
 _cache: dict[str, tuple] = {}
+
 
 def _cache_get(key: str):
     entry = _cache.get(key)
@@ -304,20 +381,22 @@ def _cache_get(key: str):
         return entry[0]
     return None
 
+
 def _cache_set(key: str, value, ttl_seconds: int):
     _cache[key] = (value, time.monotonic() + ttl_seconds)
 
 
 # ── Text scan (RAG-enhanced) ──────────────────────────────────────────────────
 
+
 async def scan_food_text(
     food_name: str,
     member_profile: dict | None,
     lang: str = "en",
 ) -> dict:
-    fssai_records = rag.retrieve(food_name, n_results=5)
+    fssai_records = await rag.retrieve(food_name, n_results=5)
     fssai_context = rag.format_context(fssai_records)
-    has_evidence  = bool(fssai_records)
+    has_evidence = bool(fssai_records)
 
     evidence_note = (
         "You have been given verified FSSAI violation records above. "
@@ -325,15 +404,18 @@ async def scan_food_text(
         "If a specific adulterant appears in the records, include it and "
         "mention its documented frequency or state. "
         "Do NOT invent adulterants not supported by the records or well-established food science."
-        if has_evidence else
-        "No specific FSSAI records were found for this food. "
+        if has_evidence
+        else "No specific FSSAI records were found for this food. "
         "Use established food science and general FSSAI survey knowledge. "
         "Be conservative with severity ratings when citing general knowledge."
     )
 
     lang_note = (
-        "Respond with summary, verdict, and description values in Hindi."   if lang == "hi" else
-        "Respond with summary, verdict, and description values in Marathi." if lang == "mr" else ""
+        "Respond with summary, verdict, and description values in Hindi."
+        if lang == "hi"
+        else "Respond with summary, verdict, and description values in Marathi."
+        if lang == "mr"
+        else ""
     )
     profile_ctx = (
         f"\nUser health profile: {json.dumps(member_profile)}" if member_profile else ""
@@ -381,7 +463,7 @@ Return ONLY this JSON structure:
 
     result = await _call_gemini(system, user)
     result["fssaiCitations"] = rag.format_citations(fssai_records)
-    result["ragGrounded"]    = has_evidence
+    result["ragGrounded"] = has_evidence
     result["marketFakeRate"] = _get_market_rate(food_name)
 
     if not isinstance(result.get("adulterants"), list):
@@ -392,17 +474,21 @@ Return ONLY this JSON structure:
 
 # ── Combination risk ──────────────────────────────────────────────────────────
 
+
 async def scan_combination(
     foods: list[str],
     member_profile: dict | None,
     lang: str = "en",
 ) -> dict:
     lang_note = (
-        "Respond with all text values in Hindi."   if lang == "hi" else
-        "Respond with all text values in Marathi." if lang == "mr" else ""
+        "Respond with all text values in Hindi."
+        if lang == "hi"
+        else "Respond with all text values in Marathi."
+        if lang == "mr"
+        else ""
     )
     system = f"You are a food safety and toxicology expert. Respond ONLY with valid JSON, no markdown. {lang_note}"
-    user = f"""Analyse combined adulteration + toxin exposure for: {', '.join(foods)}
+    user = f"""Analyse combined adulteration + toxin exposure for: {", ".join(foods)}
 {f"Health profile: {json.dumps(member_profile)}" if member_profile else ""}
 
 Return ONLY this JSON:
@@ -418,18 +504,22 @@ Return ONLY this JSON:
 
 # ── Symptom reverse lookup ────────────────────────────────────────────────────
 
+
 async def analyze_symptoms(
     symptoms: str,
     recent_foods: list[str],
     lang: str = "en",
 ) -> dict:
     lang_note = (
-        "Respond with all text values in Hindi."   if lang == "hi" else
-        "Respond with all text values in Marathi." if lang == "mr" else ""
+        "Respond with all text values in Hindi."
+        if lang == "hi"
+        else "Respond with all text values in Marathi."
+        if lang == "mr"
+        else ""
     )
     system = f"You are a food safety and public health expert. Respond ONLY with valid JSON, no markdown. {lang_note}"
     user = f"""Symptoms: "{symptoms}"
-Recent foods: {', '.join(recent_foods) if recent_foods else 'unknown'}
+Recent foods: {", ".join(recent_foods) if recent_foods else "unknown"}
 
 Could these be food adulteration related? Return ONLY this JSON:
 {{
@@ -444,6 +534,7 @@ Could these be food adulteration related? Return ONLY this JSON:
 
 
 # ── Label image analysis ──────────────────────────────────────────────────────
+
 
 async def analyze_label_image(
     image_b64: str,
@@ -492,32 +583,49 @@ Return ONLY this JSON:
 }"""
 
     try:
-        result = await _call_gemini_vision(system, user, image_b64, media_type, max_tokens=1800)
+        result = await _call_gemini_vision(
+            system, user, image_b64, media_type, max_tokens=1800
+        )
 
-        for key in ["homeTests", "adulterants", "visual_red_flags",
-                    "authenticity_indicators", "buyingTips", "flaggedIngredients", "eNumbers"]:
+        for key in [
+            "homeTests",
+            "adulterants",
+            "visual_red_flags",
+            "authenticity_indicators",
+            "buyingTips",
+            "flaggedIngredients",
+            "eNumbers",
+        ]:
             if not isinstance(result.get(key), list):
                 result[key] = []
 
         food_name = (
-            result.get("foodName") or result.get("productName") or result.get("brand") or ""
+            result.get("foodName")
+            or result.get("productName")
+            or result.get("brand")
+            or ""
         )
         market_data = (
-            _get_market_rate(food_name) if food_name
-            else {"rate": 35, "source": "FSSAI general food safety survey", "trend": "unknown"}
+            _get_market_rate(food_name)
+            if food_name
+            else {
+                "rate": 35,
+                "source": "FSSAI general food safety survey",
+                "trend": "unknown",
+            }
         )
         result["marketFakeRate"] = market_data
 
-        ai_raw       = result.get("fake_probability") or (100 - result.get("safetyScore", 50))
+        ai_raw = result.get("fake_probability") or (100 - result.get("safetyScore", 50))
         market_boost = round(market_data["rate"] * 0.35)
         boosted_fake = min(95, round(ai_raw * 0.65 + market_boost))
 
-        result["fake_probability"]   = boosted_fake
+        result["fake_probability"] = boosted_fake
         result["authenticity_score"] = 100 - boosted_fake
         result["scoreBreakdown"] = {
             "ai_visual_score": round(100 - ai_raw),
-            "market_rate":     market_data["rate"],
-            "market_boost":    market_boost,
+            "market_rate": market_data["rate"],
+            "market_boost": market_boost,
             "final_fake_prob": boosted_fake,
         }
         return result
@@ -534,8 +642,17 @@ Return ONLY this JSON:
             "fake_probability": 50,
             "visual_red_flags": [],
             "authenticity_indicators": [],
-            "marketFakeRate": {"rate": 35, "source": "General estimate", "trend": "unknown"},
-            "scoreBreakdown": {"ai_visual_score": 50, "market_rate": 35, "market_boost": 12, "final_fake_prob": 50},
+            "marketFakeRate": {
+                "rate": 35,
+                "source": "General estimate",
+                "trend": "unknown",
+            },
+            "scoreBreakdown": {
+                "ai_visual_score": 50,
+                "market_rate": 35,
+                "market_boost": 12,
+                "final_fake_prob": 50,
+            },
             "summary": "Could not analyse image. Please type the food name manually.",
             "flaggedIngredients": [],
             "eNumbers": [],
@@ -550,6 +667,7 @@ Return ONLY this JSON:
 
 
 # ── FSSAI report NLP ──────────────────────────────────────────────────────────
+
 
 async def extract_fssai_violation(raw_text: str) -> dict:
     system = "Extract structured food safety violation data. Respond ONLY with valid JSON, no markdown."
