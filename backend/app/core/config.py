@@ -1,11 +1,12 @@
-from pydantic_settings import BaseSettings
-from typing import List
 import json
 from pathlib import Path
+from typing import List
 
+from pydantic_settings import BaseSettings
 
 ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 DEFAULT_DB = Path(__file__).resolve().parents[3] / "foodsafe.db"
+
 
 class Settings(BaseSettings):
     APP_ENV: str = "development"
@@ -30,6 +31,10 @@ class Settings(BaseSettings):
 
     REDIS_URL: str = "redis://localhost:6379"
     SECRET_KEY: str = "dev-secret-key-change-in-production"
+
+    # Shared secret checked against the `Authorization: Bearer <secret>` header
+    # on Vercel Cron Job requests (see routers/cron.py). Leave empty locally.
+    CRON_SECRET: str = ""
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
@@ -53,27 +58,31 @@ class Settings(BaseSettings):
     ]
 
     TWILIO_ACCOUNT_SID: str = ""
-    TWILIO_AUTH_TOKEN:  str = ""
+    TWILIO_AUTH_TOKEN: str = ""
     TWILIO_WHATSAPP_FROM: str = "whatsapp:+14155238886"
 
     VAPID_PRIVATE_KEY: str = ""
-    VAPID_PUBLIC_KEY:  str = ""
-    VAPID_EMAIL:       str = "mailto:admin@foodsafe.app"
+    VAPID_PUBLIC_KEY: str = ""
+    VAPID_EMAIL: str = "mailto:admin@foodsafe.app"
 
     class Config:
         env_file = ENV_FILE
         extra = "ignore"
 
     def model_post_init(self, __context):
-        if self.APP_ENV != "development" and self.SECRET_KEY == "dev-secret-key-change-in-production":
+        if (
+            self.APP_ENV != "development"
+            and self.SECRET_KEY == "dev-secret-key-change-in-production"
+        ):
             raise RuntimeError(
                 "FATAL: SECRET_KEY must be changed in production! "
                 "Set SECRET_KEY in your .env file."
             )
         if isinstance(self.CORS_ORIGINS, str):
             try:
-                object.__setattr__(self, 'CORS_ORIGINS', json.loads(self.CORS_ORIGINS))
+                object.__setattr__(self, "CORS_ORIGINS", json.loads(self.CORS_ORIGINS))
             except Exception:
-                object.__setattr__(self, 'CORS_ORIGINS', [self.CORS_ORIGINS])
+                object.__setattr__(self, "CORS_ORIGINS", [self.CORS_ORIGINS])
+
 
 settings = Settings()

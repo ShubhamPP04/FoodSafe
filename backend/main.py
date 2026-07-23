@@ -1,15 +1,29 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.db.database import init_db
-
 from routers import (
-    scan, symptoms, community, brands, fssai,
-    users, whatsapp, recommendations, festival,
-    meal_planner, push, admin, diary, news, chat,
+    admin,
+    brands,
+    chat,
+    community,
+    cron,
+    diary,
+    festival,
+    fssai,
+    meal_planner,
+    news,
+    push,
+    recommendations,
+    scan,
+    symptoms,
+    users,
+    whatsapp,
 )
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,6 +37,7 @@ async def lifespan(app: FastAPI):
 
     yield
     print("🌿 FoodSafe API shutting down...")
+
 
 app = FastAPI(
     title="FoodSafe API",
@@ -53,6 +68,8 @@ app.include_router(admin.router, prefix="/api/admin")
 app.include_router(diary.router, prefix="/api/diary")
 app.include_router(news.router, prefix="/api/news")
 app.include_router(chat.router, prefix="/api/chat")
+app.include_router(cron.router, prefix="/api/cron")
+
 
 @app.get("/")
 async def root():
