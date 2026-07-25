@@ -56,7 +56,14 @@ export default function BrandsPage() {
   const maxSelect = 4
   const selected = selections[selectionKey(activeCat)] || []
 
-  useEffect(() => { loadInitial() }, [])
+  useEffect(() => {
+    if (search.trim()) loadBrandsForSearch(search.trim())
+    else loadInitial()
+  }, [lang])
+
+  useEffect(() => {
+    if (compared && selected.length >= 2) handleCompare({ scroll: false })
+  }, [lang])
 
   useEffect(() => {
     try {
@@ -70,7 +77,7 @@ export default function BrandsPage() {
     setLoading(true)
     setError('')
     try {
-      const data = await fetch(`${API_URL}/brands/all`).then(r => r.json())
+      const data = await fetch(`${API_URL}/brands/all?lang=${lang}`).then(r => r.json())
       if (data.source === 'error') throw new Error(data.message)
       const b    = data.brands || []
       const cats = data.categories || [...new Set(b.map(br => br.food))].sort()
@@ -91,7 +98,7 @@ export default function BrandsPage() {
     setError('')
     try {
       const data = await fetch(
-        `${API_URL}/brands/all?search=${encodeURIComponent(cat)}`
+        `${API_URL}/brands/all?search=${encodeURIComponent(cat)}&lang=${lang}`
       ).then(r => r.json())
       if (data.source === 'error') throw new Error(data.message)
       const b = data.brands || []
@@ -108,15 +115,12 @@ export default function BrandsPage() {
     }
   }
 
-  async function handleSearch(e) {
-    e.preventDefault()
-    if (!search.trim()) { loadInitial(); return }
-    setCompared(null)
+  async function loadBrandsForSearch(query) {
     setLoading(true)
     setError('')
     try {
       const data = await fetch(
-        `${API_URL}/brands/all?search=${encodeURIComponent(search.trim())}`
+        `${API_URL}/brands/all?search=${encodeURIComponent(query)}&lang=${lang}`
       ).then(r => r.json())
       if (data.source === 'error') throw new Error(data.message)
       const b    = data.brands || []
@@ -131,6 +135,13 @@ export default function BrandsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSearch(e) {
+    e.preventDefault()
+    if (!search.trim()) { loadInitial(); return }
+    setCompared(null)
+    loadBrandsForSearch(search.trim())
   }
 
   function handleCatChange(cat) {
@@ -159,7 +170,7 @@ export default function BrandsPage() {
     })
   }
 
-  async function handleCompare() {
+  async function handleCompare({ scroll = true } = {}) {
     if (selected.length < 2) return
     setComparing(true)
     setError('')
@@ -170,15 +181,18 @@ export default function BrandsPage() {
         body:    JSON.stringify({
           brands:        selected.map(b => b.brand),
           food_category: activeCat,
+          lang,
         }),
       })
       const json = await res.json()
       if (json.source === 'error') throw new Error(json.message)
       setCompared(json.data || {})
       setSource(json.source || 'gemini')
-      setTimeout(() => {
-        document.getElementById('bc-result')?.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+      if (scroll) {
+        setTimeout(() => {
+          document.getElementById('bc-result')?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
     } catch (e) {
       setError(e.message || 'Comparison failed. Please try again.')
       setCompared(null)
@@ -375,7 +389,7 @@ export default function BrandsPage() {
       <div className="sticky bottom-[90px] md:bottom-6 z-40 mb-10 w-full max-w-md mx-auto">
         <button
           disabled={selected.length < 2 || comparing}
-          onClick={handleCompare}
+          onClick={() => handleCompare()}
           className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all duration-300 border shadow-xl"
           style={{
             background:  selected.length >= 2 && !comparing ? 'oklch(52% 0.13 155 / 0.12)' : 'var(--color-paper-3)',

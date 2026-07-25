@@ -19,11 +19,17 @@ import logging
 import httpx
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import List
+from typing import List, Literal
 
 from services.ai_service import _call_gemini, _cache_get, _cache_set
 
 logger = logging.getLogger(__name__)
+
+LANGUAGE_NAMES = {
+    "en": "English",
+    "hi": "Hindi (Devanagari)",
+    "mr": "Marathi (Devanagari)",
+}
 router = APIRouter()
 
 # Cache TTLs (seconds)
@@ -78,17 +84,18 @@ async def fetch_off_brands(food_query: str) -> list:
 
 # ── Gemini: enrich brand list with safety scores ──────────────────────────────
 
-async def enrich_brands_with_gemini(food: str, brand_names: list) -> list:
+async def enrich_brands_with_gemini(food: str, brand_names: list, lang: str = "en") -> list:
     """Ask Gemini to score and explain brands for Indian food safety context."""
     if not brand_names:
         return []
 
-    cache_key = f"enrich:{food.lower()}:{','.join(sorted(brand_names)).lower()}"
+    cache_key = f"enrich:{lang}:{food.lower()}:{','.join(sorted(brand_names)).lower()}"
     cached = _cache_get(cache_key)
     if cached is not None:
         return cached
 
     brands_str = ", ".join(brand_names)
+    language = LANGUAGE_NAMES.get(lang, LANGUAGE_NAMES["en"])
     system = (
         "You are an Indian food safety expert with deep knowledge of FSSAI regulations, "
         "CSE lab studies, adulteration patterns, and documented brand quality issues in India. "
@@ -119,7 +126,8 @@ Rules:
 - Price must be current Indian retail price in ₹
 - If you have no specific data for a brand, give a conservative score (60-70) and say so
 - Do not invent data — only use documented facts
-- Local/unbranded always scores lower due to documented adulteration risk"""
+- Local/unbranded always scores lower due to documented adulteration risk
+- Write the "why" value in {language}; keep brand names, food names, JSON keys, numbers, and certification terms unchanged"""
 
     try:
         result = await _call_gemini(system, user, max_tokens=2000)
@@ -138,13 +146,14 @@ Rules:
 
 # ── Gemini: generate full brand list for a food category ─────────────────────
 
-async def generate_brands_for_food(food: str) -> list:
+async def generate_brands_for_food(food: str, lang: str = "en") -> list:
     """Ask Gemini to list real Indian brands for a food category with safety data."""
-    cache_key = f"brands:{food.lower()}"
+    cache_key = f"brands:{lang}:{food.lower()}"
     cached = _cache_get(cache_key)
     if cached is not None:
         return cached
 
+    language = LANGUAGE_NAMES.get(lang, LANGUAGE_NAMES["en"])
     system = (
         "You are an Indian food safety expert. "
         "Respond ONLY with valid JSON. No markdown, no preamble."
@@ -169,7 +178,8 @@ Return ONLY this JSON:
 }}
 
 Include 5-8 brands. Be honest — if a brand has documented issues (pesticide residues, adulteration, recalls), reflect that in the score and why.
-Local/unbranded options should reflect actual documented adulteration risk from government surveys."""
+Local/unbranded options should reflect actual documented adulteration risk from government surveys.
+Write every "why" value in {language}. Keep brand names, food names, JSON keys, numbers, prices, and certification terms unchanged."""
 
     try:
         result = await _call_gemini(system, user, max_tokens=2000)
@@ -225,20 +235,20 @@ Order by frequency of adulteration reports in India."""
 # ── GET /brands/all ───────────────────────────────────────────────────────────
 
 @router.get("/all")
-async def get_all_brands(search: str = ""):
+async def get_all_brands(search: str = "", lang: Literal["en", "hi", "mr"] = "en"):
     search = search.strip()
 
     if search:
         # 1. Fetch OFF data and Gemini-generated brands in parallel
         off_data, gemini_generated = await asyncio.gather(
             fetch_off_brands(search),
-            generate_brands_for_food(search),
+            generate_brands_for_food(search, lang),
         )
         off_brand_names = [b["brand"] for b in off_data]
 
         # 2. Enrich OFF brands (skipped if OFF returned nothing)
         gemini_enriched = (
-            await enrich_brands_with_gemini(search, off_brand_names)
+            await enrich_brands_with_gemini(search, off_brand_names, lang)
             if off_brand_names else []
         )
 
@@ -270,7 +280,7 @@ async def get_all_brands(search: str = ""):
     if not categories:
         return {"brands": [], "categories": [], "total": 0, "source": "error"}
 
-    first_cat_brands = await generate_brands_for_food(categories[0])
+    first_cat_brands = await generate_brands_for_food(categories[0], lang)
     return {
         "brands":     first_cat_brands or [],
         "categories": categories,
@@ -284,14 +294,16 @@ async def get_all_brands(search: str = ""):
 class CompareRequest(BaseModel):
     brands:        List[str]
     food_category: str = ""
+    lang:          Literal["en", "hi", "mr"] = "en"
 
 
 @router.post("/compare")
 async def compare_brands(req: CompareRequest):
     brand_list = ", ".join(req.brands)
     category   = req.food_category or "food"
+    language   = LANGUAGE_NAMES[req.lang]
 
-    cache_key = f"compare:{category.lower()}:{','.join(sorted(req.brands)).lower()}"
+    cache_key = f"compare:{req.lang}:{category.lower()}:{','.join(sorted(req.brands)).lower()}"
     cached = _cache_get(cache_key)
     if cached is not None:
         return {"data": cached, "source": "cache"}
@@ -328,7 +340,10 @@ Return ONLY this JSON:
   "winner": "<safest brand name based on evidence>",
   "category_risk": "<LOW or MEDIUM or HIGH based on documented adulteration frequency in India>",
   "tip": "<one actionable, evidence-based buying tip for {category} in India>"
-}}"""
+}}
+
+Write all explanatory values ("why", "adulterants", "home_test", "pros", "cons", and "tip") in {language}.
+Keep brand names, JSON keys, numbers, prices, FSSAI, and the LOW/MEDIUM/HIGH values unchanged."""
 
     try:
         result = await _call_gemini(system, user, max_tokens=2500)
