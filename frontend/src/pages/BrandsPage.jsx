@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useStore } from '../store'
 import { t } from '../i18n/translations'
 import {
@@ -8,6 +8,20 @@ import {
 } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
+const BRAND_SELECTIONS_KEY = 'foodsafe-brand-selections'
+
+function loadBrandSelections() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(BRAND_SELECTIONS_KEY) || '{}')
+    return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {}
+  } catch {
+    return {}
+  }
+}
+
+function selectionKey(category) {
+  return category.trim().toLowerCase()
+}
 
 // ── Dynamic score styling (no hardcoded thresholds — derived from score itself) ──
 function getScoreTier(score) {
@@ -31,7 +45,7 @@ export default function BrandsPage() {
   const [brands,     setBrands]     = useState([])
   const [categories, setCategories] = useState([])
   const [activeCat,  setActiveCat]  = useState('')
-  const [selected,   setSelected]   = useState([])
+  const [selections, setSelections] = useState(loadBrandSelections)
   const [compared,   setCompared]   = useState(null)
   const [loading,    setLoading]    = useState(true)
   const [catLoading, setCatLoading] = useState(false)
@@ -39,9 +53,18 @@ export default function BrandsPage() {
   const [source,     setSource]     = useState('')
   const [search,     setSearch]     = useState('')
   const [error,      setError]      = useState('')
-  const [maxSelect,  setMaxSelect]  = useState(4) // fetched from config or default
+  const maxSelect = 4
+  const selected = selections[selectionKey(activeCat)] || []
 
   useEffect(() => { loadInitial() }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(BRAND_SELECTIONS_KEY, JSON.stringify(selections))
+    } catch {
+      // Comparison still works when browser storage is unavailable.
+    }
+  }, [selections])
 
   async function loadInitial() {
     setLoading(true)
@@ -88,7 +111,6 @@ export default function BrandsPage() {
   async function handleSearch(e) {
     e.preventDefault()
     if (!search.trim()) { loadInitial(); return }
-    setSelected([])
     setCompared(null)
     setLoading(true)
     setError('')
@@ -113,7 +135,6 @@ export default function BrandsPage() {
 
   function handleCatChange(cat) {
     setActiveCat(cat)
-    setSelected([])
     setCompared(null)
     // Load brands for this category if not already loaded
     const already = brands.filter(b => b.food === cat)
@@ -124,11 +145,18 @@ export default function BrandsPage() {
 
   function toggleBrand(brand) {
     setCompared(null)
-    if (selected.find(b => b.brand === brand.brand)) {
-      setSelected(s => s.filter(b => b.brand !== brand.brand))
-    } else if (selected.length < maxSelect) {
-      setSelected(s => [...s, brand])
-    }
+    const key = selectionKey(activeCat)
+    setSelections(current => {
+      const categorySelection = current[key] || []
+      const isSelected = categorySelection.some(b => b.brand === brand.brand)
+      const nextSelection = isSelected
+        ? categorySelection.filter(b => b.brand !== brand.brand)
+        : categorySelection.length < maxSelect
+          ? [...categorySelection, brand]
+          : categorySelection
+
+      return { ...current, [key]: nextSelection }
+    })
   }
 
   async function handleCompare() {
@@ -160,7 +188,8 @@ export default function BrandsPage() {
   }
 
   function reset() {
-    setSelected([])
+    const key = selectionKey(activeCat)
+    setSelections(current => ({ ...current, [key]: [] }))
     setCompared(null)
     setError('')
   }
