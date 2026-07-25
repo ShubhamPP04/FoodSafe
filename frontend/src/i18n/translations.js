@@ -169,6 +169,9 @@ const translations = {
     analyzingSymptoms: 'Analyzing…',
     possibleCauses: 'Possible Causes',
     recommendation: 'Recommendation',
+    confidenceLabel: '{value} Confidence',
+    typicallyFoundIn: 'Typically found in {food} — {explanation}',
+    communityFlagMessage: '{percent}% of users who scanned {food} flagged it as a concern.',
 
     // ── FestivalPage ──
     festivalSafetyGuide: 'Festival Safety Guide',
@@ -381,6 +384,9 @@ const translations = {
     analyzingSymptoms: 'विश्लेषण हो रहा है…',
     possibleCauses: 'संभावित कारण',
     recommendation: 'सिफारिश',
+    confidenceLabel: '{value} विश्वास स्तर',
+    typicallyFoundIn: '{food} में सामान्यतः पाया जाता है — {explanation}',
+    communityFlagMessage: '{food} स्कैन करने वाले {percent}% उपयोगकर्ताओं ने इसे चिंता का विषय बताया।',
 
     // ── FestivalPage ──
     festivalSafetyGuide: 'त्योहार सुरक्षा गाइड',
@@ -593,6 +599,9 @@ const translations = {
     analyzingSymptoms: 'विश्लेषण होत आहे…',
     possibleCauses: 'संभाव्य कारणे',
     recommendation: 'शिफारस',
+    confidenceLabel: '{value} विश्वास पातळी',
+    typicallyFoundIn: '{food} मध्ये सामान्यतः आढळते — {explanation}',
+    communityFlagMessage: '{food} स्कॅन केलेल्या {percent}% वापरकर्त्यांनी हे चिंताजनक मानले.',
 
     // ── FestivalPage ──
     festivalSafetyGuide: 'सण सुरक्षा मार्गदर्शक',
@@ -637,5 +646,25 @@ const translations = {
 }
 
 export const t = (lang, key) => translations[lang]?.[key] || translations.en[key] || key
+
+// Template lookup: replaces {placeholders} in the translated string with `vars`.
+// Falls back to the raw key (with placeholders left as-is) if the lookup fails.
+export const tf = (lang, key, vars = {}) => {
+  const template = t(lang, key)
+  return template.replace(/\{(\w+)\}/g, (match, name) => (
+    name in vars ? String(vars[name]) : match
+  ))
+}
+
+// Like `tf`, but returns an array of strings/values instead of a joined string —
+// lets callers wrap specific placeholders (e.g. `food`, `percent`) in JSX like <strong>.
+export const tParts = (lang, key, vars = {}) => (
+  t(lang, key).split(/(\{\w+\})/g).map(part => {
+    const match = part.match(/^\{(\w+)\}$/)
+    if (!match) return part
+    const name = match[1]
+    return name in vars ? vars[name] : part
+  })
+)
 
 export default translations

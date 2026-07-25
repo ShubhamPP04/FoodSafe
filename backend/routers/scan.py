@@ -216,7 +216,7 @@ async def scan_image(
         }
     else:
         try:
-            result = await analyze_label_image(b64, file.content_type)
+            result = await analyze_label_image(b64, file.content_type, lang)
         except Exception as exc:
             logger.exception("Image label analysis failed")
             raise HTTPException(503, "Image analysis service is temporarily unavailable") from exc

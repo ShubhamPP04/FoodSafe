@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '../store'
-import { t } from '../i18n/translations'
+import { t, tf, tParts } from '../i18n/translations'
 import { Stethoscope, Clock, ShieldAlert, CheckCircle2, ArrowRight } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
@@ -128,11 +128,14 @@ export default function SymptomPage() {
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-sm text-ink">{c.adulterant}</h4>
                       <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border ${CONF_COLOR[c.confidence]}`}>
-                        {c.confidence} Confidence
+                        {tf(lang, 'confidenceLabel', { value: c.confidence })}
                       </span>
                     </div>
                     <p className="text-xs text-ink-2 leading-relaxed">
-                      Typically found in <strong className="text-ink-2">{c.food}</strong> — {c.explanation}
+                      {tParts(lang, 'typicallyFoundIn', {
+                        food:        <strong className="text-ink-2">{c.food}</strong>,
+                        explanation: c.explanation,
+                      }).map((part, i) => <span key={i}>{part}</span>)}
                     </p>
                   </div>
                 ))}

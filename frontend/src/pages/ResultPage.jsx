@@ -1,7 +1,7 @@
 import { OC_STYLES, ScanBanner } from '../components/OverconsumptionBanner'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
-import { t } from '../i18n/translations'
+import { t, tParts } from '../i18n/translations'
 import { useEffect, useRef, useState } from 'react'
 import {
   ShieldAlert, AlertTriangle, ShieldCheck, FileText, Beaker,
@@ -446,8 +446,10 @@ export default function ResultPage() {
           style={{ background: 'rgba(255,255,255,0.03)' }}>
           <TrendingUp className="w-5 h-5 shrink-0 mt-0.5 text-orange-400" />
           <p className="text-ink-2 leading-snug">
-            <span className="text-ink font-semibold">{collab.flag_rate_percent}%</span> of users who scanned{' '}
-            <span className="text-ink font-semibold">{r.foodName || r.productName}</span> flagged it as a concern.
+            {tParts(lang, 'communityFlagMessage', {
+              percent: <span className="text-ink font-semibold">{collab.flag_rate_percent}%</span>,
+              food:    <span className="text-ink font-semibold">{r.foodName || r.productName}</span>,
+            }).map((part, i) => <span key={i}>{part}</span>)}
           </p>
         </div>
       )}

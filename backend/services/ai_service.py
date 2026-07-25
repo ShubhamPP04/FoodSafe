@@ -411,10 +411,15 @@ async def scan_food_text(
     )
 
     lang_note = (
-        "Respond with summary, verdict, and description values in Hindi."
-        if lang == "hi"
-        else "Respond with summary, verdict, and description values in Marathi."
-        if lang == "mr"
+        (
+            "Write summary, cookingWarning, personalizedWarning, verdict, "
+            "adulterants[].name, adulterants[].description, adulterants[].healthRisk, "
+            "homeTests[].name, homeTests[].steps, homeTests[].result, homeTests[].difficulty, "
+            "and buyingTips values in " + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + " Keep riskLevel, adulterants[].severity, adulterants[].isPersonalRisk, "
+            "adulterants[].evidenceBased, safetyScore, and all JSON keys unchanged."
+        )
+        if lang in ("hi", "mr")
         else ""
     )
     profile_ctx = (
@@ -481,10 +486,13 @@ async def scan_combination(
     lang: str = "en",
 ) -> dict:
     lang_note = (
-        "Respond with all text values in Hindi."
-        if lang == "hi"
-        else "Respond with all text values in Marathi."
-        if lang == "mr"
+        (
+            "Write interactions[].interaction, dailyExposureWarning, and recommendation values in "
+            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + " Keep combinedRiskLevel, interactions[].severity, interactions[].foods, "
+            "combinedScore, and all JSON keys unchanged."
+        )
+        if lang in ("hi", "mr")
         else ""
     )
     system = f"You are a food safety and toxicology expert. Respond ONLY with valid JSON, no markdown. {lang_note}"
@@ -511,10 +519,13 @@ async def analyze_symptoms(
     lang: str = "en",
 ) -> dict:
     lang_note = (
-        "Respond with all text values in Hindi."
-        if lang == "hi"
-        else "Respond with all text values in Marathi."
-        if lang == "mr"
+        (
+            "Write possibleCauses[].explanation, recommendation, and disclaimer values in "
+            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + " Keep possibleCauses[].confidence, urgency, possibleCauses[].adulterant, "
+            "possibleCauses[].food, and all JSON keys unchanged."
+        )
+        if lang in ("hi", "mr")
         else ""
     )
     system = f"You are a food safety and public health expert. Respond ONLY with valid JSON, no markdown. {lang_note}"
@@ -539,10 +550,23 @@ Could these be food adulteration related? Return ONLY this JSON:
 async def analyze_label_image(
     image_b64: str,
     media_type: str = "image/jpeg",
+    lang: str = "en",
 ) -> dict:
+    lang_note = (
+        (
+            "Write summary, visual_red_flags[].explanation, authenticity_indicators, "
+            "buyingTips, eNumbers[].note, and homeTests text values in "
+            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + " Keep riskLevel, visual_red_flags[].severity, eNumbers[].risk, "
+            "safetyScore, authenticity_score, fake_probability, and all JSON keys unchanged."
+        )
+        if lang in ("hi", "mr")
+        else ""
+    )
     system = (
         "You are a forensic food safety expert specialising in Indian food adulteration "
-        "and product counterfeiting detection. Respond ONLY with valid JSON, no markdown."
+        "and product counterfeiting detection. Respond ONLY with valid JSON, no markdown. "
+        f"{lang_note}"
     )
     user = """Analyse this food product image carefully for authenticity and adulteration signs.
 
