@@ -58,7 +58,7 @@ async def get_diary_insights(
 
     lang_note = (
         "Respond in Hindi."   if req.lang == "hi" else
-        "Respond in Marathi." if req.lang == "mr" else ""
+        ""
     )
     condition_ctx = f"\nUser health condition: {req.condition}" if req.condition else ""
 

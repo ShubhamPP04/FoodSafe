@@ -415,7 +415,7 @@ async def scan_food_text(
             "Write summary, cookingWarning, personalizedWarning, verdict, "
             "adulterants[].name, adulterants[].description, adulterants[].healthRisk, "
             "homeTests[].name, homeTests[].steps, homeTests[].result, homeTests[].difficulty, "
-            "and buyingTips values in " + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            "and buyingTips values in Hindi (Devanagari)." if lang == "hi" else ""
             + " Keep riskLevel, adulterants[].severity, adulterants[].isPersonalRisk, "
             "adulterants[].evidenceBased, safetyScore, and all JSON keys unchanged."
         )
@@ -488,7 +488,7 @@ async def scan_combination(
     lang_note = (
         (
             "Write interactions[].interaction, dailyExposureWarning, and recommendation values in "
-            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + ("Hindi (Devanagari)." if lang == "hi" else "English.")
             + " Keep combinedRiskLevel, interactions[].severity, interactions[].foods, "
             "combinedScore, and all JSON keys unchanged."
         )
@@ -521,7 +521,7 @@ async def analyze_symptoms(
     lang_note = (
         (
             "Write possibleCauses[].explanation, recommendation, and disclaimer values in "
-            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + ("Hindi (Devanagari)." if lang == "hi" else "English.")
             + " Keep possibleCauses[].confidence, urgency, possibleCauses[].adulterant, "
             "possibleCauses[].food, and all JSON keys unchanged."
         )
@@ -556,7 +556,7 @@ async def analyze_label_image(
         (
             "Write summary, visual_red_flags[].explanation, authenticity_indicators, "
             "buyingTips, eNumbers[].note, and homeTests text values in "
-            + ("Hindi (Devanagari)." if lang == "hi" else "Marathi (Devanagari).")
+            + ("Hindi (Devanagari)." if lang == "hi" else "English.")
             + " Keep riskLevel, visual_red_flags[].severity, eNumbers[].risk, "
             "safetyScore, authenticity_score, fake_probability, and all JSON keys unchanged."
         )

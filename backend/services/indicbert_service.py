@@ -4,7 +4,7 @@ backend/services/indicbert_service.py
 Gemini-powered replacement for MuRIL/IndicBERT.
 Provides the same public API:
   1. classify_intent(text)     → "food_scan" | "symptom_report" | "brand_query" | "general"
-  2. normalize_food_name(text) → English food name (resolves Hindi/Marathi input)
+  2. normalize_food_name(text) → English food name (resolves Hindi/English input)
   3. get_food_adulteration_risk(food_name) → "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
 
 No torch, transformers, or sentencepiece required.
@@ -127,7 +127,7 @@ def classify_intent(text: str) -> str:
 
 def normalize_food_name(text: str) -> str:
     """
-    Resolve Hindi/Marathi food names to English.
+    Resolve Hindi/English food names to English.
     Uses food_name_mapping.json first, then Gemini as fallback.
     """
     _load_map()

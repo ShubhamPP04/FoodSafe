@@ -15,7 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 // ── Risk config — derived from risk level string, not hardcoded per item ──
 function getRiskConfig(risk) {
   const configs = {
-    LOW:      { bg: 'bg-brand/10',   text: 'text-brand',  border: 'border-brand/30',  accent: '#2f8f52', label: 'Low Risk',      bar: '#2f8f52', glow: 'oklch(52% 0.13 155 / 0.12)' },
+    LOW:      { bg: 'bg-brand/10',   text: 'text-brand',  border: 'border-brand/30',  accent: '#4a90d9', label: 'Low Risk',      bar: '#4a90d9', glow: 'rgba(74,144,217,0.12)' },
     MEDIUM:   { bg: 'bg-ochre/10',   text: 'text-ochre',  border: 'border-ochre/30',  accent: '#c4892e', label: 'Medium Risk',   bar: '#c4892e', glow: 'oklch(70% 0.12 75 / 0.12)' },
     HIGH:     { bg: 'bg-chili/10',   text: 'text-chili',  border: 'border-chili/30',  accent: '#c93d32', label: 'High Risk',     bar: '#c93d32', glow: 'oklch(55% 0.17 28 / 0.12)' },
     CRITICAL: { bg: 'bg-chili/15',   text: 'text-chili',  border: 'border-chili/40',  accent: '#9a241c', label: 'Critical Risk', bar: '#9a241c', glow: 'oklch(45% 0.16 25 / 0.14)' },
@@ -186,7 +186,7 @@ function ShareButton({ result }) {
     ctx.beginPath(); ctx.moveTo(24, H - 52); ctx.lineTo(W - 110, H - 52); ctx.stroke()
     ctx.fillStyle = 'rgba(245,240,232,0.4)'; ctx.font = '10px sans-serif'
     ctx.textAlign = 'left'
-    ctx.fillText('🌿 FoodSafe — Protect your family\'s plate', 24, H - 28)
+    ctx.fillText('🌿 SafeThali — Protect your family\'s plate', 24, H - 28)
 
     return canvas
   }
@@ -201,7 +201,7 @@ function ShareButton({ result }) {
 
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
-          title: `FoodSafe: ${foodName}`,
+          title: `SafeThali: ${foodName}`,
           text: `Risk: ${result.riskLevel || 'MEDIUM'} | Score: ${result.safetyScore ?? 50}/100\n${result.verdict || ''}`,
           files: [file],
         })
@@ -653,7 +653,7 @@ export default function ResultPage() {
       {r.scanType === 'image' && r.fake_probability !== undefined && (() => {
         const fake       = r.fake_probability ?? 50
         const real       = r.authenticity_score ?? (100 - fake)
-        const gaugeColor = fake >= 60 ? '#c93d32' : fake >= 40 ? '#c4892e' : '#2f8f52'
+        const gaugeColor = fake >= 60 ? '#b91c1c' : fake >= 40 ? '#4a5260' : '#4a90d9'
         const verdict    = fake >= 70 ? 'Likely Fake' : fake >= 45 ? 'Suspicious' : 'Likely Genuine'
         const desc       = fake >= 70
           ? 'Multiple visual red flags detected. High risk of adulteration or counterfeiting.'

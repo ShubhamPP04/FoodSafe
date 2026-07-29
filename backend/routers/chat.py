@@ -1,28 +1,25 @@
-"""Thin proxy between the frontend chatbot and Gemini."""
+"""Thin proxy between the frontend chatbot and the AI service."""
 
-import asyncio
 import logging
 
-import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from typing import Literal
 
-from services.ai_service import (
-    _get_semaphore, _jitter,
-    GEMINI_URL, GEMINI_KEY, GEMINI_MODEL,
-    BASE_WAIT, MAX_WAIT, MAX_RETRIES,
-)
+from services.ai_service import _chat_completion
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = (
-    "You are FoodSafe AI, a food safety assistant for Indian families. "
+    "You are SafeThali AI, a food safety assistant for Indian families, replying inside "
+    "a narrow chat widget. "
     "You help with food adulteration detection, FSSAI violations, safe food buying tips, "
     "home tests, and seasonal food risks in Delhi. "
-    "Keep responses short and practical. "
-    "If asked in Hindi or Marathi, respond in the same language."
+    "Keep responses short and practical — a few sentences or a short list, never long. "
+    "Reply in PLAIN TEXT only: no markdown, no tables, no headings, no asterisks for bold. "
+    "Use plain dashes for lists if needed. "
+    "If asked in Hindi or English, respond in the same language."
 )
 
 MAX_HISTORY  = 10   # messages to keep in context (prevents token bloat)
@@ -41,55 +38,16 @@ class ChatRequest(BaseModel):
 
 @router.post("/")
 async def chat(req: ChatRequest):
-    if not GEMINI_KEY:
-        raise HTTPException(503, "AI service not configured")
-
-    # Build messages array: system + trimmed history + new user message.
-    # BUG FIX: history is assembled server-side so it always reflects the
-    # correct full conversation — frontend was sending stale history because
-    # React state hadn't flushed when the fetch fired.
+    # History is assembled server-side so it always reflects the full conversation.
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     for m in req.history[-(MAX_HISTORY):]:
         messages.append({"role": m.role, "content": m.content})
     messages.append({"role": "user", "content": req.message})
 
-    headers = {
-        "Authorization": f"Bearer {GEMINI_KEY}",
-        "Content-Type":  "application/json",
-    }
-    payload = {
-        "model":       GEMINI_MODEL,
-        "messages":    messages,
-        "temperature": 0.5,
-        "max_tokens":  350,
-    }
+    try:
+        reply = await _chat_completion(messages, max_tokens=350, temperature=0.5, timeout=30)
+    except RuntimeError as e:
+        logger.warning("Chat AI failed: %s", e)
+        raise HTTPException(503, "AI service temporarily unavailable")
 
-    async with _get_semaphore():
-        async with httpx.AsyncClient(timeout=30) as client:
-            for attempt in range(1, MAX_RETRIES + 1):
-                try:
-                    resp = await client.post(GEMINI_URL, headers=headers, json=payload)
-
-                    if resp.status_code == 429 or resp.status_code >= 500:
-                        wait = _jitter(min(MAX_WAIT, BASE_WAIT * (2 ** (attempt - 1))))
-                        logger.warning("Chat Gemini %d attempt %d/%d, retry %.1fs",
-                                       resp.status_code, attempt, MAX_RETRIES, wait)
-                        if attempt < MAX_RETRIES:
-                            await asyncio.sleep(wait)
-                            continue
-                        raise HTTPException(503, "AI service temporarily unavailable")
-
-                    resp.raise_for_status()
-                    reply = resp.json()["choices"][0]["message"]["content"]
-                    return {"reply": reply}
-
-                except httpx.TimeoutException:
-                    wait = _jitter(min(MAX_WAIT, BASE_WAIT * (2 ** (attempt - 1))))
-                    logger.warning("Chat timeout attempt %d/%d, retry %.1fs",
-                                   attempt, MAX_RETRIES, wait)
-                    if attempt < MAX_RETRIES:
-                        await asyncio.sleep(wait)
-                    else:
-                        raise HTTPException(503, "AI service timed out")
-
-    raise HTTPException(503, "AI service temporarily unavailable")
+    return {"reply": reply}

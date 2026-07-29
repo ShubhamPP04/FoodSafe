@@ -1,26 +1,29 @@
-import { getRiskConfig } from '../../utils/risk'
+/* Hallmark · component: badge · genre: modern-minimal · theme: SafeThali */
+import { getRiskConfig, normalizeRisk } from '../../utils/risk'
 
 /**
- * Risk-level badge. Pass `risk` prop (SAFE/MODERATE/UNSAFE/CRITICAL)
- * and optionally override the displayed label.
+ * Risk / status pill. Accepts SAFE|MODERATE|UNSAFE|CRITICAL
+ * or scan-style LOW|MEDIUM|HIGH|CRITICAL.
  */
-export default function Badge({ risk, label, size = 'md' }) {
-  const config = getRiskConfig(risk)
+export default function Badge({ risk, label, size = 'md', className = '' }) {
+  const level = normalizeRisk(risk)
+  const config = getRiskConfig(level)
 
   const sizeClass =
     size === 'sm'
-      ? 'text-[10px] px-2 py-0.5'
-      : 'text-xs px-2.5 py-1'
+      ? 'text-[10px] px-2 py-0.5 gap-1'
+      : 'text-[12px] px-2.5 py-1 gap-1.5'
 
   return (
     <span
       className={[
-        'inline-flex items-center gap-1 rounded-full font-medium',
+        'inline-flex items-center rounded-full font-medium font-sans border',
         sizeClass,
         config.badgeClass,
+        className,
       ].join(' ')}
     >
-      <span aria-hidden="true">{config.icon}</span>
+      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${config.dotClass}`} aria-hidden />
       {label ?? config.shortLabel}
     </span>
   )

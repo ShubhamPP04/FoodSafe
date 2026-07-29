@@ -87,7 +87,7 @@ export default function ScanPage() {
         {/* Header */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-1">
-            FoodSafe
+            SafeThali
           </p>
           <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">
             What are you eating?

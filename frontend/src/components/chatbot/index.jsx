@@ -2,12 +2,43 @@ import { useState, useRef, useEffect } from 'react'
 import { useStore } from '../../store'
 import { MessageCircle, X, Send } from 'lucide-react'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const BASE = import.meta.env.VITE_API_URL || 'https://foodsafe-api.onrender.com/api'
+
+// Minimal markdown-lite renderer: **bold**, `code`, and strips stray table pipes/headers
+// so occasional markdown from the model still looks clean in the narrow chat widget.
+function renderInline(text) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    return part
+  })
+}
+
+function MessageContent({ text }) {
+  const cleaned = text
+    .replace(/^\|.*\|$/gm, '')          // drop markdown table rows
+    .replace(/^-{2,}\|?-{2,}.*$/gm, '')  // drop table separators
+    .replace(/^#{1,6}\s*/gm, '')        // drop heading hashes
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+
+  return (
+    <>
+      {cleaned.split('\n').map((line, i) => (
+        <span key={i}>
+          {i > 0 && <br />}
+          {renderInline(line)}
+        </span>
+      ))}
+    </>
+  )
+}
 
 const SUGGESTIONS = {
   en: ['Is turmeric safe?', 'How to test milk?', 'Safe oil brands?'],
   hi: ['हल्दी सुरक्षित है?', 'दूध कैसे जांचें?', 'त्योहार में क्या खाएं?'],
-  mr: ['हळद सुरक्षित आहे?', 'दूध कसे तपासावे?', 'सणात काय खावे?'],
 }
 
 export default function Chatbot() {
@@ -34,7 +65,7 @@ export default function Chatbot() {
     setLoading(true)
 
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      const res = await fetch(`${BASE}/chat/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -59,20 +90,20 @@ export default function Chatbot() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close chat' : 'Open chat'}
-        className="fixed bottom-20 md:bottom-6 right-4 z-[1000] w-12 h-12 rounded-[14px] bg-ink text-accent-ink flex items-center justify-center shadow-[0_8px_24px_oklch(22%_0.03_155/0.18)] hover:-translate-y-0.5 transition-transform"
+        className="fixed bottom-20 md:bottom-6 right-4 z-[1000] w-11 h-11 rounded-full bg-brand text-white flex items-center justify-center shadow-lift hover:-translate-y-0.5 transition-transform"
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
       </button>
 
       {open && (
-        <div className="fixed bottom-[140px] md:bottom-24 right-4 z-[1000] w-[min(300px,calc(100vw-2rem))] h-[420px] bg-paper border border-rule rounded-[16px] shadow-[0_12px_40px_oklch(22%_0.03_155/0.12)] flex flex-col overflow-hidden">
-          <div className="bg-ink px-3.5 py-3 flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-[8px] bg-brand text-accent-ink flex items-center justify-center">
+        <div className="fixed bottom-[140px] md:bottom-24 right-4 z-[1000] w-[min(300px,calc(100vw-2rem))] h-[420px] bg-paper border border-rule rounded-2xl shadow-soft flex flex-col overflow-hidden">
+          <div className="px-3.5 py-3 flex items-center gap-2.5 border-b border-rule bg-paper">
+            <div className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center">
               <MessageCircle className="w-3.5 h-3.5" />
             </div>
             <div>
-              <div className="text-accent-ink text-[13px] font-semibold leading-none">FoodSafe AI</div>
-              <div className="text-accent-ink/55 text-[10px] font-mono uppercase tracking-[0.1em] mt-1">Safety assistant</div>
+              <div className="text-ink text-[13px] font-semibold leading-none">SafeThali AI</div>
+              <div className="text-ink-3 text-[10px] uppercase tracking-[0.08em] mt-1">Safety assistant</div>
             </div>
           </div>
 
@@ -80,18 +111,18 @@ export default function Chatbot() {
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[85%] px-3.5 py-2.5 rounded-[14px] text-[13px] leading-relaxed whitespace-pre-wrap
+                  className={`max-w-[85%] px-3 py-2 rounded-xl text-[13px] leading-relaxed whitespace-pre-wrap
                     ${m.role === 'user'
-                      ? 'bg-brand text-accent-ink rounded-br-[4px]'
-                      : 'bg-paper-2 text-ink border border-rule rounded-bl-[4px]'}`}
+                      ? 'bg-brand text-white rounded-br-sm'
+                      : 'bg-paper-2 text-ink border border-rule rounded-bl-sm'}`}
                 >
-                  {m.content}
+                  <MessageContent text={m.content} />
                 </div>
               </div>
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="px-3.5 py-2 rounded-[14px] bg-paper-2 border border-rule text-[13px] text-ink-3">
+                <div className="px-3 py-2 rounded-xl bg-paper-2 border border-rule text-[13px] text-ink-3">
                   Thinking…
                 </div>
               </div>
@@ -105,7 +136,7 @@ export default function Chatbot() {
                 <button
                   key={s}
                   onClick={() => sendMessage(s)}
-                  className="text-[10px] px-2.5 py-1.5 rounded-[8px] border border-rule bg-paper-2 text-ink-2 font-medium hover:border-brand/40 hover:text-ink transition-colors"
+                  className="text-[10px] px-2.5 py-1.5 rounded-lg border border-rule bg-paper-2 text-ink-2 font-medium hover:border-brand/40 hover:text-ink transition-colors"
                 >
                   {s}
                 </button>
@@ -113,18 +144,18 @@ export default function Chatbot() {
             </div>
           )}
 
-          <div className="p-3 border-t border-rule flex gap-2 bg-paper-2">
+          <div className="p-2.5 border-t border-rule flex gap-2 bg-paper">
             <input
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !loading && sendMessage()}
-              placeholder={lang === 'hi' ? 'कुछ पूछें...' : lang === 'mr' ? 'विचारा...' : 'Ask anything...'}
-              className="flex-1 px-3.5 py-2.5 rounded-[10px] border border-rule bg-paper text-ink text-[13px] outline-none focus:border-brand"
+              placeholder={lang === 'hi' ? 'कुछ पूछें...' : 'Ask anything...'}
+              className="flex-1 px-3 py-2 rounded-lg border border-rule bg-paper text-ink text-[13px] outline-none focus:border-brand"
             />
             <button
               onClick={() => sendMessage()}
               disabled={loading || !input.trim()}
-              className="w-10 h-10 rounded-[10px] flex items-center justify-center disabled:opacity-40 bg-ink text-accent-ink"
+              className="w-9 h-9 rounded-lg flex items-center justify-center disabled:opacity-40 bg-brand text-white"
               aria-label="Send"
             >
               <Send className="w-4 h-4" />

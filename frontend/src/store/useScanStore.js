@@ -18,7 +18,7 @@ const useScanStore = create(
       clearHistory: () => set({ scanHistory: [] }),
     }),
     {
-      name: 'foodsafe-store',
+      name: 'safethali-store',
       partialize: (state) => ({ scanHistory: state.scanHistory }),
     }
   )

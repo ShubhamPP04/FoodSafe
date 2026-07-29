@@ -1,5 +1,5 @@
 /**
- * ScanLoader — Forest calm progress overlay while food is analysed.
+ * ScanLoader — warm kitchen progress overlay while food is analysed.
  */
 import { useEffect, useState } from 'react'
 
@@ -15,12 +15,6 @@ const MESSAGES = {
     'मिलावट जोखिम विश्लेषण…',
     'मौसमी जोखिम मॉडल चला रहे हैं…',
     'सुरक्षा रिपोर्ट तैयार हो रही है…',
-  ],
-  mr: [
-    'FSSAI नोंदी तपासत आहोत…',
-    'भेसळ जोखीम विश्लेषण…',
-    'हंगामी जोखीम मॉडेल चालवत आहोत…',
-    'सुरक्षा अहवाल तयार होत आहे…',
   ],
 }
 
@@ -54,95 +48,97 @@ export default function ScanLoader({ food = '', lang = 'en' }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'oklch(97.2% 0.006 150 / 0.94)',
+        background: 'rgba(248, 250, 252, 0.94)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
         padding: 24,
       }}
     >
-      <div
-        style={{
-          width: 52,
-          height: 52,
-          borderRadius: 14,
-          background: 'oklch(52% 0.13 155)',
-          color: 'oklch(98% 0.004 150)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 28,
-        }}
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z" />
-          <path d="M9 12l2 2 4-4" />
-        </svg>
-      </div>
-
-      {food ? (
+      <div style={{ position: 'relative', width: 56, height: 56, marginBottom: 28 }}>
         <div
           style={{
-            fontFamily: '"Outfit", system-ui, sans-serif',
-            fontSize: 22,
-            fontWeight: 600,
-            letterSpacing: '-0.02em',
-            color: 'oklch(22% 0.035 155)',
-            marginBottom: 10,
-            textAlign: 'center',
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '999px',
+            border: '2px solid rgba(74,144,217,0.3)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 6,
+            borderRadius: '999px',
+            background: '#4a90d9',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          {food}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
         </div>
-      ) : null}
+      </div>
 
-      <div
-        key={msgIdx}
+      <p
         style={{
-          fontFamily: '"Outfit", system-ui, sans-serif',
-          fontSize: 14,
-          fontWeight: 500,
-          color: 'oklch(38% 0.025 155)',
-          minHeight: 22,
-          marginBottom: 28,
+          fontFamily: 'Fraunces, Georgia, serif',
+          fontWeight: 600,
+          fontSize: 22,
+          letterSpacing: '-0.02em',
+          color: '#1c1917',
+          marginBottom: 6,
           textAlign: 'center',
         }}
       >
+        {food ? `Scanning ${food}` : 'Scanning…'}
+      </p>
+      <p
+        key={msgIdx}
+        style={{
+          fontFamily: '"Source Sans 3", system-ui, sans-serif',
+          fontSize: 14,
+          color: '#57534e',
+          marginBottom: 28,
+          textAlign: 'center',
+          minHeight: 20,
+        }}
+      >
         {messages[msgIdx]}
-      </div>
+      </p>
 
       <div
         style={{
-          width: 220,
+          width: 'min(280px, 80vw)',
           height: 4,
-          background: 'oklch(91% 0.010 150)',
-          borderRadius: 99,
+          borderRadius: 999,
+          background: '#e3e7ed',
           overflow: 'hidden',
-          border: '1px solid oklch(88% 0.008 150)',
         }}
       >
         <div
           style={{
-            height: '100%',
             width: `${progress}%`,
-            background: 'oklch(52% 0.13 155)',
-            borderRadius: 99,
-            transition: 'width 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            height: '100%',
+            background: '#4a90d9',
+            borderRadius: 999,
+            transition: 'width 200ms ease-out',
           }}
         />
       </div>
-
-      <div
+      <p
         style={{
-          marginTop: 12,
-          fontFamily: '"DM Mono", monospace',
-          fontSize: 11,
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'oklch(52% 0.018 155)',
+          marginTop: 10,
+          fontFamily: '"Source Sans 3", system-ui, sans-serif',
+          fontSize: 12,
+          color: '#a8a29e',
+          fontVariantNumeric: 'tabular-nums',
         }}
       >
         {progress}%
-      </div>
+      </p>
     </div>
   )
 }

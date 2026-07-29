@@ -148,7 +148,7 @@ export default function ShareCard({ result }) {
     ctx.fillStyle = 'rgba(245,240,232,0.4)'
     ctx.font = '10px sans-serif'
     ctx.textAlign = 'left'
-    ctx.fillText('🌿 FoodSafe — Protect your family\'s plate', 24, H - 28)
+    ctx.fillText('🌿 SafeThali — Protect your family\'s plate', 24, H - 28)
 
     ctx.fillStyle = cfg.accent
     ctx.font = 'bold 10px sans-serif'
@@ -165,7 +165,7 @@ export default function ShareCard({ result }) {
     if (navigator.share && navigator.canShare({ files: [new File([blob], 'foodsafe.png', { type: 'image/png' })] })) {
       // Native share (mobile)
       await navigator.share({
-        title: `FoodSafe: ${result.foodName || 'Food Scan'}`,
+        title: `SafeThali: ${result.foodName || 'Food Scan'}`,
         text: `Risk: ${result.riskLevel} | Score: ${result.safetyScore}/100\n${result.verdict || ''}`,
         files: [new File([blob], 'foodsafe-report.png', { type: 'image/png' })],
       })

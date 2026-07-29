@@ -1,10 +1,10 @@
-# 🌿 FoodSafe — AI-Powered Food Adulteration Detection
+# SafeThali — AI-Powered Food Adulteration Detection
 
-> A research-grade, full-stack web app for detecting food adulteration using AI, computer vision, and NLP. Built around **Delhi NCT** with Hindi/English support.
+> A full-stack web app for detecting food adulteration using AI, computer vision, and NLP. Built around **Delhi NCT** with **English + Hindi** support.
 
 ## 🎯 Project Overview
 
-FoodSafe helps Indian families detect food adulteration using:
+SafeThali helps Indian families detect food adulteration using:
 - **Real-time camera detection** (YOLOv8 → Gemini Vision)
 - **Multilingual NLP** (IndicBERT/MuRIL, Gemini)
 - **Predictive risk scoring** (Prophet time-series)
@@ -102,7 +102,7 @@ python scripts/build_fssai_index.py
 
 ## 🗄️ Database
 
-FoodSafe uses **MongoDB Atlas** as its primary data store. Collections:
+SafeThali uses **MongoDB Atlas** as its primary data store. Collections:
 
 | Collection            | Purpose                                                  |
 |-----------------------|----------------------------------------------------------|

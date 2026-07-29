@@ -1,41 +1,44 @@
+/* Hallmark · pre-emit critique: P4 H5 E4 S4 R4 V4
+ * Reading: consumer food-safety landing · warm kitchen trust · Fraunces + turmeric
+ */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useStore } from '../store'
-import { ShieldCheck, Camera, Languages, Users, ArrowRight } from 'lucide-react'
-
-const PROOF = [
-  { value: '68%', label: 'Turmeric samples flagged in surveys' },
-  { value: '77%', label: 'Honey brands failing NMR checks' },
-  { value: '46%', label: 'Milk samples found impure' },
-]
+import { Camera, Languages, Users, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Button } from '../components/ui'
 
 const FEATURES = [
   {
     icon: Camera,
-    title: 'Scan any food',
-    desc: 'Type a name or snap a photo. Get a clear safety score with home tests and buying tips.',
+    title: 'Scan any staple',
+    desc: 'Name it or photograph the packet. Get a clear score, home tests, and what to buy instead.',
   },
   {
     icon: Languages,
-    title: 'Hindi, Marathi, English',
-    desc: 'Ask about adulteration risk in the language your family actually uses.',
+    title: 'English & Hindi',
+    desc: 'Switch language anytime — the guidance stays plain and useful for the whole household.',
   },
   {
     icon: Users,
     title: 'Family profiles',
-    desc: 'Flag foods that conflict with conditions you track for each household member.',
+    desc: 'Flag foods that clash with conditions you track for each person at home.',
   },
 ]
 
-const STEPS = [
-  { title: 'Scan', desc: 'Search a food, capture a label, or speak your query.' },
-  { title: 'Check', desc: 'We match FSSAI signals, seasonal risk, and your family profile.' },
-  { title: 'Act', desc: 'Read the score, run a home test, and choose a safer buy.' },
-]
+const fade = (reduce, delay = 0) =>
+  reduce
+    ? {}
+    : {
+        initial: { opacity: 0, y: 14 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay },
+      }
 
 export default function LandingPage() {
   const nav = useNavigate()
   const { refreshToken: token } = useStore()
+  const reduce = useReducedMotion()
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -43,153 +46,146 @@ export default function LandingPage() {
   }, [token, nav])
 
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 40)
+    const t = setTimeout(() => setReady(true), 20)
     return () => clearTimeout(t)
   }, [])
 
   return (
     <div className="min-h-[100dvh] bg-paper text-ink font-sans overflow-x-clip">
-      <header className="sticky top-0 z-40 border-b border-rule bg-paper/90 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[9px] bg-brand text-accent-ink flex items-center justify-center">
-              <ShieldCheck className="w-4 h-4" strokeWidth={2.25} />
-            </div>
-            <span className="text-[18px] font-semibold tracking-tight">FoodSafe</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => nav('/auth')} className="btn-glass !py-2 !px-3.5 !text-[13px] hidden sm:inline-flex">
-              Sign in
-            </button>
-            <button onClick={() => nav('/auth')} className="btn-safe !py-2 !px-3.5 !text-[13px]">
-              Scan food
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <section className="relative max-w-6xl mx-auto px-5 pt-14 md:pt-20 pb-16 md:pb-24 grid md:grid-cols-12 gap-10 md:gap-8 items-end">
+      {/* Full-bleed hero — one composition */}
+      <section className="relative min-h-[100dvh] flex flex-col">
+        <img
+          src="/images/hero-kitchen-spices.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover"
+          width={1600}
+          height={1200}
+          loading="eager"
+        />
         <div
-          className={`md:col-span-7 transition-all duration-500 ${ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
-          style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-        >
-          <h1 className="display text-[clamp(2.4rem,6vw,3.75rem)] text-ink max-w-[14ch]">
-            Know what is really in your food
-          </h1>
-          <p className="mt-5 text-[16px] md:text-[17px] text-ink-2 leading-relaxed max-w-[42ch]">
-            FoodSafe checks Indian kitchen staples for adulteration risk before they reach your family&apos;s plate.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <button onClick={() => nav('/auth')} className="btn-safe !py-3.5 !px-6 !text-[15px]">
-              Scan food free
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(105deg, rgba(28,25,23,0.88) 0%, rgba(28,25,23,0.72) 42%, rgba(28,25,23,0.35) 70%, rgba(28,25,23,0.2) 100%)',
+          }}
+        />
+        {/* Thali rings — signature motif */}
+        <div className="absolute right-[-8%] top-[18%] w-[min(70vw,520px)] h-[min(70vw,520px)] rounded-full border border-white/10 pointer-events-none hidden sm:block" />
+        <div className="absolute right-[4%] top-[28%] w-[min(48vw,340px)] h-[min(48vw,340px)] rounded-full border border-brand/35 pointer-events-none hidden sm:block" />
+
+        <header className="relative z-10 flex items-center justify-between px-5 sm:px-8 md:px-12 pt-5 sm:pt-6">
+          <div className="flex items-center gap-2.5 text-accent-ink">
+            <span className="relative w-9 h-9 flex items-center justify-center">
+              <span className="absolute inset-0 rounded-full border-2 border-brand/50" />
+              <span className="w-7 h-7 rounded-full bg-brand flex items-center justify-center">
+                <ShieldCheck className="w-3.5 h-3.5" strokeWidth={2.5} />
+              </span>
+            </span>
+            <span className="font-display text-[20px] sm:text-[22px] font-semibold tracking-tight">
+              SafeThali
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => nav('/auth')}
+            className="!text-accent-ink/80 hover:!text-accent-ink hover:!bg-white/10"
+          >
+            Sign in
+          </Button>
+        </header>
+
+        <div className="relative z-10 flex-1 flex flex-col justify-center px-5 sm:px-8 md:px-12 pb-16 pt-10 max-w-3xl">
+          <motion.p
+            className="font-display text-[clamp(3rem,11vw,5.5rem)] font-semibold tracking-tight text-accent-ink leading-[0.95] mb-5"
+            {...(ready ? fade(reduce, 0) : {})}
+          >
+            SafeThali
+          </motion.p>
+          <motion.h1
+            className="font-display text-[clamp(1.65rem,4.2vw,2.35rem)] font-medium tracking-tight text-accent-ink/95 leading-[1.15] max-w-[16ch]"
+            {...(ready ? fade(reduce, 0.06) : {})}
+          >
+            Check your thali before you eat
+          </motion.h1>
+          <motion.p
+            className="mt-5 text-[16px] md:text-[17px] text-white/70 leading-relaxed max-w-[36ch]"
+            {...(ready ? fade(reduce, 0.12) : {})}
+          >
+            Adulteration risk for milk, spices, oil, and honey — clear scores you can act on tonight.
+          </motion.p>
+          <motion.div
+            className="mt-9 flex flex-wrap gap-3"
+            {...(ready ? fade(reduce, 0.18) : {})}
+          >
+            <Button size="lg" onClick={() => nav('/auth')}>
+              Scan a food
               <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
               onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
-              className="btn-glass !py-3.5 !px-6 !text-[15px]"
+              className="!bg-white/10 !border-white/25 !text-accent-ink hover:!bg-white/18"
             >
               How it works
-            </button>
-          </div>
-        </div>
-
-        <div
-          className={`md:col-span-5 transition-all duration-700 delay-100 ${ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
-        >
-          <figure className="relative rounded-[20px] overflow-hidden border border-rule bg-paper-2 aspect-[4/5] md:aspect-[5/6]">
-            <img
-              src="/images/hero-kitchen-spices.png"
-              alt="Turmeric, chilli, mustard oil, and honey on an Indian kitchen counter"
-              className="w-full h-full object-cover"
-              width={900}
-              height={1100}
-              loading="eager"
-              decoding="async"
-            />
-            <figcaption className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-ink/70 to-transparent">
-              <p className="text-accent-ink text-[13px] font-medium leading-snug">
-                Turmeric, chilli, honey, mustard oil - checked against real adulteration patterns.
-              </p>
-            </figcaption>
-          </figure>
+            </Button>
+          </motion.div>
         </div>
       </section>
 
-      <section className="border-y border-rule bg-paper-2">
-        <div className="max-w-6xl mx-auto px-5 py-10 grid sm:grid-cols-3 gap-8">
-          {PROOF.map((item) => (
-            <div key={item.label}>
-              <div className="text-[2rem] font-semibold tracking-tight text-ink tabular-nums">{item.value}</div>
-              <p className="mt-1.5 text-[13px] text-ink-2 leading-snug max-w-[28ch]">{item.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-5 py-20 md:py-28">
-        <h2 className="display text-[clamp(1.75rem,3.5vw,2.5rem)] max-w-[18ch]">
-          Built for Indian kitchens, not generic food apps
-        </h2>
-        <div className="mt-12 grid md:grid-cols-3 gap-6">
+      <section id="how" className="border-y border-rule bg-paper-2">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-16 md:py-20 space-y-14 md:space-y-16">
+          <h2 className="font-display text-[clamp(1.55rem,3vw,2.1rem)] font-semibold tracking-tight max-w-[18ch]">
+            Built for the Indian kitchen
+          </h2>
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
             <div
               key={title}
-              className={`p-6 rounded-[16px] border border-rule ${i === 0 ? 'bg-brand/5 border-brand/20' : 'bg-paper'}`}
+              className={`flex flex-col md:flex-row md:items-start gap-3 md:gap-12 ${
+                i % 2 === 1 ? 'md:flex-row-reverse' : ''
+              }`}
             >
-              <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center mb-5 ${i === 0 ? 'bg-brand text-accent-ink' : 'bg-paper-3 text-ink'}`}>
-                <Icon className="w-5 h-5" strokeWidth={1.75} />
+              <div className="md:w-[38%] shrink-0">
+                <div className="flex items-center gap-3">
+                  <span className="w-10 h-10 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0">
+                    <Icon className="w-[18px] h-[18px]" strokeWidth={1.75} />
+                  </span>
+                  <h3 className="font-display text-[19px] font-semibold tracking-tight">{title}</h3>
+                </div>
               </div>
-              <h3 className="text-[17px] font-semibold tracking-tight">{title}</h3>
-              <p className="mt-2 text-[14px] text-ink-2 leading-relaxed">{desc}</p>
+              <p className="md:w-[62%] text-[15px] text-ink-2 leading-relaxed md:pt-1.5">
+                {desc}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="how" className="bg-ink text-accent-ink">
-        <div className="max-w-6xl mx-auto px-5 py-20 md:py-24">
-          <h2 className="display text-[clamp(1.75rem,3.5vw,2.5rem)] text-accent-ink max-w-[16ch]">
-            Three steps to a safer plate
+      <section className="relative overflow-hidden bg-ink text-accent-ink">
+        <div className="absolute -right-20 -bottom-24 w-72 h-72 rounded-full border border-brand/30" />
+        <div className="absolute right-24 -bottom-8 w-44 h-44 rounded-full border border-white/10" />
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-16 md:py-20">
+          <h2 className="font-display text-[clamp(1.5rem,3vw,2.15rem)] font-semibold tracking-tight max-w-[14ch]">
+            Start with one scan tonight
           </h2>
-          <div className="mt-12 grid md:grid-cols-3 gap-10">
-            {STEPS.map((step, i) => (
-              <div key={step.title}>
-                <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent-ink/45 mb-3">
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <h3 className="text-[20px] font-semibold tracking-tight">{step.title}</h3>
-                <p className="mt-2 text-[14px] text-accent-ink/70 leading-relaxed max-w-[32ch]">{step.desc}</p>
-              </div>
-            ))}
+          <p className="mt-3 text-[15px] text-white/65 leading-relaxed max-w-[40ch]">
+            Turmeric, milk, honey, mustard oil — under a minute, no install required.
+          </p>
+          <div className="mt-8">
+            <Button size="lg" onClick={() => nav('/auth')}>
+              Create free account
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-5 py-20 md:py-28">
-        <div className="rounded-[20px] border border-rule bg-paper-2 px-6 py-12 md:px-12 md:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-          <div>
-            <h2 className="display text-[clamp(1.6rem,3vw,2.25rem)] max-w-[16ch]">
-              Start with one scan tonight
-            </h2>
-            <p className="mt-3 text-[15px] text-ink-2 max-w-[40ch] leading-relaxed">
-              No install required. Check turmeric, milk, honey, or spices in under a minute.
-            </p>
-          </div>
-          <button onClick={() => nav('/auth')} className="btn-safe !py-3.5 !px-6 !text-[15px] shrink-0 self-start md:self-center">
-            Scan food free
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </section>
-
-      <footer className="border-t border-rule">
-        <div className="max-w-6xl mx-auto px-5 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-brand" strokeWidth={2} />
-            <span className="text-[14px] font-semibold tracking-tight">FoodSafe</span>
-          </div>
-          <p className="text-[12px] text-ink-3">Food safety guidance for Indian households.</p>
+      <footer className="border-t border-rule bg-paper">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span className="font-display font-semibold tracking-tight">SafeThali · सेफथाली</span>
+          <p className="text-[13px] text-ink-3">Food adulteration awareness · English & Hindi</p>
         </div>
       </footer>
     </div>

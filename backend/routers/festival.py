@@ -23,8 +23,6 @@ async def get_current_festival(lang: str = "en"):
     lang_note = (
         "Respond with all text values in Hindi."
         if lang == "hi"
-        else "Respond with all text values in Marathi."
-        if lang == "mr"
         else ""
     )
     system = f"You are a food safety expert for India. Respond ONLY with valid JSON, no markdown. {lang_note}"

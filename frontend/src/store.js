@@ -154,7 +154,7 @@ export const useStore = create(
       setLastResult: (result) => set({ lastResult: result }),
     }),
     {
-      name: 'foodsafe-storage',
+      name: 'safethali-storage',
       partialize: (state) => ({
         lang:         state.lang,
         family:       state.family,

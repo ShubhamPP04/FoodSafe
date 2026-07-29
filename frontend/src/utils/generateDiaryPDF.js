@@ -101,7 +101,7 @@ function drawHeroHeader(doc, userName, LOGO_BASE64) {
     rect(doc, ML, 14, 28, 9, 4.5)
     textC(doc, '#ffffff')
     doc.setFontSize(8.5).setFont(undefined, 'bold')
-    doc.text('FoodSafe', ML + 14, 19.8, { align: 'center' })
+    doc.text('SafeThali', ML + 14, 19.8, { align: 'center' })
   }
 
   // Tagline
@@ -483,7 +483,7 @@ export async function generateDiaryPDF({ scanHistory, aiInsights, digest, userNa
 
     textC(doc, '#475569')
     doc.setFontSize(6.5).setFont(undefined, 'normal')
-    doc.text('FoodSafe · foodsafe.app', ML, PH - 3.5)
+    doc.text('SafeThali · foodsafe.app', ML, PH - 3.5)
 
     textC(doc, '#475569')
     doc.text(
@@ -497,5 +497,5 @@ export async function generateDiaryPDF({ scanHistory, aiInsights, digest, userNa
   }
 
   // ── Save ──────────────────────────────────────────────────────────────────
-  doc.save(`FoodSafe_Diary_${new Date().toISOString().slice(0, 10)}.pdf`)
+  doc.save(`SafeThali_Diary_${new Date().toISOString().slice(0, 10)}.pdf`)
 }

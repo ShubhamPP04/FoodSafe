@@ -4,12 +4,11 @@ import { ChevronRight, Plus, Trash2, User } from 'lucide-react'
 const LANGUAGES = [
   { code: 'en', label: 'English' },
   { code: 'hi', label: 'हिन्दी (Hindi)' },
-  { code: 'mr', label: 'मराठी (Marathi)' },
 ]
 
 const INITIAL_USER = {
-  name: 'Atharva Vavhal',
-  email: 'atharva@example.com',
+  name: 'Demo User',
+  email: 'demo@safethali.app',
 }
 
 const INITIAL_FAMILY = [

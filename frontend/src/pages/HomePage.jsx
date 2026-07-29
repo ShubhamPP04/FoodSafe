@@ -5,6 +5,7 @@ import { t } from '../i18n/translations'
 import { scanFoodAPI, scanImageAPI, scanCombinationAPI } from '../services/api'
 import ScanLoader from '../components/ScanLoader'
 import { Camera, Image as ImageIcon, Mic, Search as SearchIcon, X, Sparkles, HeartPulse, MapPin, ShieldCheck, Plus, CheckCircle2 } from 'lucide-react'
+import { Button } from '../components/ui'
 
 const DEFAULT_ALERTS = [
   "MDH spices flagged for pesticide residue — Apr 2024",
@@ -35,7 +36,7 @@ export default function HomePage() {
   const recognitionRef = useRef(null)
 
   // ── Voice input ───────────────────────────────────────────────
-  const LANG_MAP = { en: 'en-IN', hi: 'hi-IN', mr: 'mr-IN' }
+  const LANG_MAP = { en: 'en-IN', hi: 'hi-IN' }
 
   function toggleVoice() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -202,207 +203,185 @@ export default function HomePage() {
   const currentAlert = fssaiAlerts[ticker % fssaiAlerts.length]
 
   return (
-    <div className="flex flex-col gap-6 fade-up">
+    <div className="flex flex-col gap-8 max-w-lg mx-auto w-full">
       {loading && <ScanLoader food={query.trim()} lang={lang} />}
 
       {cameraOpen && (
-        <div className="fixed inset-0 bg-ink/90 backdrop-blur-xl z-[999] flex flex-col items-center justify-center p-4">
-          <div className="relative w-full max-w-md rounded-[20px] overflow-hidden border border-rule shadow-2xl bg-ink">
-            <video ref={cameraRef} autoPlay playsInline className="w-full h-[60vh] object-cover" />
-            <div className="absolute inset-0 border-2 border-brand/40 rounded-[16px] pointer-events-none m-4" />
-            <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-ink/90 to-transparent flex justify-center gap-4">
-              <button onClick={stopCamera} className="w-14 h-14 rounded-full bg-paper-2 border border-rule flex items-center justify-center text-ink-2 hover:bg-paper-3 hover:text-ink transition-colors">
-                <X className="w-6 h-6" />
+        <div className="fixed inset-0 bg-ink/90 z-[999] flex flex-col items-center justify-center p-4">
+          <div className="relative w-full max-w-md overflow-hidden bg-ink">
+            <video ref={cameraRef} autoPlay playsInline className="w-full h-[55vh] object-cover" />
+            <div className="absolute bottom-0 inset-x-0 p-5 flex justify-center gap-4 bg-gradient-to-t from-ink/90 to-transparent">
+              <button type="button" onClick={stopCamera} className="w-12 h-12 rounded-full bg-white/15 text-accent-ink flex items-center justify-center">
+                <X className="w-5 h-5" />
               </button>
-              <button onClick={capturePhoto} className="w-16 h-16 rounded-full bg-brand flex items-center justify-center border-4 border-paper shadow-[0_1px_2px_oklch(22%_0.03_155/0.2)]">
-                <div className="w-12 h-12 rounded-full border-2 border-ink/20" />
-              </button>
+              <button type="button" onClick={capturePhoto} aria-label="Capture" className="w-14 h-14 rounded-full bg-brand border-4 border-white/25" />
             </div>
           </div>
           <canvas ref={canvasRef} className="hidden" />
         </div>
       )}
 
-      <div className="relative p-6 md:p-7 rounded-[20px] bg-paper-2 border border-rule overflow-hidden mt-1">
-        <div className="relative z-10 flex flex-col gap-5">
-          <div>
-            <h2 className="font-sans text-3xl md:text-4xl text-ink font-semibold tracking-tight mb-2">What&apos;s in your food?</h2>
-            <p className="font-sans text-[13px] md:text-sm text-ink-2">{t(lang, 'placeholder') || 'Search paneer, spices, or ingredients...'}</p>
-          </div>
+      <header>
+        <h1 className="text-[22px] font-semibold tracking-tight text-ink">
+          {t(lang, 'scan') || 'Scan food'}
+        </h1>
+        <p className="mt-1 text-[14px] text-ink-2">{t(lang, 'placeholder')}</p>
+      </header>
 
-          <div className="relative group w-full">
-            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-3 group-focus-within:text-brand transition-colors" />
-            <input
-              className="w-full bg-paper border border-rule rounded-[14px] py-4 pl-12 pr-12 text-sm text-ink placeholder:text-ink-3 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10 transition-all"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleScan()}
-              placeholder="E.g. Turmeric powder, Amul Milk..."
-            />
-            {query && (
-              <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-ink/5 text-ink-2 hover:bg-ink/10 hover:text-ink transition-colors"
-                onClick={() => setQuery('')}
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          <div className="flex gap-3 h-[72px]">
-            <button
-              className="flex-1 rounded-[14px] border border-rule bg-paper flex flex-col items-center justify-center gap-1.5 hover:bg-paper-3 hover:border-rule-2 transition-all hover:-translate-y-0.5 group"
-              onClick={() => fileRef.current.click()}
-            >
-              <ImageIcon className="w-5 h-5 text-ink-2 group-hover:text-brand transition-colors" />
-              <span className="text-[11px] font-medium text-ink-2 group-hover:text-ink">{t(lang, 'uploadBtn')}</span>
-            </button>
-            <button
-              className="flex-1 rounded-[14px] border border-rule bg-paper flex flex-col items-center justify-center gap-1.5 hover:bg-paper-3 hover:border-rule-2 transition-all hover:-translate-y-0.5 group"
-              onClick={openCamera}
-            >
-              <Camera className="w-5 h-5 text-ink-2 group-hover:text-brand transition-colors" />
-              <span className="text-[11px] font-medium text-ink-2 group-hover:text-ink">{t(lang, 'cameraBtn')}</span>
-            </button>
-            <button
-              className={`flex-1 rounded-[14px] border transition-all hover:-translate-y-0.5 group flex flex-col items-center justify-center gap-1.5
-                ${listening ? 'bg-chili/10 border-chili/30' : 'bg-paper border-rule hover:bg-paper-3 hover:border-rule-2'}`}
-              onClick={toggleVoice}
-            >
-              <Mic className={`w-5 h-5 transition-colors ${listening ? 'text-chili animate-pulse' : 'text-ink-2 group-hover:text-brand'}`} />
-              <span className={`text-[11px] font-medium ${listening ? 'text-chili' : 'text-ink-2 group-hover:text-ink'}`}>
-                {listening ? 'Listening...' : t(lang, 'voiceInput')}
-              </span>
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
-          </div>
-
-          {error && (
-            <div className="p-3 bg-chili/10 border border-chili/30 rounded-[10px] flex items-center gap-3 text-[12px] text-chili">
-              <div className="w-1.5 h-1.5 rounded-full bg-chili" />
-              {error}
+      {/* One scan surface */}
+      <section className="rounded-2xl border border-rule bg-paper shadow-soft overflow-hidden">
+        <div className="p-3 sm:p-3.5">
+          <div className="flex items-stretch gap-2">
+            <div className="relative flex-1 min-w-0">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-3 pointer-events-none" />
+              <input
+                className="w-full h-11 bg-paper-2 border border-rule rounded-xl pl-9 pr-9 text-[14px] text-ink placeholder:text-ink-3 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleScan()}
+                placeholder="Turmeric, Amul milk, mustard oil…"
+              />
+              {query && (
+                <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-ink-3 hover:text-ink" onClick={() => setQuery('')}>
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
-          )}
+            <Button
+              onClick={handleScan}
+              disabled={loading || !query.trim()}
+              loading={loading}
+              className="shrink-0 h-11 !rounded-xl px-4 shadow-none"
+            >
+              {t(lang, 'scanNow') || 'Scan'}
+            </Button>
+          </div>
 
+          <div className="mt-2.5 flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => fileRef.current.click()}
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-[13px] font-medium leading-none text-ink-2 hover:bg-paper-2 hover:text-ink transition-colors"
+            >
+              <ImageIcon className="w-4 h-4 shrink-0" />
+              <span>{t(lang, 'uploadBtn')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={openCamera}
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-[13px] font-medium leading-none text-ink-2 hover:bg-paper-2 hover:text-ink transition-colors"
+            >
+              <Camera className="w-4 h-4 shrink-0" />
+              <span>{t(lang, 'cameraBtn')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={toggleVoice}
+              className={`inline-flex items-center justify-center gap-1.5 h-9 px-3 rounded-lg text-[13px] font-medium leading-none transition-colors ${
+                listening ? 'text-chili bg-red-50' : 'text-ink-2 hover:bg-paper-2 hover:text-ink'
+              }`}
+            >
+              <Mic className={`w-4 h-4 shrink-0 ${listening ? 'animate-pulse' : ''}`} />
+              <span>{listening ? 'Listening…' : t(lang, 'voiceInput')}</span>
+            </button>
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleImageUpload} />
+          </div>
+        </div>
+
+        {error && (
+          <div className="px-3.5 pb-3">
+            <p className="text-[13px] text-chili bg-red-50 border border-red-100 rounded-lg px-3 py-2" role="alert">{error}</p>
+          </div>
+        )}
+      </section>
+
+      <aside className="rounded-xl bg-red-50/70 border border-red-100 px-3.5 py-3">
+        <p className="text-[11px] font-semibold text-chili tracking-[0.06em] uppercase">{t(lang, 'fssaiAlert')}</p>
+        <p className="text-[13px] text-ink mt-1 leading-snug" key={ticker}>{currentAlert}</p>
+      </aside>
+
+      <section>
+        <h2 className="text-[13px] font-semibold text-ink-3 tracking-wide uppercase mb-2">
+          {t(lang, 'quickActions')}
+        </h2>
+        <ul className="rounded-2xl border border-rule bg-paper divide-y divide-rule overflow-hidden">
+          {[
+            { icon: Sparkles, title: 'festivalGuide', sub: 'festivalGuideSub', to: '/festival' },
+            { icon: HeartPulse, title: 'symptomCheck', sub: 'symptomCheckSub', to: '/symptoms' },
+            { icon: MapPin, title: 'foodSafetyMap', sub: 'foodSafetyMapSub', to: '/map' },
+          ].map(({ icon: Icon, title, sub, to }) => (
+            <li key={to}>
+              <button
+                type="button"
+                onClick={() => nav(to)}
+                className="w-full flex items-center gap-3 px-3.5 py-3 text-left hover:bg-paper-2 transition-colors"
+              >
+                <Icon className="w-4 h-4 text-ink-3 shrink-0" strokeWidth={1.75} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-medium text-ink">{t(lang, title)}</span>
+                  <span className="block text-[12px] text-ink-3">{t(lang, sub)}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="rounded-2xl border border-rule bg-paper px-3.5 py-3.5">
+        <div className="flex items-start justify-between gap-3 mb-2.5">
+          <div>
+            <h2 className="text-[14px] font-semibold text-ink flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-brand" />
+              {t(lang, 'combinationRisk')}
+            </h2>
+            <p className="text-[12px] text-ink-3 mt-0.5">{t(lang, 'combinationSub')}</p>
+          </div>
+          {combinationFoods.length > 0 && (
+            <button type="button" className="text-[12px] font-medium text-chili shrink-0" onClick={clearCombination}>
+              {t(lang, 'clear')}
+            </button>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {combinationFoods.map((f, i) => (
+            <span key={i} className="inline-flex items-center gap-1 bg-paper-2 text-ink text-[12px] font-medium px-2 py-1 rounded-md border border-rule">
+              <CheckCircle2 className="w-3 h-3 text-brand" /> {f}
+            </span>
+          ))}
           <button
-            className={`w-full py-4 rounded-[14px] font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2
-              ${query.trim()
-                ? 'btn-safe !rounded-[14px] !py-4'
-                : 'bg-paper text-ink-3 border border-rule cursor-not-allowed'}`}
-            onClick={handleScan}
-            disabled={loading || !query.trim()}
+            type="button"
+            className="inline-flex items-center gap-1 text-[12px] font-medium text-ink-3 border border-dashed border-rule px-2 py-1 rounded-md hover:border-brand hover:text-brand"
+            onClick={() => { if (query.trim()) { addCombinationFood(query.trim()); setQuery('') } }}
           >
-            <SearchIcon className="w-4 h-4" />
-            {t(lang, 'scanNow') || 'Analyze Food Safety'}
+            <Plus className="w-3 h-3" /> {t(lang, 'addFood')}
           </button>
         </div>
-      </div>
-
-      <div className="relative overflow-hidden rounded-[16px] bg-paper border border-rule p-4 flex gap-4 items-center">
-        <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-chili/10 border border-chili/30 shrink-0">
-          <div className="w-2 h-2 rounded-full bg-chili" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-chili font-mono">{t(lang, 'fssaiAlert')}</span>
-            <span className="text-[10px] text-ink-3">{ticker % fssaiAlerts.length + 1}/{fssaiAlerts.length}</span>
-          </div>
-          <p className="text-[12px] text-ink font-medium truncate" key={ticker}>
-            {currentAlert}
-          </p>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.12em] mb-3 pl-1 font-mono">{t(lang, 'quickActions')}</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-          {[
-            { icon: Sparkles, color: 'text-ochre', bg: 'bg-ochre/10', border: 'group-hover:border-ochre/30', title: 'festivalGuide', sub: 'festivalGuideSub', to: '/festival' },
-            { icon: HeartPulse, color: 'text-brand', bg: 'bg-brand/10', border: 'group-hover:border-brand/30', title: 'symptomCheck', sub: 'symptomCheckSub', to: '/symptoms' },
-            { icon: MapPin, color: 'text-brand', bg: 'bg-brand/10', border: 'group-hover:border-brand/30', title: 'foodSafetyMap', sub: 'foodSafetyMapSub', to: '/map' },
-          ].map(({ icon: Icon, color, bg, border, title, sub, to }) => (
-            <button key={to} onClick={() => nav(to)} className={`p-4 rounded-[14px] bg-paper border border-rule flex flex-col gap-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-paper-2 group ${border}`}>
-              <div className={`w-9 h-9 rounded-[10px] ${bg} flex items-center justify-center`}>
-                <Icon className={`w-[18px] h-[18px] ${color}`} />
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-[13px] font-semibold text-ink">{t(lang, title)}</div>
-                <div className="text-[10px] text-ink-3 leading-snug">{t(lang, sub)}</div>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.12em] mb-3 pl-1 font-mono">{t(lang, 'combinationRisk') || 'Combination Analysis'}</h3>
-        <div className="p-5 rounded-[16px] bg-paper border border-rule">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-brand" />
-                <h4 className="text-[13px] font-semibold text-ink">Meal Safety Stack</h4>
-              </div>
-              <p className="text-[11px] text-ink-3 mt-1">{t(lang, 'combinationSub')}</p>
-            </div>
-            {combinationFoods.length > 0 && (
-              <button className="text-[10px] font-semibold text-chili bg-chili/10 px-2.5 py-1 rounded-md hover:bg-chili/20 transition-colors" onClick={clearCombination}>
-                {t(lang, 'clear')}
-              </button>
-            )}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {combinationFoods.map((f, i) => (
-              <span key={i} className="flex items-center gap-1.5 bg-brand/10 border border-brand/20 text-brand text-[11px] font-semibold px-3 py-1.5 rounded-full">
-                <CheckCircle2 className="w-3 h-3" />
-                {f}
-              </span>
-            ))}
-            <button
-              className="flex items-center gap-1.5 text-[11px] font-semibold text-ink-3 border border-dashed border-rule px-3 py-1.5 rounded-full hover:border-brand/40 hover:text-ink transition-colors"
-              onClick={() => { if (query.trim()) { addCombinationFood(query.trim()); setQuery('') } }}
-            >
-              <Plus className="w-3 h-3" />
-              {t(lang, 'addFood') || 'Add to Stack'}
-            </button>
-          </div>
-        </div>
-      </div>
+      </section>
 
       {family.length > 0 && (
-        <div className="mb-8">
-          <h3 className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.12em] mb-3 pl-1 font-mono">{t(lang, 'scanFor')}</h3>
-          <div className="p-4 rounded-[16px] bg-paper border border-rule flex flex-wrap gap-2">
+        <section>
+          <h2 className="text-[13px] font-semibold text-ink-3 tracking-wide uppercase mb-2">{t(lang, 'scanFor')}</h2>
+          <div className="flex flex-wrap gap-2">
             {family.map(m => {
               const active = activeMember?.id === m.id
               return (
                 <button
                   key={m.id}
+                  type="button"
                   onClick={() => setActiveMember(active ? null : m)}
-                  className={`
-                    flex items-center gap-2.5 px-3 py-1.5 rounded-full border transition-all duration-200
-                    ${active
-                      ? 'bg-brand text-accent-ink border-brand font-semibold'
-                      : 'bg-paper-2 border-rule text-ink-2 hover:text-ink hover:bg-paper-3 font-medium'}
-                  `}
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[13px] font-medium transition-colors ${
+                    active ? 'bg-brand text-accent-ink border-brand' : 'bg-paper border-rule text-ink-2 hover:border-brand/40'
+                  }`}
                 >
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold
-                    ${active ? 'bg-accent-ink/20 text-accent-ink' : 'bg-paper-3 text-ink-2'}`}>
+                  <span className={`w-5 h-5 rounded-full text-[9px] font-bold flex items-center justify-center ${active ? 'bg-white/20' : 'bg-paper-3'}`}>
                     {m.name.slice(0, 2).toUpperCase()}
-                  </div>
-                  <span className="text-[12px]">{m.name}</span>
-                  {m.conditions?.length > 0 && <HeartPulse className={`w-3 h-3 ${active ? 'text-accent-ink/80' : 'text-chili'}`} />}
+                  </span>
+                  {m.name}
                 </button>
               )
             })}
           </div>
-        </div>
+        </section>
       )}
     </div>
   )

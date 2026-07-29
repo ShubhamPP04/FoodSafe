@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
-const BRAND_SELECTIONS_KEY = 'foodsafe-brand-selections'
+const BRAND_SELECTIONS_KEY = 'safethali-brand-selections'
 
 function loadBrandSelections() {
   try {
@@ -23,19 +23,19 @@ function selectionKey(category) {
   return category.trim().toLowerCase()
 }
 
-// ── Dynamic score styling (no hardcoded thresholds — derived from score itself) ──
+// Score tiers — Safe / Moderate / Caution / Risky (design.md risk colors)
 function getScoreTier(score) {
-  if (score >= 85) return { color: 'text-brand',    bg: 'bg-brand',    label: 'Safe'     }
-  if (score >= 70) return { color: 'text-amber-400', bg: 'bg-amber-400', label: 'Moderate' }
-  if (score >= 50) return { color: 'text-orange-400',bg: 'bg-orange-400',label: 'Caution'  }
-  return              { color: 'text-chili',    bg: 'bg-chili',   label: 'Risky'    }
+  if (score >= 85) return { color: 'text-brand',    bg: 'bg-brand',    label: 'Safe' }
+  if (score >= 70) return { color: 'text-ochre',     bg: 'bg-ochre',     label: 'Moderate' }
+  if (score >= 50) return { color: 'text-brand',     bg: 'bg-brand',     label: 'Caution' }
+  return              { color: 'text-chili',     bg: 'bg-chili',     label: 'Risky' }
 }
 
 function getRiskStyle(risk) {
   const map = {
-    HIGH:   { bg: 'oklch(55% 0.17 28 / 0.1)',  color: '#c93d32', border: 'oklch(55% 0.17 28 / 0.25)'  },
-    MEDIUM: { bg: 'oklch(70% 0.12 75 / 0.12)', color: '#c4892e', border: 'oklch(70% 0.12 75 / 0.25)'  },
-    LOW:    { bg: 'oklch(52% 0.13 155 / 0.1)', color: '#2f8f52', border: 'oklch(52% 0.13 155 / 0.2)'  },
+    HIGH:   { bg: 'rgba(185,28,28,0.08)',  color: '#b91c1c', border: 'rgba(185,28,28,0.25)' },
+    MEDIUM: { bg: 'rgba(74,144,217,0.08)', color: '#2563eb', border: 'rgba(74,144,217,0.25)' },
+    LOW:    { bg: 'rgba(74,144,217,0.1)',  color: '#4a90d9', border: 'rgba(74,144,217,0.25)' },
   }
   return map[risk] || map.MEDIUM
 }
@@ -334,17 +334,17 @@ export default function BrandsPage() {
                   onClick={() => !isDisabled && toggleBrand(b)}
                   className="relative p-4 rounded-2xl transition-all duration-200 overflow-hidden border"
                   style={{
-                    background:  isSel ? 'oklch(52% 0.13 155 / 0.08)' : isRisky ? 'oklch(55% 0.17 28 / 0.06)' : 'var(--color-paper-2)',
-                    borderColor: isSel ? 'oklch(52% 0.13 155 / 0.4)' : isRisky ? 'oklch(55% 0.17 28 / 0.25)' : 'var(--color-rule)',
+                    background:  isSel ? 'rgba(74,144,217,0.08)' : isRisky ? 'rgba(185,28,28,0.06)' : 'var(--color-paper)',
+                    borderColor: isSel ? 'rgba(74,144,217,0.4)' : isRisky ? 'rgba(185,28,28,0.25)' : 'var(--color-rule)',
                     opacity:     isDisabled ? 0.35 : 1,
                     cursor:      isDisabled ? 'not-allowed' : 'pointer',
                     transform:   isSel ? 'scale(1.02)' : 'scale(1)',
-                    boxShadow:   isSel ? '0 4px 20px oklch(52% 0.13 155 / 0.12)' : 'none',
+                    boxShadow:   isSel ? '0 4px 20px rgba(74,144,217,0.14)' : 'none',
                   }}>
 
                   {isSel && (
                     <div className="absolute top-3 right-3">
-                      <CheckCircle2 className="w-5 h-5 text-brand" style={{ fill: 'oklch(52% 0.13 155 / 0.15)' }} />
+                      <CheckCircle2 className="w-5 h-5 text-brand" />
                     </div>
                   )}
                   {isRisky && !isSel && (

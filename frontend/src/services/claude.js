@@ -1,4 +1,4 @@
-// FoodSafe Backend Service Wrapper
+// SafeThali Backend Service Wrapper
 // All model calls go through FastAPI so the Gemini key is never exposed,
 // and scan results can be saved to the user's history.
 

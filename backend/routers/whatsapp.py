@@ -35,7 +35,6 @@ Commands:
 • *symptoms* - check if your symptoms relate to adulteration
 • *brands* - safe brand recommendations
 • *lang hi* - switch to Hindi
-• *lang mr* - switch to Marathi
 • *help* - show this menu"""
 
 HELP_HI = """🌿 *फूडसेफ बॉट*

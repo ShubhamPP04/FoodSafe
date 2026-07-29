@@ -9,10 +9,10 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png"],
       manifest: {
-        name: "FoodSafe — Protect Your Family's Plate",
-        short_name: "FoodSafe",
+        name: "SafeThali — Check your thali before you eat",
+        short_name: "SafeThali",
         description: "AI-powered Indian food adulteration detection",
-        theme_color: "#2f8f52",
+        theme_color: "#4a90d9",
         background_color: "#f4f7f4",
         display: "standalone",
         orientation: "portrait",

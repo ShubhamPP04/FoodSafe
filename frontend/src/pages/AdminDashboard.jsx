@@ -153,7 +153,7 @@ export default function AdminDashboard() {
             <Activity className="w-5 h-5 text-brand" />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-sm font-bold text-ink font-sans tracking-wide leading-tight">FoodSafe Cortex</h1>
+            <h1 className="text-sm font-bold text-ink font-sans tracking-wide leading-tight">SafeThali Cortex</h1>
             <span className="text-[9px] font-bold text-ink-3 uppercase tracking-[0.2em]">Command Center</span>
           </div>
         </div>

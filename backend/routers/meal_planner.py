@@ -19,8 +19,6 @@ async def generate_meal_plan(req: MealPlanRequest):
     lang_note = (
         "Respond with all text values in Hindi."
         if req.lang == "hi"
-        else "Respond with all text values in Marathi."
-        if req.lang == "mr"
         else ""
     )
     system = f"You are a Delhi-based nutritionist and food safety expert. Respond ONLY with valid JSON, no markdown. {lang_note}"

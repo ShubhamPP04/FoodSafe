@@ -9,9 +9,9 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
 
-// ── Risk config (Forest calm tokens) ───────────────────────────────────────
+// ── Risk config (clean SaaS tokens) ───────────────────────────────────────────
 const RISK_CONFIG = {
-  LOW:      { bg: 'bg-brand/10',     text: 'text-brand',     border: 'border-brand/30',     dot: '#2f8f52', glow: 'rgba(47,143,82,0.25)',  label: 'Low Risk',      icon: Shield },
+  LOW:      { bg: 'bg-brand/10',     text: 'text-brand',     border: 'border-brand/30',     dot: '#4a90d9', glow: 'rgba(74,144,217,0.25)', label: 'Low Risk',      icon: Shield },
   MEDIUM:   { bg: 'bg-ochre/10',     text: 'text-ochre',     border: 'border-ochre/30',     dot: '#c4892e', glow: 'rgba(196,137,46,0.25)', label: 'Medium Risk',   icon: TrendingUp },
   HIGH:     { bg: 'bg-chili/10',     text: 'text-chili',     border: 'border-chili/30',     dot: '#c93d32', glow: 'rgba(201,61,50,0.30)',  label: 'High Risk',     icon: AlertCircle },
   CRITICAL: { bg: 'bg-chili/15',     text: 'text-chili',     border: 'border-chili/40',     dot: '#a52a20', glow: 'rgba(165,42,32,0.40)',  label: 'Critical Risk', icon: Flame },
@@ -103,10 +103,10 @@ function LeafletMap({ cities, selected, onSelect, filter }) {
         .on('click', () => onSelect(selected === city.city ? null : city.city))
 
       marker.bindTooltip(`
-        <div style="background:#ffffff;border:1px solid var(--color-rule, #d5dcd5);border-radius:10px;padding:8px 12px;color:#14241c;font-family:'Outfit',sans-serif;min-width:120px;box-shadow:0 4px 16px rgba(20,36,28,0.10)">
+        <div style="background:#f8fafc;border:1px solid #dde3ea;border-radius:10px;padding:8px 12px;color:#1c1917;font-family:'Source Sans 3',system-ui,sans-serif;min-width:120px;box-shadow:0 4px 16px rgba(28,25,23,0.08)">
           <div style="font-weight:700;font-size:13px;margin-bottom:4px">${city.city}</div>
           <div style="font-size:10px;color:${cfg.dot};text-transform:uppercase;letter-spacing:0.1em;font-weight:600">${cfg.label}</div>
-          <div style="font-size:11px;color:#6a7a70;margin-top:4px">${city.reports} reports · ${city.topFood}</div>
+          <div style="font-size:11px;color:#57534e;margin-top:4px">${city.reports} reports · ${city.topFood}</div>
         </div>
       `, { permanent: false, direction: 'top', offset: [0, -size / 2], opacity: 1, className: 'custom-tooltip' })
 

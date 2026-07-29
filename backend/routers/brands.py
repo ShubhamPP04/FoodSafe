@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 LANGUAGE_NAMES = {
     "en": "English",
     "hi": "Hindi (Devanagari)",
-    "mr": "Marathi (Devanagari)",
 }
 router = APIRouter()
 
@@ -235,7 +234,7 @@ Order by frequency of adulteration reports in India."""
 # ── GET /brands/all ───────────────────────────────────────────────────────────
 
 @router.get("/all")
-async def get_all_brands(search: str = "", lang: Literal["en", "hi", "mr"] = "en"):
+async def get_all_brands(search: str = "", lang: Literal["en", "hi"] = "en"):
     search = search.strip()
 
     if search:
@@ -294,7 +293,7 @@ async def get_all_brands(search: str = "", lang: Literal["en", "hi", "mr"] = "en
 class CompareRequest(BaseModel):
     brands:        List[str]
     food_category: str = ""
-    lang:          Literal["en", "hi", "mr"] = "en"
+    lang:          Literal["en", "hi"] = "en"
 
 
 @router.post("/compare")
