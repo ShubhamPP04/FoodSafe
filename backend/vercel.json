@@ -1,7 +1,8 @@
 {
   "crons": [
-    { "path": "/api/cron/scraper", "schedule": "30 0 * * 1" },
-    { "path": "/api/cron/retrain", "schedule": "30 18 * * 6" },
-    { "path": "/api/cron/digest", "schedule": "30 3 * * 0" }
+    { "path": "/api/cron/scraper",     "schedule": "30 0 * * 1" },
+    { "path": "/api/cron/retrain",     "schedule": "30 18 * * 6" },
+    { "path": "/api/cron/digest",      "schedule": "30 3 * * 0" },
+    { "path": "/api/cron/seed-daily",  "schedule": "0 6 * * *" }
   ]
 }

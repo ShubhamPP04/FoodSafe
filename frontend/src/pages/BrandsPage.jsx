@@ -386,7 +386,7 @@ export default function BrandsPage() {
       </div>
 
       {/* ── Compare button ── */}
-      <div className="sticky bottom-[90px] md:bottom-6 z-40 mb-10 w-full max-w-md mx-auto">
+      <div className="sticky bottom-4 md:bottom-6 z-40 mb-6 w-full max-w-md mx-auto">
         <button
           disabled={selected.length < 2 || comparing}
           onClick={() => handleCompare()}
