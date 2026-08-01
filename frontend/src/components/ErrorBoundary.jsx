@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component {
         }}>
           <div style={{
             width: 48, height: 48, borderRadius: 999,
-            background: '#00BFA5', color: '#ffffff',
+            background: '#00BFA5', color: '#FFFFFF',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             marginBottom: 20,
           }}>
@@ -40,57 +40,37 @@ export default class ErrorBoundary extends Component {
           </div>
           <div style={{
             fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
-            fontSize: 24,
-            fontWeight: 800,
-            letterSpacing: '-0.02em',
-            color: '#1D1D1F',
-            marginBottom: 8,
+            fontWeight: 800, fontSize: 24, letterSpacing: '-0.02em',
+            color: '#1D1D1F', marginBottom: 8,
           }}>
             Something went wrong
           </div>
           <div style={{
-            fontSize: 14,
-            color: '#6E6E73',
-            fontWeight: 400,
-            marginBottom: 24,
-            lineHeight: 1.6,
-            maxWidth: 320,
+            fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+            fontSize: 14, color: '#6E6E73', marginBottom: 24,
           }}>
             An unexpected error occurred. Your scan history is safe.
           </div>
           {this.props.showError && this.state.error && (
-            <div style={{
-              fontSize: 11,
-              fontFamily: 'ui-monospace, monospace',
-              color: '#6E6E73',
-              background: '#eef1f5',
-              padding: '10px 14px',
-              borderRadius: 8,
-              border: '1px solid #E5E5E7',
-              marginBottom: 20,
-              maxWidth: 360,
-              wordBreak: 'break-all',
-              textAlign: 'left',
+            <pre style={{
+              marginTop: 8, marginBottom: 16, padding: 12,
+              background: '#FFF3F3', border: '1px solid #FF3B30',
+              borderRadius: 8, maxWidth: 500, textAlign: 'left',
+              fontFamily: 'monospace', fontSize: 11, color: '#C62828',
+              whiteSpace: 'pre-wrap',
             }}>
-              {this.state.error.toString()}
-            </div>
+              {String(this.state.error?.message || this.state.error)}
+            </pre>
           )}
           <button
-            type="button"
-            onClick={() => {
-              this.setState({ hasError: false, error: null })
-              window.location.href = '/'
-            }}
+            onClick={() => { this.setState({ hasError: false, error: null }); window.location.href = '/' }}
             style={{
-              padding: '11px 28px',
-              borderRadius: 10,
-              border: '1px solid #00BFA5',
-              background: '#00BFA5',
-              color: '#ffffff',
-              fontSize: 13,
-              fontWeight: 800,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
+              padding: '12px 28px', borderRadius: 999,
+              border: '1px solid #00BFA5', background: '#00BFA5',
+              color: '#FFFFFF',
+              fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+              fontWeight: 700, fontSize: 14, cursor: 'pointer',
+              transition: 'background 0.3s cubic-bezier(0.32,0.72,0,1)',
             }}
           >
             Back to home

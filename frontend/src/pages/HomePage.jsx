@@ -27,10 +27,10 @@ export default function HomePage() {
   const [error, setError] = useState('')
   const [ticker, setTicker] = useState(0)
   const [fssaiAlerts, setFssaiAlerts] = useState(DEFAULT_ALERTS)
+  const [cameraOpen, setCameraOpen] = useState(false)
   const [listening, setListening] = useState(false)
   const [addingFood, setAddingFood] = useState(false)
   const [newFood, setNewFood] = useState('')
-
   const fileRef = useRef()
   const cameraRef = useRef()
   const canvasRef = useRef()
