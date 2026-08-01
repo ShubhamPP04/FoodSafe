@@ -1,10 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-/* SafeThali · Soft Structuralism · Asymmetrical Bento
- * Pure white surfaces · emerald accent · Plus Jakarta Sans 800
- * Double-bezel cards · floating glass nav · fluid motion
- */
+/* SafeThali · Soft Structuralism · Dark Mode via CSS variables */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -13,54 +11,52 @@ export default {
         mono:  ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
-        // Soft Structuralism — silver-grey / pure white
-        canvas:    '#F5F5F7',
+        canvas:    'var(--color-canvas)',
         paper: {
-          DEFAULT: '#FFFFFF',
-          2:       '#FAFAFA',
-          3:       '#F0F0F2',
-          4:       '#E5E5E7',
+          DEFAULT: 'var(--color-paper)',
+          2:       'var(--color-paper-2)',
+          3:       'var(--color-paper-3)',
+          4:       'var(--color-paper-4)',
         },
         surface: {
-          50:  '#FFFFFF',
-          100: '#FAFAFA',
-          200: '#F0F0F2',
-          300: '#E5E5E7',
+          50:  'var(--color-paper)',
+          100: 'var(--color-paper-2)',
+          200: 'var(--color-paper-3)',
+          300: 'var(--color-paper-4)',
         },
         ink: {
-          DEFAULT: '#1D1D1F',
-          2:       '#6E6E73',
-          3:       '#AEAEB2',
+          DEFAULT: 'var(--color-ink)',
+          2:       'var(--color-ink-2)',
+          3:       'var(--color-ink-3)',
         },
-        'accent-ink': '#FFFFFF',
+        'accent-ink': 'var(--color-accent-ink)',
         brand: {
-          light: '#64DFD4',
-          DEFAULT: '#00BFA5',
-          dark:  '#00897B',
-          glow:  '#00BFA51A',
+          light: 'var(--color-brand-light)',
+          DEFAULT: 'var(--color-brand)',
+          dark:  'var(--color-brand-dark)',
+          glow:  'var(--color-brand-glow)',
         },
         gold: {
-          light: '#FFD54F',
-          DEFAULT: '#F57F17',
-          dark:  '#BF360C',
+          light: 'var(--color-gold-light)',
+          DEFAULT: 'var(--color-gold)',
+          dark:  'var(--color-gold-dark)',
         },
-        chili:    '#FF3B30',
-        ochre:    '#6E6E73',
-        rule:     '#E5E5E7',
-        'rule-2': '#D1D1D6',
+        chili:    'var(--color-chili)',
+        ochre:    'var(--color-ink-2)',
+        rule:     'var(--color-rule)',
+        'rule-2': 'var(--color-rule-2)',
       },
       backgroundImage: {
-        'glass-gradient': 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
+        'glass-gradient': 'linear-gradient(180deg, var(--color-paper) 0%, var(--color-paper-2) 100%)',
         'halo-warm': 'radial-gradient(ellipse at 50% 0%, rgba(0,191,165,0.06) 0%, transparent 60%)',
         'mesh-teal': 'radial-gradient(ellipse at 20% 20%, rgba(0,191,165,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(100,223,212,0.05) 0%, transparent 50%)',
       },
       boxShadow: {
-        // Soft, highly diffused ambient shadows
-        soft:   '0 1px 2px rgba(29,29,31,0.04), 0 8px 32px rgba(29,29,31,0.06)',
-        lift:   '0 4px 12px rgba(0,191,165,0.12), 0 12px 40px rgba(29,29,31,0.08)',
-        card:   '0 1px 3px rgba(29,29,31,0.04), 0 4px 16px rgba(29,29,31,0.04)',
-        bezel:  '0 2px 8px rgba(29,29,31,0.04), 0 8px 24px rgba(29,29,31,0.06)',
-        inner:  'inset 0 1px 1px rgba(255,255,255,0.8)',
+        soft:   '0 1px 2px var(--shadow-color), 0 8px 32px var(--shadow-color)',
+        lift:   '0 4px 12px rgba(0,191,165,0.12), 0 12px 40px var(--shadow-color)',
+        card:   '0 1px 3px var(--shadow-color), 0 4px 16px var(--shadow-color)',
+        bezel:  '0 2px 8px var(--shadow-color), 0 8px 24px var(--shadow-color)',
+        inner:  'inset 0 1px 1px var(--highlight-color)',
         glow:   '0 0 24px rgba(0,191,165,0.15)',
       },
       animation: {

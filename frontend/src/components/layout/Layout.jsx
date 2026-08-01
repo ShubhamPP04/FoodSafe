@@ -3,7 +3,7 @@ import { useStore } from '../../store'
 import { t } from '../../i18n/translations'
 import { useEffect, useState } from 'react'
 import PushNotificationBell from '../PushNotificationBell'
-import { Search, BookOpen, Newspaper, ShieldCheck, Users, Map, Calendar, LogOut, LogIn, Leaf } from 'lucide-react'
+import { Search, BookOpen, Newspaper, ShieldCheck, Users, Map, Calendar, LogOut, LogIn, Leaf, Sun, Moon } from 'lucide-react'
 import { Button } from '../ui'
 
 const NAV = [
@@ -17,12 +17,16 @@ const NAV = [
 ]
 
 export default function Layout({ children }) {
-  const { lang, setLang, user, logout } = useStore()
+  const { lang, setLang, user, logout, theme, toggleTheme } = useStore()
   const nav = useNavigate()
   const { pathname } = useLocation()
   const [installPrompt, setInstallPrompt] = useState(null)
   const [showBanner, setShowBanner] = useState(false)
   const [installed, setInstalled] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+  }, [theme])
 
   useEffect(() => {
     if (window.matchMedia('(display-mode: standalone)').matches) { setInstalled(true); return }
@@ -42,7 +46,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="flex flex-col h-[100dvh] w-full bg-canvas text-ink font-sans antialiased overflow-hidden">
-      {/* Floating glass nav — detached from top */}
+      {/* Floating glass nav */}
       <header className="shrink-0 z-50 px-4 pt-4">
         <div className="max-w-6xl mx-auto">
           <div className="glass rounded-full px-5 h-14 flex items-center justify-between gap-4 shadow-card">
@@ -60,25 +64,29 @@ export default function Layout({ children }) {
               {NAV.map(({ to, key }) => {
                 const isActive = pathname === to || (to !== '/scan' && pathname.startsWith(to))
                 return (
-                  <NavLink
-                    key={to}
-                    to={to}
-                    className={`px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                  <NavLink key={to} to={to}
+                    className={`px-4 py-1.5 rounded-full text-[13px] font-bold transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                       isActive ? 'bg-brand/10 text-brand' : 'text-ink-2 hover:text-ink hover:bg-paper-3'
-                    }`}
-                  >
+                    }`}>
                     {t(lang, key)}
                   </NavLink>
                 )
               })}
             </nav>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="flex rounded-full border border-rule overflow-hidden bg-white">
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Dark mode toggle */}
+              <button type="button" onClick={toggleTheme}
+                className="w-9 h-9 rounded-full flex items-center justify-center text-ink-2 hover:text-ink hover:bg-paper-3 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-90"
+                aria-label="Toggle dark mode" title="Toggle dark mode">
+                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+
+              <div className="flex rounded-full border border-rule overflow-hidden bg-paper">
                 {['en', 'hi'].map(l => (
                   <button key={l} type="button" onClick={() => setLang(l)}
                     className={`text-[11px] px-3 py-1 font-bold transition-all duration-400 ${
-                      lang === l ? 'bg-brand text-white' : 'bg-white text-ink-3 hover:text-ink'
+                      lang === l ? 'bg-brand text-white' : 'bg-paper text-ink-3 hover:text-ink'
                     }`}>
                     {l.toUpperCase()}
                   </button>
@@ -87,7 +95,7 @@ export default function Layout({ children }) {
               <PushNotificationBell />
               {user ? (
                 <button type="button" onClick={() => { logout(); nav('/') }}
-                  className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-2 hover:text-ink px-2 py-1.5 transition-colors"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-bold text-ink-2 hover:text-ink px-2 py-1.5 transition-colors"
                   title="Log out">
                   <span className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center text-[12px] font-bold">
                     {user.name?.charAt(0).toUpperCase()}
@@ -105,7 +113,6 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      {/* Main content with breathing whitespace */}
       <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 lg:pb-10">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12">
           {children}

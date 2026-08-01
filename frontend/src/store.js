@@ -10,6 +10,10 @@ export const useStore = create(
       lang: 'en',
       setLang: (lang) => set({ lang }),
 
+      // ── Theme ──────────────────────────────────────────────
+      theme: 'light',
+      toggleTheme: () => set((s) => ({ theme: s.theme === 'light' ? 'dark' : 'light' })),
+      setTheme: (theme) => set({ theme }),
       // ── Auth ─────────────────────────────────────────────
       user:         null,
       accessToken:  null,  // short-lived (15 min), not persisted
@@ -160,8 +164,8 @@ export const useStore = create(
       name: 'safethali-storage',
       partialize: (state) => ({
         lang:         state.lang,
-        family:       state.family,
-        scanHistory:  state.scanHistory,
+        guestMode:    state.guestMode,
+        theme:        state.theme,
         user:         state.user,
         refreshToken: state.refreshToken,
         guestMode:    state.guestMode,
