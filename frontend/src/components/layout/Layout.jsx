@@ -82,7 +82,7 @@ export default function Layout({ children }) {
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
 
-              <div className="flex rounded-full border border-rule overflow-hidden bg-paper">
+              <div className="hidden sm:flex rounded-full border border-rule overflow-hidden bg-paper shrink-0">
                 {['en', 'hi'].map(l => (
                   <button key={l} type="button" onClick={() => setLang(l)}
                     className={`text-[11px] px-3 py-1 font-bold transition-all duration-400 ${
@@ -95,17 +95,16 @@ export default function Layout({ children }) {
               <PushNotificationBell />
               {user ? (
                 <button type="button" onClick={() => { logout(); nav('/') }}
-                  className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-bold text-ink-2 hover:text-ink px-2 py-1.5 transition-colors"
+                  className="flex items-center gap-1.5 text-[13px] font-bold text-ink-2 hover:text-ink px-1.5 py-1 transition-colors shrink-0"
                   title="Log out">
-                  <span className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center text-[12px] font-bold">
+                  <span className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center text-[12px] font-bold shrink-0">
                     {user.name?.charAt(0).toUpperCase()}
                   </span>
-                  <LogOut className="w-3.5 h-3.5" />
+                  <LogOut className="w-4 h-4 shrink-0" />
                 </button>
               ) : (
-                <Button size="sm" onClick={() => nav('/auth')}>
+                <Button size="sm" onClick={() => nav('/auth')} className="!px-3 shrink-0">
                   <LogIn className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Log in</span>
                 </Button>
               )}
             </div>
