@@ -47,7 +47,7 @@ function NutritionBar({ label, value, max, unit, warn }) {
   const color = warn ? '#e07c1a' : '#00c896'
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex justify-between items-center text-[10px] font-bold text-ink-3 uppercase tracking-wider">
+      <div className="flex justify-between items-center text-[11px] font-bold text-ink-3 uppercase tracking-wider">
         <span>{label}</span>
         <span style={{ color: warn ? '#e07c1a' : 'inherit' }}>{value}{unit}</span>
       </div>
@@ -75,7 +75,7 @@ function ScoreRing({ score, accent, size = 96 }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="font-sans font-bold leading-none" style={{ fontSize: size * 0.3, color: accent }}>{score}</span>
-        <span className="text-ink-3 font-bold uppercase tracking-widest" style={{ fontSize: size * 0.09 }}>/ 100</span>
+        <span className="text-ink-3 font-bold uppercase tracking-[0.1em]" style={{ fontSize: size * 0.09 }}>/ 100</span>
       </div>
     </div>
   )
@@ -226,7 +226,7 @@ function ShareButton({ result }) {
       <button
         onClick={handleShare}
         disabled={sharing}
-        className="flex items-center justify-center gap-2 py-4 px-6 rounded-2xl border border-rule hover:border-rule text-ink-2 hover:text-ink font-bold text-sm transition-all duration-300 w-full md:w-auto mt-4 md:mt-0 disabled:opacity-50"
+        className="flex items-center justify-center gap-2 py-4 px-6 rounded-2xl border border-rule hover:border-rule text-ink-2 hover:text-ink font-bold text-sm transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] w-full md:w-auto mt-4 md:mt-0 disabled:opacity-50"
         style={{ background: 'rgba(255,255,255,0.04)' }}
       >
         {sharing
@@ -270,7 +270,7 @@ function FeedbackRow({ scanId, lang }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10px] text-ink-3 uppercase tracking-widest font-bold">
+      <span className="text-[10px] text-ink-3 uppercase tracking-[0.1em] font-bold">
         {t(lang, 'wasHelpful') || 'Was this helpful?'}
       </span>
       <button
@@ -293,7 +293,7 @@ function FeedbackRow({ scanId, lang }) {
 function Section({ icon: Icon, label, children }) {
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] flex items-center gap-2 pl-1">
+      <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] flex items-center gap-2 pl-1">
         <Icon className="w-3.5 h-3.5" /> {label}
       </h3>
       {children}
@@ -321,12 +321,12 @@ export default function ResultPage() {
   // ── Empty state ──
   if (!lastResult) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center animate-fade-up">
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center fade-up">
         <ShieldAlert className="w-16 h-16 text-ink-3 mb-4" />
         <p className="text-ink-3 text-sm mb-6">{t(lang, 'noResult')}</p>
         <button
           onClick={() => nav('/scan')}
-          className="px-6 py-3 rounded-xl border border-rule text-ink font-bold text-sm transition-colors"
+          className="px-6 py-3 rounded-xl border border-rule text-ink font-bold text-sm transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
           style={{ background: 'rgba(255,255,255,0.05)' }}
         >
           {t(lang, 'backToScan')}
@@ -349,26 +349,27 @@ export default function ResultPage() {
   const hasAllergens = r.allergens?.length > 0
 
   return (
-    <div className="flex flex-col min-h-screen animate-fade-up pb-24 px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col min-h-screen fade-up pb-24 px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
       <style>{OC_STYLES}</style>
 
       {/* ── Back ── */}
       <button
         onClick={() => nav('/scan')}
-        className="flex items-center gap-2 text-ink-3 hover:text-ink transition-colors text-xs font-bold uppercase tracking-wider mb-6 w-fit"
+        className="flex items-center gap-2 text-ink-3 hover:text-ink transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] text-xs font-bold uppercase tracking-wider mb-6 w-fit"
       >
         <ArrowLeft className="w-4 h-4" /> {t(lang, 'backToScan')}
       </button>
 
       {/* ── Hero ── */}
-      <div
-        className="relative p-6 md:p-8 rounded-2xl border shadow-soft overflow-hidden mb-6"
-        style={{
-          background: `linear-gradient(135deg, ${cfg.glow}, rgba(0,0,0,0.01))`,
-          borderColor: cfg.accent + '33',
-          boxShadow: `0 0 60px ${cfg.glow}`,
-        }}
-      >
+      <div className="bezel-shell mb-6">
+        <div
+          className="bezel-core p-6 md:p-8 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${cfg.glow}, rgba(0,0,0,0.01))`,
+            borderColor: cfg.accent + '33',
+            boxShadow: `0 0 60px ${cfg.glow}`,
+          }}
+        >
         {/* Glow orb */}
         <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none"
           style={{ background: cfg.glow, filter: 'blur(60px)' }} />
@@ -393,12 +394,12 @@ export default function ResultPage() {
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border ${cfg.bg} ${cfg.border}`}
               >
                 <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: cfg.accent }} />
-                <span className={`text-[11px] font-bold tracking-widest uppercase ${cfg.text}`}>{cfg.label}</span>
+                <span className={`text-[11px] font-bold tracking-[0.1em] uppercase ${cfg.text}`}>{cfg.label}</span>
               </div>
 
               {r.scanType && (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-rule bg-ink/5">
-                  <span className="text-[11px] font-bold text-ink-3 uppercase tracking-widest">
+                  <span className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">
                     {r.scanType === 'image' ? '📷 Image Scan' : r.scanType === 'barcode' ? '📦 Barcode' : '💬 Text Scan'}
                   </span>
                 </div>
@@ -407,7 +408,7 @@ export default function ResultPage() {
               {r.ragGrounded && (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-brand/20 bg-brand/5">
                   <ShieldCheck className="w-3 h-3 text-brand" />
-                  <span className="text-[11px] font-bold text-brand/70 uppercase tracking-widest">FSSAI Verified</span>
+                  <span className="text-[11px] font-bold text-brand/70 uppercase tracking-[0.1em]">FSSAI Verified</span>
                 </div>
               )}
             </div>
@@ -420,6 +421,7 @@ export default function ResultPage() {
             {r.summary}
           </div>
         )}
+        </div>
       </div>
 
       {/* ── Warnings ── */}
@@ -468,16 +470,16 @@ export default function ResultPage() {
                 {r.adulterants.map((a, i) => {
                   const sev = getRiskConfig(a.severity)
                   return (
-                    <div key={i} className="p-4 md:p-5 hover:bg-ink/5 transition-colors">
+                    <div key={i} className="p-4 md:p-5 hover:bg-ink/5 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="font-bold text-sm text-ink">{a.name}</h4>
-                        <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border ${sev.bg} ${sev.text} ${sev.border}`}>
+                        <span className={`text-[11px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-full border ${sev.bg} ${sev.text} ${sev.border}`}>
                           {a.severity}
                         </span>
                       </div>
                       <p className="text-xs text-ink-2 leading-relaxed">{a.healthRisk}</p>
                       {a.isPersonalRisk && (
-                        <div className="inline-flex mt-3 text-[10px] font-bold text-chili bg-chili/10 border border-chili/30 px-2 py-1 rounded-md">
+                        <div className="inline-flex mt-3 text-[11px] font-bold text-chili bg-chili/10 border border-chili/30 px-2 py-1 rounded-md">
                           ⚠ {t(lang, 'highRiskProfile') || 'Flagged for your profile'}
                         </div>
                       )}
@@ -495,7 +497,7 @@ export default function ResultPage() {
                 style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {r.fssaiCitations.map((c, i) => (
                   <div key={i} className={`flex gap-3 pb-3 ${i < r.fssaiCitations.length - 1 ? 'border-b border-rule' : ''}`}>
-                    <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand border border-brand/20 flex items-center justify-center text-[11px] font-bold shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-brand/10 text-brand border border-brand/20 flex items-center justify-center text-[11px] font-bold shrink-0">
                       {Math.round(c.relevance * 100)}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -585,7 +587,7 @@ export default function ResultPage() {
                     <div className="flex justify-between items-center mb-3">
                       <h4 className="font-bold text-sm text-ink">{test.name}</h4>
                       {test.difficulty && (
-                        <span className="text-[9px] font-bold text-ink-3 bg-ink/5 px-2 py-0.5 rounded-md border border-rule uppercase tracking-wider">
+                        <span className="text-[11px] font-bold text-ink-3 bg-ink/5 px-2 py-0.5 rounded-full border border-rule uppercase tracking-wider">
                           {test.difficulty}
                         </span>
                       )}
@@ -663,7 +665,7 @@ export default function ResultPage() {
 
         return (
           <div className="mt-8 flex flex-col gap-3">
-            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1">
+            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1">
               🔬 {t(lang, 'authenticityAnalysis')}
             </h3>
             <div className="rounded-2xl border border-rule p-6 lg:p-8 shadow-soft bg-paper/50">
@@ -693,7 +695,7 @@ export default function ResultPage() {
         <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
           <button
             onClick={() => nav('/brands')}
-            className="flex-1 md:flex-none font-bold text-sm py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
+            className="flex-1 md:flex-none font-bold text-sm py-4 px-6 rounded-2xl transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-center gap-2"
             style={{
               background: cfg.accent,
               color: '#ffffff',

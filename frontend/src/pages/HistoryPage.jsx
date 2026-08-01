@@ -57,7 +57,7 @@ export default function HistoryPage() {
             key={opt}
             onClick={() => setFilter(opt)}
             className={[
-              'shrink-0 h-8 px-4 rounded-full text-sm font-medium transition-colors duration-100',
+              'shrink-0 h-8 px-4 rounded-full text-sm font-medium transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] duration-100',
               filter === opt
                 ? 'bg-stone-900 text-ink'
                 : 'bg-white border border-stone-200 text-stone-600 hover:bg-stone-50',
@@ -73,7 +73,7 @@ export default function HistoryPage() {
         <div className="flex flex-col gap-6 pb-4">
           {groups.map(({ label, items }) => (
             <div key={label}>
-              <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2 px-1">
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-stone-400 mb-2 px-1">
                 {label}
               </p>
               <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden divide-y divide-stone-100">
@@ -82,7 +82,7 @@ export default function HistoryPage() {
                     key={scan.id}
                     onClick={() => openResult(scan)}
                     className="w-full flex items-center gap-4 px-4 py-3.5
-                               hover:bg-stone-50 active:bg-stone-100 transition-colors text-left"
+                               hover:bg-stone-50 active:bg-stone-100 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] text-left"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-[15px] font-medium text-stone-900 truncate">
@@ -130,7 +130,7 @@ function EmptyState({ hasHistory }) {
         <button
           onClick={() => navigate('/scan')}
           className="h-10 px-5 bg-stone-900 text-ink text-sm font-medium rounded-xl
-                     hover:bg-stone-800 transition-colors"
+                     hover:bg-stone-800 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
         >
           Scan a Food
         </button>

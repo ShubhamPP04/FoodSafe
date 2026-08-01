@@ -30,7 +30,7 @@ export default function FestivalPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen animate-pulse p-6">
         <Calendar className="w-12 h-12 text-ink/10 mb-4" />
-        <div className="text-[13px] text-ink-3 font-medium uppercase tracking-widest">{t(lang, 'loadingFestival')}</div>
+        <div className="text-[13px] text-ink-3 font-medium uppercase tracking-[0.1em]">{t(lang, 'loadingFestival')}</div>
       </div>
     )
   }
@@ -40,16 +40,16 @@ export default function FestivalPage() {
   const cfg = RISK_CONFIG[data.risk] || RISK_CONFIG.MEDIUM
 
   return (
-    <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
       
       {/* Hero */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-8">
+      <div className="bezel-shell mb-8"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute -right-32 -top-32 w-96 h-96 bg-brand/10 blur-[80px] rounded-full pointer-events-none" />
         <div className="absolute top-0 right-0 p-8 text-8xl opacity-10 blur-sm pointer-events-none select-none">{data.icon}</div>
         <div className="relative z-10 flex flex-col gap-4">
           <div>
             <h1 className="text-2xl font-sans font-bold text-ink mb-1">{t(lang, 'festivalSafetyGuide')}</h1>
-            <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">{t(lang, 'festivalSafetySub')}</p>
+            <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.1em]">{t(lang, 'festivalSafetySub')}</p>
           </div>
           
           <div className="bg-paper-2/50 border border-rule rounded-2xl p-5 inline-block max-w-lg">
@@ -57,7 +57,7 @@ export default function FestivalPage() {
               <span className="text-3xl bg-paper-3 w-12 h-12 rounded-full flex items-center justify-center border border-rule">{data.icon}</span>
               <div>
                 <h2 className="font-sans text-xl font-bold text-ink leading-tight">{data.festival}</h2>
-                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[9px] font-bold tracking-widest uppercase border mt-1 ${cfg.bg} ${cfg.text} ${cfg.border}`}>
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-[0.1em] uppercase border mt-1 ${cfg.bg} ${cfg.text} ${cfg.border}`}>
                   <ShieldAlert className="w-2.5 h-2.5" />
                   {data.risk} {t(lang, 'riskSeason')}
                 </span>
@@ -66,24 +66,25 @@ export default function FestivalPage() {
             <p className="text-[13px] text-ink-2 leading-relaxed">{data.headline}</p>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Risky foods */}
       {data.riskyFoods?.length > 0 && (
-        <div className="mb-6 animate-fade-up">
-          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+        <div className="mb-6 fade-up">
+          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
             <FileWarning className="w-3.5 h-3.5 text-gold" /> {t(lang, 'riskyFoodsSeason')}
           </h3>
           <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
             {data.riskyFoods.map((f, i) => {
               const sev = RISK_CONFIG[f.severity] || RISK_CONFIG.MEDIUM
               return (
-                <div key={i} className="p-4 md:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-colors">
+                <div key={i} className="p-4 md:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                   <div>
                     <h4 className="text-sm font-bold text-ink">{f.name}</h4>
                     <p className="text-[11px] text-ink-3 mt-1">{f.concern}</p>
                   </div>
-                  <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border shrink-0 ${sev.bg} ${sev.text} ${sev.border}`}>
+                  <span className={`text-[11px] font-bold uppercase tracking-[0.1em] px-2 py-1 rounded-full border shrink-0 ${sev.bg} ${sev.text} ${sev.border}`}>
                     {f.severity}
                   </span>
                 </div>
@@ -95,8 +96,8 @@ export default function FestivalPage() {
 
       {/* Tips */}
       {data.tips?.length > 0 && (
-        <div className="mb-6 animate-fade-up">
-          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
+        <div className="mb-6 fade-up">
+          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
           <div className="bg-paper border border-rule rounded-2xl p-5">
             <ul className="space-y-3">
               {data.tips.map((tip, i) => (
@@ -112,8 +113,8 @@ export default function FestivalPage() {
 
       {/* All seasons */}
       {data.allSeasons?.length > 0 && (
-        <div className="mb-8 animate-fade-up">
-          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+        <div className="mb-8 fade-up">
+          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5" /> {t(lang, 'yearRoundCalendar')}
           </h3>
           <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
@@ -129,7 +130,7 @@ export default function FestivalPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border mb-1.5 ${sCfg.bg} ${sCfg.text} ${sCfg.border}`}>
+                    <span className={`inline-block text-[11px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-full border mb-1.5 ${sCfg.bg} ${sCfg.text} ${sCfg.border}`}>
                       {s.risk}
                     </span>
                     <p className="text-[11px] text-ink-2">{s.topConcern}</p>

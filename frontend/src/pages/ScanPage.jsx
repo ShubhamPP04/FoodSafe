@@ -86,7 +86,7 @@ export default function ScanPage() {
       <div className="px-5 pt-8 flex flex-col gap-8">
         {/* Header */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
+          <p className="text-xs font-bold uppercase tracking-[0.1em] text-stone-400 mb-1">
             SafeThali
           </p>
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
@@ -137,7 +137,7 @@ export default function ScanPage() {
             onClick={() => setCameraOpen(true)}
             className="flex-1 h-[52px] flex items-center justify-center gap-2
                        border border-stone-300 bg-white rounded-xl text-sm font-medium text-stone-700
-                       hover:bg-stone-50 active:bg-stone-100 transition-colors"
+                       hover:bg-stone-50 active:bg-stone-100 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
           >
             <Camera size={16} className="text-stone-500" />
             Take Photo
@@ -147,7 +147,7 @@ export default function ScanPage() {
             onClick={() => fileInputRef.current?.click()}
             className="flex-1 h-[52px] flex items-center justify-center gap-2
                        border border-stone-300 bg-white rounded-xl text-sm font-medium text-stone-700
-                       hover:bg-stone-50 active:bg-stone-100 transition-colors"
+                       hover:bg-stone-50 active:bg-stone-100 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
           >
             <Upload size={16} className="text-stone-500" />
             Upload Image
@@ -167,7 +167,7 @@ export default function ScanPage() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Clock size={13} className="text-stone-400" />
-              <p className="text-xs font-bold uppercase tracking-widest text-stone-400">
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-stone-400">
                 Recent
               </p>
             </div>
@@ -180,7 +180,7 @@ export default function ScanPage() {
                     navigate('/result')
                   }}
                   className="flex items-center justify-between px-4 py-3.5
-                             hover:bg-stone-50 active:bg-stone-100 transition-colors text-left"
+                             hover:bg-stone-50 active:bg-stone-100 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] text-left"
                 >
                   <span className="text-[15px] font-medium text-stone-900 truncate mr-3">
                     {scan.foodName}

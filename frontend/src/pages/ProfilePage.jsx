@@ -48,7 +48,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col gap-8 px-5 pt-8 pb-4">
       {/* Header */}
-      <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Profile</h1>
+      <h1 className="text-2xl font-bold text-ink tracking-tight">Profile</h1>
 
       {/* Identity */}
       <div className="flex items-center gap-4">
@@ -57,8 +57,8 @@ export default function ProfilePage() {
           {INITIAL_USER.name.charAt(0)}
         </div>
         <div>
-          <p className="text-lg font-bold text-stone-900">{INITIAL_USER.name}</p>
-          <p className="text-sm text-stone-500">{INITIAL_USER.email}</p>
+          <p className="text-lg font-bold text-ink">{INITIAL_USER.name}</p>
+          <p className="text-sm text-ink-3">{INITIAL_USER.email}</p>
         </div>
       </div>
 
@@ -77,9 +77,9 @@ export default function ProfilePage() {
                 key={l.code}
                 onClick={() => { setLang(l.code); setLangOpen(false) }}
                 className="w-full flex items-center justify-between px-4 py-3
-                           hover:bg-stone-50 text-left transition-colors"
+                           hover:bg-paper-2 text-left transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
               >
-                <span className={`text-[15px] ${lang === l.code ? 'font-bold text-stone-900' : 'text-stone-700'}`}>
+                <span className={`text-[15px] ${lang === l.code ? 'font-bold text-ink' : 'text-ink-2'}`}>
                   {l.label}
                 </span>
                 {lang === l.code && <span className="text-emerald-600 text-sm font-medium">✓</span>}
@@ -97,22 +97,22 @@ export default function ProfilePage() {
               key={member.id}
               className="flex items-center gap-3 px-4 py-3.5"
             >
-              <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center
-                              text-sm font-medium text-stone-600 shrink-0">
+              <div className="w-8 h-8 rounded-full bg-paper-3 flex items-center justify-center
+                              text-sm font-medium text-ink-2 shrink-0">
                 {member.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-medium text-stone-900">{member.name}</p>
+                <p className="text-[15px] font-medium text-ink">{member.name}</p>
                 {member.conditions.length > 0 && (
-                  <p className="text-xs text-stone-400 mt-0.5">
+                  <p className="text-xs text-ink-3 mt-0.5">
                     {member.conditions.join(', ')}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => removeMember(member.id)}
-                className="w-8 h-8 rounded-full hover:bg-red-50 text-stone-400 hover:text-chili
-                           flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full hover:bg-red-50 text-ink-3 hover:text-chili
+                           flex items-center justify-center transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
                 aria-label={`Remove ${member.name}`}
               >
                 <Trash2 size={14} />
@@ -128,14 +128,14 @@ export default function ProfilePage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Name"
-                className="h-10 px-3 rounded-lg border border-stone-300 text-sm text-stone-900
+                className="h-10 px-3 rounded-full border border-stone-300 text-sm text-ink
                            placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900"
               />
               <input
                 value={newCondition}
                 onChange={(e) => setNewCondition(e.target.value)}
                 placeholder="Health condition (optional)"
-                className="h-10 px-3 rounded-lg border border-stone-300 text-sm text-stone-900
+                className="h-10 px-3 rounded-full border border-stone-300 text-sm text-ink
                            placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900"
               />
               <div className="flex gap-2">
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 </button>
                 <button
                   onClick={() => { setAddingMember(false); setNewName(''); setNewCondition('') }}
-                  className="flex-1 h-9 border border-stone-300 text-stone-700 text-sm font-medium rounded-lg"
+                  className="flex-1 h-9 border border-stone-300 text-ink-2 text-sm font-medium rounded-lg"
                 >
                   Cancel
                 </button>
@@ -157,13 +157,13 @@ export default function ProfilePage() {
             <button
               onClick={() => setAddingMember(true)}
               className="w-full flex items-center gap-3 px-4 py-3.5 text-left
-                         hover:bg-stone-50 transition-colors"
+                         hover:bg-paper-2 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
             >
               <div className="w-8 h-8 rounded-full border-2 border-dashed border-stone-300
                               flex items-center justify-center shrink-0">
-                <Plus size={14} className="text-stone-400" />
+                <Plus size={14} className="text-ink-3" />
               </div>
-              <span className="text-sm font-medium text-stone-500">Add family member</span>
+              <span className="text-sm font-medium text-ink-3">Add family member</span>
             </button>
           )}
         </div>
@@ -171,15 +171,15 @@ export default function ProfilePage() {
 
       {/* Account */}
       <Section title="Account">
-        <button className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-stone-50
-                           transition-colors text-left">
-          <User size={16} className="text-stone-400" />
-          <span className="flex-1 text-[15px] text-stone-700">Export my data</span>
-          <ChevronRight size={16} className="text-stone-300" />
+        <button className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-paper-2
+                           transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] text-left">
+          <User size={16} className="text-ink-3" />
+          <span className="flex-1 text-[15px] text-ink-2">Export my data</span>
+          <ChevronRight size={16} className="text-ink-3" />
         </button>
         <div className="border-t border-stone-100">
           <button className="w-full px-4 py-3.5 text-[15px] font-medium text-red-600 text-left
-                             hover:bg-red-50 transition-colors rounded-b-2xl">
+                             hover:bg-red-50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-b-2xl">
             Log Out
           </button>
         </div>
@@ -193,10 +193,10 @@ export default function ProfilePage() {
 function Section({ title, children }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2 px-1">
+      <p className="text-xs font-bold uppercase tracking-[0.1em] text-ink-3 mb-2 px-1">
         {title}
       </p>
-      <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-paper border border-rule rounded-2xl shadow-sm overflow-hidden">
         {children}
       </div>
     </div>
@@ -208,12 +208,12 @@ function SettingRow({ label, value, onClick }) {
     <button
       onClick={onClick}
       className="w-full flex items-center justify-between px-4 py-3.5
-                 hover:bg-stone-50 active:bg-stone-100 transition-colors text-left"
+                 hover:bg-paper-2 active:bg-paper-3 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] text-left"
     >
-      <span className="text-[15px] text-stone-700">{label}</span>
-      <div className="flex items-center gap-1.5 text-stone-500">
+      <span className="text-[15px] text-ink-2">{label}</span>
+      <div className="flex items-center gap-1.5 text-ink-3">
         <span className="text-sm">{value}</span>
-        <ChevronRight size={15} className="text-stone-300" />
+        <ChevronRight size={15} className="text-ink-3" />
       </div>
     </button>
   )

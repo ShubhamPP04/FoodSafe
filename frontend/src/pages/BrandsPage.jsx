@@ -224,10 +224,10 @@ export default function BrandsPage() {
   }[source] || source
 
   return (
-    <div className="flex flex-col min-h-screen animate-fade-up px-4 md:px-8 py-6 max-w-5xl mx-auto w-full pb-32">
+    <div className="flex flex-col min-h-screen fade-up px-4 md:px-8 py-6 max-w-5xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-2xl mb-6 overflow-hidden bg-paper border border-rule">
+      <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute -right-6 -top-10 text-[120px] font-black italic pointer-events-none select-none text-ink/[0.03]">VS</div>
         <div className="relative z-10 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
@@ -235,10 +235,11 @@ export default function BrandsPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold text-ink">{t(lang, 'brandCompare')}</h1>
-            <p className="text-[11px] text-ink-3 mt-0.5 uppercase tracking-widest font-medium">
+            <p className="text-[11px] text-ink-3 mt-0.5 uppercase tracking-[0.1em] font-medium">
               Live data · FSSAI · Gemini AI analysis
             </p>
           </div>
+        </div>
         </div>
       </div>
 
@@ -278,7 +279,7 @@ export default function BrandsPage() {
         <div className="flex flex-wrap gap-2 mb-6">
           {categories.map(cat => (
             <button key={cat} onClick={() => handleCatChange(cat)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] border ${
                 activeCat === cat
                   ? 'bg-brand text-accent-ink border-brand-dark shadow-[0_4px_16px_oklch(60%_0.12_175/0.25)] scale-105'
                   : 'bg-paper-2/50 text-ink-3 border-rule'
@@ -292,14 +293,14 @@ export default function BrandsPage() {
       {/* ── Brand grid ── */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4 pl-1">
-          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-widest">
+          <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">
             Select to compare
             {selected.length > 0 && (
               <span className="text-brand ml-2">({selected.length}/{maxSelect} selected)</span>
             )}
           </h3>
           {source && (
-            <span className="text-[9px] text-ink-3 uppercase tracking-wider ml-auto flex items-center gap-1">
+            <span className="text-[11px] text-ink-3 uppercase tracking-wider ml-auto flex items-center gap-1">
               <Info className="w-3 h-3" />
               {sourceLabel}
             </span>
@@ -317,7 +318,7 @@ export default function BrandsPage() {
             <Search className="w-8 h-8 text-ink/10" />
             <p className="text-ink-3 text-sm">No brands found for this category</p>
             <button onClick={() => loadBrandsForCategory(activeCat)}
-              className="text-xs text-brand/70 hover:text-brand transition-colors mt-2 flex items-center gap-1.5">
+              className="text-xs text-brand/70 hover:text-brand transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] mt-2 flex items-center gap-1.5">
               <RefreshCcw className="w-3 h-3" /> Retry
             </button>
           </div>
@@ -332,7 +333,7 @@ export default function BrandsPage() {
               return (
                 <div key={`${b.brand}-${idx}`}
                   onClick={() => !isDisabled && toggleBrand(b)}
-                  className="relative p-4 rounded-2xl transition-all duration-200 overflow-hidden border"
+                  className="relative p-4 rounded-2xl transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] overflow-hidden border"
                   style={{
                     background:  isSel ? 'rgba(0,191,165,0.08)' : isRisky ? 'rgba(185,28,28,0.06)' : 'var(--color-paper)',
                     borderColor: isSel ? 'rgba(0,191,165,0.4)' : isRisky ? 'rgba(185,28,28,0.25)' : 'var(--color-rule)',
@@ -353,7 +354,7 @@ export default function BrandsPage() {
                     </div>
                   )}
 
-                  <div className="text-[9px] text-ink-3 uppercase tracking-widest mb-1.5 font-bold">{b.food}</div>
+                  <div className="text-[11px] text-ink-3 uppercase tracking-[0.1em] mb-1.5 font-bold">{b.food}</div>
                   <div className="text-sm font-bold text-ink mb-3 leading-tight pr-6">{b.brand}</div>
 
                   <div className="flex items-end justify-between">
@@ -362,14 +363,14 @@ export default function BrandsPage() {
                         {b.score}
                         <span className="text-[10px] text-ink/25 ml-0.5 font-sans font-normal">/100</span>
                       </div>
-                      <div className={`text-[9px] font-bold uppercase tracking-wider mt-1 ${tier.color}`}>
+                      <div className={`text-[11px] font-bold uppercase tracking-wider mt-1 ${tier.color}`}>
                         {tier.label}
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-[10px] text-ink-3">{b.price}</div>
                       {b.fssai && (
-                        <div className="text-[9px] text-brand/70 font-bold mt-0.5">FSSAI ✓</div>
+                        <div className="text-[11px] text-brand/70 font-bold mt-0.5">FSSAI ✓</div>
                       )}
                     </div>
                   </div>
@@ -390,7 +391,7 @@ export default function BrandsPage() {
         <button
           disabled={selected.length < 2 || comparing}
           onClick={() => handleCompare()}
-          className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all duration-300 border shadow-soft"
+          className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] border shadow-soft"
           style={{
             background:  selected.length >= 2 && !comparing ? 'oklch(60% 0.12 175 / 0.12)' : 'var(--color-paper-3)',
             borderColor: selected.length >= 2 && !comparing ? 'oklch(60% 0.12 175 / 0.3)' : 'var(--color-rule)',
@@ -410,22 +411,22 @@ export default function BrandsPage() {
 
       {/* ── Comparison results ── */}
       {compared && items.length > 0 && (
-        <div id="bc-result" className="animate-fade-up scroll-mt-24 mt-4">
+        <div id="bc-result" className="fade-up scroll-mt-24 mt-4">
 
           <div className="flex items-center gap-3 mb-4 pl-1 flex-wrap">
-            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-widest">
+            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">
               {t(lang, 'comparison')}
             </h3>
             {compared.category_risk && (() => {
               const rs = getRiskStyle(compared.category_risk)
               return (
-                <span className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border"
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border"
                   style={{ background: rs.bg, color: rs.color, borderColor: rs.border }}>
                   {compared.category_risk} CATEGORY RISK
                 </span>
               )
             })()}
-            <span className="ml-auto text-[9px] text-ink-3 uppercase tracking-wider flex items-center gap-1">
+            <span className="ml-auto text-[11px] text-ink-3 uppercase tracking-wider flex items-center gap-1">
               <Info className="w-3 h-3" />
               {sourceLabel}
             </span>
@@ -444,13 +445,13 @@ export default function BrandsPage() {
                       <div className="absolute top-0 left-0 right-0 h-0.5"
                         style={{ background: 'linear-gradient(90deg, #4aad68, #00897B)' }} />
                     )}
-                    <div className="text-[9px] text-ink/25 uppercase tracking-widest mb-1 font-bold">{activeCat}</div>
+                    <div className="text-[11px] text-ink/25 uppercase tracking-[0.1em] mb-1 font-bold">{activeCat}</div>
                     <div className="text-sm font-bold text-ink leading-tight mb-1">{b.brand}</div>
                     <div className="text-[10px] text-ink-3">{b.price}</div>
                     {isWinner && (
-                      <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand/10 border border-brand/25">
+                      <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand/10 border border-brand/25">
                         <Zap className="w-3 h-3 text-brand" style={{ fill: 'oklch(60% 0.12 175 / 0.3)' }} />
-                        <span className="text-[9px] font-bold text-brand uppercase tracking-widest">Top Pick</span>
+                        <span className="text-[11px] font-bold text-brand uppercase tracking-[0.1em]">Top Pick</span>
                       </div>
                     )}
                   </div>
@@ -462,7 +463,7 @@ export default function BrandsPage() {
 
               {/* Safety Score */}
               <div className="pt-4 pb-1 bg-paper-2/30">
-                <div className="px-5 mb-3 flex items-center gap-2 text-[9px] font-bold text-ink-3 uppercase tracking-widest">
+                <div className="px-5 mb-3 flex items-center gap-2 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">
                   <ShieldCheck className="w-3 h-3" /> Safety Score
                 </div>
                 <div className="grid" style={{ gridTemplateColumns: gridCols }}>
@@ -475,7 +476,7 @@ export default function BrandsPage() {
                           {b.score}
                           <span className="text-xs text-ink-3 ml-1 font-sans font-normal">/100</span>
                         </div>
-                        <div className={`text-[9px] font-bold uppercase tracking-wider mt-1 ${tier.color}`}>
+                        <div className={`text-[11px] font-bold uppercase tracking-wider mt-1 ${tier.color}`}>
                           {tier.label}
                         </div>
                         <div className="h-1.5 rounded-full mt-3 overflow-hidden bg-paper-3">
@@ -490,12 +491,12 @@ export default function BrandsPage() {
 
               {/* FSSAI */}
               <div className="pt-4 pb-1">
-                <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">FSSAI Certified</div>
+                <div className="px-5 mb-3 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">FSSAI Certified</div>
                 <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                   {items.map((b, i) => (
                     <div key={i} className="px-5 pb-4"
                       style={{ borderRight: i < items.length - 1 ? '1px solid var(--color-rule)' : 'none' }}>
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border ${
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${
                         b.fssai ? 'bg-brand/10 text-brand border-brand/20' : 'bg-chili/10 text-chili border-chili/20'
                       }`}>
                         {b.fssai ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
@@ -508,7 +509,7 @@ export default function BrandsPage() {
 
               {/* Safety Analysis */}
               <div className="pt-4 pb-1">
-                <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">Safety Analysis</div>
+                <div className="px-5 mb-3 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">Safety Analysis</div>
                 <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                   {items.map((b, i) => (
                     <div key={i} className="px-5 pb-4"
@@ -522,7 +523,7 @@ export default function BrandsPage() {
               {/* Pros & Cons */}
               {items.some(b => b.pros?.length || b.cons?.length) && (
                 <div className="pt-4 pb-1 bg-paper-2/30">
-                  <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">Pros & Cons</div>
+                  <div className="px-5 mb-3 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">Pros & Cons</div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                     {items.map((b, i) => (
                       <div key={i} className="px-5 pb-4 space-y-2"
@@ -548,7 +549,7 @@ export default function BrandsPage() {
               {/* Adulterants */}
               {items.some(b => b.adulterants?.length) && (
                 <div className="pt-4 pb-1">
-                  <div className="px-5 mb-3 flex items-center gap-2 text-[9px] font-bold text-ink-3 uppercase tracking-widest">
+                  <div className="px-5 mb-3 flex items-center gap-2 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">
                     <AlertTriangle className="w-3 h-3 text-gold" /> Adulterants to Watch
                   </div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
@@ -556,7 +557,7 @@ export default function BrandsPage() {
                       <div key={i} className="px-5 pb-4 space-y-1.5"
                         style={{ borderRight: i < items.length - 1 ? '1px solid var(--color-rule)' : 'none' }}>
                         {(b.adulterants || []).map((a, j) => (
-                          <div key={j} className="flex items-center gap-2 text-xs text-ink-2 px-2.5 py-1.5 rounded-lg bg-paper-2/50 border border-rule">
+                          <div key={j} className="flex items-center gap-2 text-xs text-ink-2 px-2.5 py-1.5 rounded-full bg-paper-2/50 border border-rule">
                             <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${j === 0 ? 'bg-chili' : 'bg-gold'}`} />
                             {a}
                           </div>
@@ -570,7 +571,7 @@ export default function BrandsPage() {
               {/* Home Test */}
               {items.some(b => b.home_test) && (
                 <div className="pt-4 pb-1 bg-paper-2/30">
-                  <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">DIY Home Test</div>
+                  <div className="px-5 mb-3 text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">DIY Home Test</div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                     {items.map((b, i) => (
                       <div key={i} className="px-5 pb-4"
@@ -579,7 +580,7 @@ export default function BrandsPage() {
                           <div className="p-3 rounded-xl bg-brand/[0.06] border border-brand/[0.15]">
                             <div className="flex items-center gap-1.5 mb-1.5">
                               <Beaker className="w-3.5 h-3.5 text-brand" />
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-brand">Test Method</span>
+                              <span className="text-[11px] font-bold uppercase tracking-wider text-brand">Test Method</span>
                             </div>
                             <p className="text-xs text-ink-2 leading-relaxed">{b.home_test}</p>
                           </div>
@@ -602,7 +603,7 @@ export default function BrandsPage() {
                     <span>{compared.tip}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-1.5 text-[9px] text-ink-3 uppercase tracking-widest ml-auto">
+                <div className="flex items-center gap-1.5 text-[11px] text-ink-3 uppercase tracking-[0.1em] ml-auto">
                   <Info className="w-3 h-3" />
                   {sourceLabel}
                 </div>

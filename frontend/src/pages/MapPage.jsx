@@ -119,7 +119,7 @@ function LeafletMap({ cities, selected, onSelect, filter }) {
       {!leafletLoaded && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-paper-2 gap-3" style={{ zIndex: 1 }}>
           <MapPin className="w-8 h-8 text-ink-3 animate-bounce" />
-          <span className="text-ink-3 text-xs font-bold uppercase tracking-widest">Loading Map…</span>
+          <span className="text-ink-3 text-xs font-bold uppercase tracking-[0.1em]">Loading Map…</span>
         </div>
       )}
       <div ref={mapRef} className="w-full h-full" style={{ minHeight: 420, background: '#ebf0eb', zIndex: 0 }} />
@@ -136,7 +136,7 @@ function CityCard({ city, selected, onSelect, index }) {
   return (
     <div
       onClick={() => onSelect(isSel ? null : city.city)}
-      className={`group relative flex items-center gap-3 p-3.5 cursor-pointer transition-all duration-300 rounded-xl mx-2 my-1
+      className={`group relative flex items-center gap-3 p-3.5 cursor-pointer transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-xl mx-2 my-1
         ${isSel
           ? `${cfg.bg} border ${cfg.border}`
           : 'hover:bg-paper-2 border border-transparent'
@@ -156,10 +156,10 @@ function CityCard({ city, selected, onSelect, index }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
           <span className="text-[13px] font-bold truncate text-ink">{city.city}</span>
-          <span className="text-[10px] font-bold text-ink-3 ml-2 shrink-0">{city.reports}</span>
+          <span className="text-[11px] font-bold text-ink-3 ml-2 shrink-0">{city.reports}</span>
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className={`text-[9px] font-bold uppercase tracking-wider ${cfg.text}`}>{cfg.label}</span>
+          <span className={`text-[11px] font-bold uppercase tracking-wider ${cfg.text}`}>{cfg.label}</span>
           <span className="text-ink-3">·</span>
           <span className="text-[10px] text-ink-3 truncate">{city.topFood}</span>
         </div>
@@ -177,7 +177,7 @@ function CityDetail({ city, onClose }) {
   const Icon = cfg.icon
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border ${cfg.border} p-5 animate-fade-up bg-paper backdrop-blur`}>
+    <div className={`relative overflow-hidden rounded-2xl border ${cfg.border} p-5 fade-up bg-paper backdrop-blur`}>
 
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
@@ -188,30 +188,30 @@ function CityDetail({ city, onClose }) {
             </div>
             <div>
               <h3 className="text-base font-bold text-ink">{city.city}</h3>
-              <span className={`text-[9px] font-bold uppercase tracking-widest ${cfg.text}`}>{cfg.label}</span>
+              <span className={`text-[11px] font-bold uppercase tracking-[0.1em] ${cfg.text}`}>{cfg.label}</span>
             </div>
           </div>
           <button onClick={onClose}
-            className="w-7 h-7 rounded-full bg-paper-2 hover:bg-paper-3 flex items-center justify-center transition-colors">
+            className="w-7 h-7 rounded-full bg-paper-2 hover:bg-paper-3 flex items-center justify-center transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
             <X className="w-3.5 h-3.5 text-ink-3" />
           </button>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl p-3.5 bg-paper-2 border border-rule">
-            <div className="text-[9px] uppercase tracking-widest text-ink-3 font-bold mb-1.5">Reports</div>
+            <div className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold mb-1.5">Reports</div>
             <div className="text-2xl font-black text-ink tabular-nums">{city.reports}</div>
           </div>
           <div className="rounded-xl p-3.5 bg-paper-2 border border-rule">
-            <div className="text-[9px] uppercase tracking-widest text-ink-3 font-bold mb-1.5">Top Risk</div>
+            <div className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold mb-1.5">Top Risk</div>
             <div className="text-sm font-bold text-ink leading-tight">{city.topFood || 'Various'}</div>
           </div>
         </div>
 
         <div className="mt-3">
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[9px] uppercase tracking-wider text-ink-3 font-bold">Risk Level</span>
-            <span className={`text-[9px] font-bold uppercase ${cfg.text}`}>{city.risk}</span>
+            <span className="text-[11px] uppercase tracking-wider text-ink-3 font-bold">Risk Level</span>
+            <span className={`text-[11px] font-bold uppercase ${cfg.text}`}>{city.risk}</span>
           </div>
           <div className="h-1.5 rounded-full bg-paper-3 overflow-hidden">
             <div className="h-full rounded-full transition-all duration-700"
@@ -266,7 +266,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
       style={{ background: 'rgba(20,36,28,0.45)', backdropFilter: 'blur(12px)', zIndex: 2000 }}
       onClick={e => e.target === e.currentTarget && onClose()}>
 
-      <div className="w-full max-w-md rounded-2xl overflow-hidden animate-fade-up bg-paper border border-rule shadow-[0_24px_64px_rgba(20,36,28,0.18)]">
+      <div className="w-full max-w-md rounded-2xl overflow-hidden fade-up bg-paper border border-rule shadow-[0_24px_64px_rgba(20,36,28,0.18)]">
 
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-rule bg-paper">
@@ -280,7 +280,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
                 <p className="text-[10px] text-ink-3 mt-0.5">Submitted anonymously · Helps the community</p>
               </div>
             </div>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-paper-2 hover:bg-paper-3 flex items-center justify-center transition-colors">
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-paper-2 hover:bg-paper-3 flex items-center justify-center transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
               <X className="w-4 h-4 text-ink-3" />
             </button>
           </div>
@@ -297,7 +297,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
         {/* Body */}
         <div className="p-6 flex flex-col gap-4 bg-paper">
           {msg === 'success' && (
-            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-brand/10 border border-brand/20 animate-fade-up">
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-brand/10 border border-brand/20 fade-up">
               <CheckCircle2 className="w-5 h-5 text-brand shrink-0" />
               <span className="text-sm text-brand-dark font-medium">Report submitted! Thank you.</span>
             </div>
@@ -312,7 +312,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
           {step === 1 ? (
             <div className="flex flex-col gap-3">
               <label className="flex flex-col gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">Food Name *</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-3">Food Name *</span>
                 <input value={food} onChange={e => setFood(e.target.value)}
                   placeholder="e.g. Turmeric Powder, Buffalo Milk…"
                   className="w-full rounded-[10px] py-3 px-4 text-sm text-ink placeholder-ink-3/40 outline-none transition-all bg-paper-2 border border-rule focus:border-brand/40"
@@ -320,14 +320,14 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">City *</span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-3">City *</span>
                   <input value={city} onChange={e => setCity(e.target.value)}
                     placeholder="e.g. Dwarka"
                     className="w-full rounded-[10px] py-3 px-4 text-sm text-ink placeholder-ink-3/40 outline-none transition-all bg-paper-2 border border-rule focus:border-brand/40"
                   />
                 </label>
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">Brand <span className="text-ink-3/50">(opt)</span></span>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-3">Brand <span className="text-ink-3/50">(opt)</span></span>
                   <input value={brand} onChange={e => setBrand(e.target.value)}
                     placeholder="Brand name"
                     className="w-full rounded-[10px] py-3 px-4 text-sm text-ink placeholder-ink-3/40 outline-none transition-all bg-paper-2 border border-rule focus:border-brand/40"
@@ -335,7 +335,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
                 </label>
               </div>
               <button onClick={() => valid1 && setStep(2)} disabled={!valid1}
-                className="mt-1 w-full py-3.5 rounded-[10px] text-sm font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] disabled:bg-paper-3 disabled:text-ink-3 disabled:border-rule">
+                className="mt-1 w-full py-3.5 rounded-[10px] text-sm font-bold tracking-wide transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-center gap-2 bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] disabled:bg-paper-3 disabled:text-ink-3 disabled:border-rule">
                 Next <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -344,11 +344,11 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
               <div className="flex items-center gap-2 p-3 rounded-[10px] bg-paper-2 border border-rule">
                 <MapPin className="w-3.5 h-3.5 text-ink-3" />
                 <span className="text-xs text-ink-2">{food} · {city}{brand && ` · ${brand}`}</span>
-                <button onClick={() => setStep(1)} className="ml-auto text-[10px] text-chili/70 hover:text-chili font-bold transition-colors">Edit</button>
+                <button onClick={() => setStep(1)} className="ml-auto text-[10px] text-chili/70 hover:text-chili font-bold transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">Edit</button>
               </div>
 
               <label className="flex flex-col gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">Describe the issue *</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-3">Describe the issue *</span>
                 <textarea value={desc} onChange={e => setDesc(e.target.value)}
                   placeholder="What did you notice? Unusual smell, color, texture, or taste? Any symptoms after eating?"
                   rows={4}
@@ -358,7 +358,7 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
               </label>
 
               <button onClick={submit} disabled={submitting || !valid2 || msg === 'success'}
-                className="mt-1 w-full py-3.5 rounded-[10px] text-sm font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] disabled:bg-paper-3 disabled:text-ink-3 disabled:border-rule">
+                className="mt-1 w-full py-3.5 rounded-[10px] text-sm font-bold tracking-wide transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex items-center justify-center gap-2 bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] disabled:bg-paper-3 disabled:text-ink-3 disabled:border-rule">
                 {submitting
                   ? <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Submitting…</>
                   : <><Send className="w-4 h-4" /> Submit Report</>
@@ -407,10 +407,10 @@ export default function MapPage() {
     .sort((a, b) => RISK_ORDER.indexOf(a.risk) - RISK_ORDER.indexOf(b.risk))
 
   return (
-    <div className="flex flex-col animate-fade-up px-3 md:px-8 py-6 max-w-6xl mx-auto w-full pb-32">
+    <div className="flex flex-col fade-up px-3 md:px-8 py-6 max-w-6xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-2xl mb-6 overflow-hidden bg-paper border border-rule">
+      <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-brand/10 border border-brand/20">
@@ -418,7 +418,7 @@ export default function MapPage() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-ink tracking-tight">{t(lang, 'riskMap') || 'Adulteration Risk Map'}</h1>
-              <p className="text-[11px] text-ink-3 mt-0.5 uppercase tracking-widest font-medium">Delhi NCR · Live Reports</p>
+              <p className="text-[11px] text-ink-3 mt-0.5 uppercase tracking-[0.1em] font-medium">Delhi NCR · Live Reports</p>
             </div>
           </div>
 
@@ -432,10 +432,11 @@ export default function MapPage() {
                 <span className={`text-xl font-black leading-none mb-1 ${color} flex items-center gap-1`}>
                   {Icon && <Icon className="w-4 h-4" />}{value}
                 </span>
-                <span className="text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center">{label}</span>
+                <span className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold text-center">{label}</span>
               </div>
             ))}
           </div>
+        </div>
         </div>
       </div>
 
@@ -451,7 +452,7 @@ export default function MapPage() {
               const active = filter === f
               return (
                 <button key={f} onClick={() => setFilter(f)}
-                  className={`px-3.5 py-1.5 rounded-[10px] text-[10px] font-bold uppercase tracking-wider transition-all duration-200 border
+                  className={`px-3.5 py-1.5 rounded-[10px] text-[11px] font-bold uppercase tracking-wider transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] border
                     ${active
                       ? (cfg ? `${cfg.bg} ${cfg.text} ${cfg.border}` : 'bg-paper-3 text-ink border-rule-2')
                       : 'bg-paper-2 text-ink-3 border-rule hover:border-rule-2'}`}>
@@ -498,7 +499,7 @@ export default function MapPage() {
           <div className="rounded-2xl overflow-hidden flex flex-col bg-paper-2 border border-rule" style={{ minHeight: 200 }}>
             <div className="flex items-center gap-2 px-4 py-3 border-b border-rule">
               <Database className="w-3.5 h-3.5 text-ink-3" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink-3">
                 {filtered.length} {filtered.length === 1 ? 'City' : 'Cities'}
               </span>
             </div>
@@ -525,7 +526,7 @@ export default function MapPage() {
 
       {/* ── FAB ── */}
       <button onClick={() => setShowForm(true)}
-        className="fixed bottom-24 md:bottom-10 right-6 flex items-center gap-2.5 pl-4 pr-5 h-12 rounded-full font-bold text-sm tracking-wide transition-all duration-300 group bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] shadow-[0_4px_20px_rgba(201,61,50,0.30)]"
+        className="fixed bottom-24 md:bottom-10 right-6 flex items-center gap-2.5 pl-4 pr-5 h-12 rounded-full font-bold text-sm tracking-wide transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] group bg-chili hover:bg-[#b3342a] text-white border border-[#a52a20] shadow-[0_4px_20px_rgba(201,61,50,0.30)]"
         style={{ zIndex: 1500 }}>
         <AlertCircle className="w-4 h-4" />
         Report

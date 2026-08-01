@@ -136,11 +136,11 @@ export default function DiaryPage() {
   }
 
   return (
-    <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
+    <div className="flex flex-col fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
       <style>{OC_STYLES}</style>
 
       {/* Header */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-8">
+      <div className="bezel-shell mb-8"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute -right-32 -top-32 w-96 h-96 bg-brand/10 blur-[80px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -150,28 +150,29 @@ export default function DiaryPage() {
             </div>
             <div>
               <h1 className="text-2xl font-sans font-bold text-ink mb-1">{t(lang, 'foodDiary')}</h1>
-              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">{t(lang, 'diarySub')}</p>
+              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.1em]">{t(lang, 'diarySub')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 md:gap-4 w-full md:w-auto">
             <div className="bg-paper-2/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center">
               <span className="text-2xl font-sans font-bold text-ink leading-none mb-1">{total}</span>
-              <span className="text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center">{t(lang, 'totalScans')}</span>
+              <span className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold text-center">{t(lang, 'totalScans')}</span>
             </div>
             <div className="bg-paper-2/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center relative overflow-hidden">
               {high > 0 && <div className="absolute top-0 right-0 w-8 h-8 bg-chili/20 blur-xl rounded-full" />}
               <span className={`text-2xl font-sans font-bold leading-none mb-1 ${high > 0 ? 'text-chili' : 'text-ink'}`}>{high}</span>
-              <span className="text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center flex items-center gap-1">
+              <span className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold text-center flex items-center gap-1">
                 {high > 0 && <AlertTriangle className="w-2.5 h-2.5 text-chili" />} {t(lang, 'highRisk')}
               </span>
             </div>
             <div className={`bg-paper-2/50 border ${gradeConfig.border} rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center relative overflow-hidden`}>
               <div className={`absolute inset-0 ${gradeConfig.bg} opacity-50`} />
               <span className={`relative z-10 text-3xl font-sans font-bold ${gradeConfig.color} leading-none mb-0.5`}>{total ? grade : '—'}</span>
-              <span className="relative z-10 text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center">{t(lang, 'reportGrade')}</span>
+              <span className="relative z-10 text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold text-center">{t(lang, 'reportGrade')}</span>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -202,8 +203,8 @@ export default function DiaryPage() {
 
           <div className="flex flex-col gap-6">
             {/* Risk Distribution */}
-            <div className="animate-fade-up">
-              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+            <div className="fade-up">
+              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                 <PieChart className="w-3.5 h-3.5" /> {t(lang, 'riskDistribution')}
               </h3>
               <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-6 shadow-soft relative">
@@ -222,7 +223,7 @@ export default function DiaryPage() {
                           <div className="w-2.5 h-2.5 rounded-full" style={{ background: r.color, boxShadow: `0 0 8px ${r.color}` }} />
                           <span className="text-ink-2 font-medium">{r.label}</span>
                         </div>
-                        <span className="font-bold text-ink bg-paper-2 px-2 py-0.5 rounded-md border border-rule">{r.value}</span>
+                        <span className="font-bold text-ink bg-paper-2 px-2 py-0.5 rounded-full border border-rule">{r.value}</span>
                       </div>
                     ))}
                   </div>
@@ -232,13 +233,13 @@ export default function DiaryPage() {
 
             {/* AI Insights */}
             {(aiInsights || loadingInsights) && (
-              <div className="animate-fade-up">
-                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+              <div className="fade-up">
+                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5 text-brand" /> {t(lang, 'aiInsights')}
                 </h3>
                 <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-5 shadow-soft">
                   {loadingInsights ? (
-                    <div className="flex items-center justify-center py-6 text-ink-3 text-xs gap-2 font-bold uppercase tracking-widest">
+                    <div className="flex items-center justify-center py-6 text-ink-3 text-xs gap-2 font-bold uppercase tracking-[0.1em]">
                       <RefreshCw className="w-4 h-4 animate-spin" /> {t(lang, 'analyzingHistory')}
                     </div>
                   ) : (
@@ -272,15 +273,15 @@ export default function DiaryPage() {
 
           <div className="flex flex-col gap-6">
             {/* Weekly Activity */}
-            <div className="animate-fade-up">
-              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+            <div className="fade-up">
+              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                 <BarChart2 className="w-3.5 h-3.5" /> {t(lang, 'last7Days')}
               </h3>
               <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-6 shadow-soft flex items-end justify-between h-[160px] pb-4">
                 {weekDays.map((d, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 flex-1 group relative">
                     {d.scans > 0 && (
-                      <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-paper-3 text-ink text-[10px] font-bold px-2 py-1 rounded border border-rule z-20 pointer-events-none whitespace-nowrap">
+                      <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-paper-3 text-ink text-[11px] font-bold px-2 py-1 rounded border border-rule z-20 pointer-events-none whitespace-nowrap">
                         {d.scans} scans ({d.avgScore}/100)
                       </div>
                     )}
@@ -291,15 +292,15 @@ export default function DiaryPage() {
                         style={{ height: d.scans ? `${Math.max((d.scans / maxScans) * 100, 4)}px` : '4px' }}
                       />
                     </div>
-                    <div className="text-[9px] uppercase tracking-widest text-ink-3 font-bold group-hover:text-ink transition-colors">{d.label}</div>
+                    <div className="text-[11px] uppercase tracking-[0.1em] text-ink-3 font-bold group-hover:text-ink transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">{d.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Overconsumption Digest */}
-            <div className="animate-fade-up">
-              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+            <div className="fade-up">
+              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                 <FileWarning className="w-3.5 h-3.5" /> {t(lang, 'weeklyOverconsumption')}
               </h3>
               <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-5 shadow-soft">
@@ -309,15 +310,15 @@ export default function DiaryPage() {
 
             {/* Top Foods */}
             {topFoods.length > 0 && (
-              <div className="animate-fade-up">
-                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+              <div className="fade-up">
+                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                   <UserCheck className="w-3.5 h-3.5" /> {t(lang, 'mostScanned')}
                 </h3>
                 <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule shadow-soft">
                   {topFoods.map(([food, count], i) => (
-                    <div key={i} className="flex justify-between items-center p-4 hover:bg-paper-2/50 transition-colors">
+                    <div key={i} className="flex justify-between items-center p-4 hover:bg-paper-2/50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                       <div className="text-sm font-bold text-ink">{food}</div>
-                      <div className="text-[11px] font-bold text-ink-3 uppercase tracking-widest bg-paper-3 px-2.5 py-1 rounded-lg border border-rule">
+                      <div className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] bg-paper-3 px-2.5 py-1 rounded-full border border-rule">
                         {count}×
                       </div>
                     </div>
@@ -328,8 +329,8 @@ export default function DiaryPage() {
           </div>
 
           {/* Scan History */}
-          <div className="md:col-span-2 animate-fade-up">
-            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+          <div className="md:col-span-2 fade-up">
+            <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
               <ShieldAlert className="w-3.5 h-3.5" /> {t(lang, 'recentScans')}
             </h3>
             <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft">
@@ -338,10 +339,10 @@ export default function DiaryPage() {
                   const rCfg = { bg: RISK_BG[s.risk_level] || RISK_BG.LOW, text: RISK_TEXT[s.risk_level] || RISK_TEXT.LOW, border: RISK_BORDER[s.risk_level] || RISK_BORDER.LOW }
                   const barColor = RISK_COLOR[s.risk_level] || RISK_COLOR.LOW
                   return (
-                    <div key={s.id || i} className="p-4 sm:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-colors">
+                    <div key={s.id || i} className="p-4 sm:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                       <div className="flex-1">
                         <div className="text-sm font-bold text-ink mb-0.5">{s.food_name}</div>
-                        <div className="text-[10px] text-ink-3 uppercase tracking-widest font-medium mb-2.5">
+                        <div className="text-[10px] text-ink-3 uppercase tracking-[0.1em] font-medium mb-2.5">
                           {new Date(s.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </div>
                         <div className="h-1.5 w-full max-w-[120px] bg-paper-3 rounded-full overflow-hidden">
@@ -349,7 +350,7 @@ export default function DiaryPage() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className={`text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md border shrink-0 ${rCfg.bg} ${rCfg.text} ${rCfg.border}`}>
+                        <span className={`text-[11px] font-bold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full border shrink-0 ${rCfg.bg} ${rCfg.text} ${rCfg.border}`}>
                           {s.risk_level || '?'}
                         </span>
                         <span className="text-[11px] font-medium text-ink-3">

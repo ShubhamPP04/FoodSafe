@@ -85,10 +85,10 @@ export default function NewsPage() {
     : null
 
   return (
-    <div className="flex flex-col animate-fade-up px-3 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
+    <div className="flex flex-col fade-up px-3 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
+      <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-1/4 w-40 h-40 bg-brand/10 blur-[50px] rounded-full pointer-events-none transform -translate-y-1/2" />
 
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -104,7 +104,7 @@ export default function NewsPage() {
               <h1 className="text-2xl font-sans font-bold text-ink mb-1">
                 {t(lang, 'news') || 'Food Safety News'}
               </h1>
-              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">
+              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.1em]">
                 Live FSSAI alerts
                 {timeStr && ` · Last sync: ${timeStr}`}
                 {newsSource && ` · ${newsSource === 'gemini' ? 'Gemini AI' : 'Verified sources'}`}
@@ -115,7 +115,7 @@ export default function NewsPage() {
           <button
             onClick={() => fetchNews(true)}
             disabled={refreshing}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-rule text-[11px] font-bold uppercase tracking-widest transition-all
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-rule text-[11px] font-bold uppercase tracking-[0.1em] transition-all
               ${refreshing
                 ? 'bg-paper-3 text-ink-3 cursor-not-allowed'
                 : 'bg-paper hover:bg-paper-2 text-ink-2 hover:text-ink'}`}
@@ -123,6 +123,7 @@ export default function NewsPage() {
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Syncing...' : 'Refresh'}
           </button>
+        </div>
         </div>
       </div>
 
@@ -178,7 +179,7 @@ export default function NewsPage() {
             {error}
             <button
               onClick={() => fetchNews()}
-              className="text-xs underline text-red-300 hover:text-ink transition-colors"
+              className="text-xs underline text-red-300 hover:text-ink transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
             >
               Try again
             </button>
@@ -197,7 +198,7 @@ export default function NewsPage() {
                 {activeTab && (
                   <button
                     onClick={() => setActiveTab(null)}
-                    className="mt-3 text-xs text-brand/70 hover:text-brand transition-colors"
+                    className="mt-3 text-xs text-brand/70 hover:text-brand transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
                   >
                     Show all alerts
                   </button>
@@ -211,7 +212,7 @@ export default function NewsPage() {
                 return (
                   <div
                     key={i}
-                    className="bg-paper border border-rule rounded-2xl p-5 md:p-6 shadow-card relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft hover:bg-paper-2/50 group"
+                    className="bg-paper border border-rule rounded-2xl p-5 md:p-6 shadow-card relative overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:shadow-soft hover:bg-paper-2/50 group"
                     style={{ animationDelay: `${i * 0.05}s` }}
                   >
                     {/* Left severity bar */}
@@ -220,21 +221,21 @@ export default function NewsPage() {
                     {/* Top row */}
                     <div className="flex justify-between items-center mb-4 pl-2">
                       <div className="flex items-center gap-3">
-                        <span className="text-lg bg-paper-3 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">
+                        <span className="text-lg bg-paper-3 w-8 h-8 rounded-full flex items-center justify-center border border-rule">
                           {catIcon}
                         </span>
-                        <span className={`text-[9px] font-bold px-2.5 py-1 rounded-md border uppercase tracking-widest ${sev.bg} ${sev.border} ${sev.text}`}>
+                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border uppercase tracking-[0.1em] ${sev.bg} ${sev.border} ${sev.text}`}>
                           {sev.label} Risk
                         </span>
                       </div>
-                      <span className="text-[10px] text-ink-3 font-medium tracking-wider bg-paper-3 px-2 py-1 rounded-lg border border-rule">
+                      <span className="text-[10px] text-ink-3 font-medium tracking-wider bg-paper-3 px-2 py-1 rounded-full border border-rule">
                         {article.date}
                       </span>
                     </div>
 
                     {/* Title & Summary */}
                     <div className="pl-2">
-                      <h3 className="text-[15px] font-bold text-ink leading-snug mb-2 group-hover:text-ink transition-colors">
+                      <h3 className="text-[15px] font-bold text-ink leading-snug mb-2 group-hover:text-ink transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                         {article.title}
                       </h3>
                       {article.summary && (
@@ -254,12 +255,12 @@ export default function NewsPage() {
                           href={article.source_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[10px] font-bold text-brand hover:text-ink uppercase tracking-widest flex items-center gap-1 transition-colors"
+                          className="text-[11px] font-bold text-brand hover:text-ink uppercase tracking-[0.1em] flex items-center gap-1 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]"
                         >
                           Read More <ChevronRight className="w-3.5 h-3.5" />
                         </a>
                       ) : (
-                        <span className="text-[10px] text-ink-3 uppercase tracking-widest">
+                        <span className="text-[10px] text-ink-3 uppercase tracking-[0.1em]">
                           {article.source === 'FSSAI Food Recall Portal' ? 'Official Notice' : 'AI Analysis'}
                         </span>
                       )}

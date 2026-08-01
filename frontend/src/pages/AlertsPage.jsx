@@ -32,7 +32,7 @@ export default function AlertsPage() {
             key={label}
             onClick={() => setTab(i)}
             className={[
-              'pb-3 mr-6 text-sm font-medium transition-colors duration-100',
+              'pb-3 mr-6 text-sm font-medium transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] duration-100',
               'focus:outline-none focus-visible:underline',
               tab === i
                 ? 'text-stone-900 border-b-2 border-stone-900 -mb-px'

@@ -47,10 +47,10 @@ export default function MealPlannerPage() {
   }
 
   return (
-    <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
+    <div className="flex flex-col fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
       
       {/* Header */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
+      <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand/10 blur-[60px] rounded-full pointer-events-none transform translate-x-1/4 -translate-y-1/4" />
         
         <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
@@ -60,7 +60,7 @@ export default function MealPlannerPage() {
           <h1 className="text-2xl md:text-3xl font-sans font-bold text-ink mb-2 leading-tight">
             {t(lang, 'mealPlanner')}
           </h1>
-          <p className="text-[11px] md:text-[13px] font-medium text-ink-2 uppercase tracking-[0.15em] mb-6">
+          <p className="text-[11px] md:text-[13px] font-medium text-ink-2 uppercase tracking-[0.1em] mb-6">
             {t(lang, 'mealPlannerSub')}
           </p>
 
@@ -90,12 +90,13 @@ export default function MealPlannerPage() {
             </button>
           </div>
         </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 w-full">
         {/* Generate Action */}
         <button 
-          className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 flex justify-center items-center gap-2 shadow-soft
+          className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex justify-center items-center gap-2 shadow-soft
             ${loading ? 'bg-paper-2 text-ink-3 border border-rule cursor-not-allowed' : 'bg-brand hover:bg-brand-dark text-accent-ink shadow-[0_4px_24px_oklch(60%_0.12_175/0.3)] hover:shadow-[0_8px_32px_oklch(60%_0.12_175/0.4)] border border-brand-dark'}`}
           onClick={generate} 
           disabled={loading}
@@ -106,7 +107,7 @@ export default function MealPlannerPage() {
 
         {/* Avoiding Alert */}
         {highRiskFoods.length > 0 && !loading && (
-          <div className="flex items-start gap-3 p-4 rounded-2xl bg-chili/10 border border-chili/30 text-chili text-xs font-medium animate-fade-up leading-relaxed">
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-chili/10 border border-chili/30 text-chili text-xs font-medium fade-up leading-relaxed">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
             <p><strong className="text-red-300">{t(lang, 'avoidingFoods')}:</strong> {highRiskFoods.join(', ')}</p>
           </div>
@@ -125,32 +126,32 @@ export default function MealPlannerPage() {
 
         {/* Error State */}
         {plan?.error && (
-          <div className="p-4 rounded-2xl bg-chili/10 border border-chili/30 text-chili text-xs font-bold animate-fade-up text-center">
+          <div className="p-4 rounded-2xl bg-chili/10 border border-chili/30 text-chili text-xs font-bold fade-up text-center">
             {plan.error}
           </div>
         )}
 
         {/* Single Day Plan */}
         {plan && !plan.error && plan.plan_type === 'single' && (
-          <div className="flex flex-col gap-6 animate-fade-up">
+          <div className="flex flex-col gap-6 fade-up">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {MEAL_ORDER.map(mealKey => {
                 const meal = plan[mealKey]
                 if (!meal) return null
                 return (
-                  <div key={mealKey} className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft hover:bg-paper-2/50 transition-colors flex flex-col group">
-                    <div className="flex justify-between items-center p-5 border-b border-rule bg-paper-2/30 group-hover:bg-transparent transition-colors">
+                  <div key={mealKey} className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft hover:bg-paper-2/50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col group">
+                    <div className="flex justify-between items-center p-5 border-b border-rule bg-paper-2/30 group-hover:bg-transparent transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                       <div className="flex items-center gap-2">
-                        <span className="text-xl bg-paper-3 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">{MEAL_ICONS[mealKey]}</span>
-                        <h3 className="text-[10px] font-bold text-ink-2 uppercase tracking-widest">{mealKey.replace('_', ' ')}</h3>
+                        <span className="text-xl bg-paper-3 w-8 h-8 rounded-full flex items-center justify-center border border-rule">{MEAL_ICONS[mealKey]}</span>
+                        <h3 className="text-[11px] font-bold text-ink-2 uppercase tracking-[0.1em]">{mealKey.replace('_', ' ')}</h3>
                       </div>
-                      {meal.prep_time && <span className="text-[10px] font-bold text-brand flex items-center gap-1 bg-brand/10 px-2 py-1 rounded-md border border-brand/20"><Clock className="w-3 h-3" /> {meal.prep_time}</span>}
+                      {meal.prep_time && <span className="text-[11px] font-bold text-brand flex items-center gap-1 bg-brand/10 px-2 py-1 rounded-full border border-brand/20"><Clock className="w-3 h-3" /> {meal.prep_time}</span>}
                     </div>
                     <div className="p-5 flex flex-col gap-4 flex-1">
                       <h4 className="font-sans text-[17px] font-bold text-ink leading-snug">{meal.name}</h4>
                       <div className="flex flex-wrap gap-2">
                         {(meal.items || []).map((item, i) => (
-                          <span key={i} className="text-[10px] font-bold text-ink-2 bg-paper-3 px-2.5 py-1 rounded-lg border border-rule">
+                          <span key={i} className="text-[11px] font-bold text-ink-2 bg-paper-3 px-2.5 py-1 rounded-full border border-rule">
                             {item}
                           </span>
                         ))}
@@ -170,7 +171,7 @@ export default function MealPlannerPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               {plan.nutrition_summary && (
                 <div>
-                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'nutritionSummary')}</h3>
+                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3">{t(lang, 'nutritionSummary')}</h3>
                   <div className="p-5 rounded-2xl bg-paper-2/50 border border-rule">
                     <p className="text-[12px] text-ink leading-relaxed">
                       {plan.nutrition_summary}
@@ -180,7 +181,7 @@ export default function MealPlannerPage() {
               )}
               {plan.safety_tips?.length > 0 && (
                 <div>
-                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
+                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
                   <div className="bg-paper border border-rule rounded-2xl p-5">
                     <ul className="space-y-3">
                       {plan.safety_tips.map((tip, i) => (
@@ -199,10 +200,10 @@ export default function MealPlannerPage() {
 
         {/* Weekly Plan */}
         {plan && !plan.error && plan.plan_type === 'weekly' && (
-          <div className="flex flex-col gap-8 animate-fade-up">
+          <div className="flex flex-col gap-8 fade-up">
             {(plan.days || []).map((day, i) => (
               <div key={i}>
-                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{day.day}</h3>
+                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3">{day.day}</h3>
                 <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft">
                   <div className="p-4 md:p-5 bg-paper-2/50 border-b border-rule font-sans text-lg font-bold text-ink">
                     {day.day}
@@ -212,16 +213,16 @@ export default function MealPlannerPage() {
                       const meal = day[mealKey]
                       if (!meal) return null
                       return (
-                        <div key={mealKey} className="p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center hover:bg-paper-2/30 transition-colors">
+                        <div key={mealKey} className="p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center hover:bg-paper-2/30 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                           <div className="w-24 shrink-0 flex items-center gap-2">
                             <span className="text-xl">{MEAL_ICONS[mealKey] || '🍽'}</span>
-                            <span className="text-[9px] font-bold text-ink-3 uppercase tracking-widest">{mealKey}</span>
+                            <span className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em]">{mealKey}</span>
                           </div>
                           <div className="flex-1 flex flex-col gap-2">
                             <h4 className="text-[13px] font-bold text-ink">{meal.name || meal}</h4>
                             <div className="flex flex-wrap gap-1.5">
                               {(meal.items || []).map((item, j) => (
-                                <span key={j} className="text-[9px] text-ink-2 bg-paper-3/50 px-2 py-0.5 rounded-md border border-rule">
+                                <span key={j} className="text-[11px] text-ink-2 bg-paper-3/50 px-2 py-0.5 rounded-full border border-rule">
                                   {item}
                                 </span>
                               ))}
@@ -237,7 +238,7 @@ export default function MealPlannerPage() {
 
             {plan.safety_tips?.length > 0 && (
               <div>
-                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
+                <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
                 <div className="bg-paper border border-rule rounded-2xl p-5">
                   <ul className="space-y-3">
                     {plan.safety_tips.map((tip, i) => (

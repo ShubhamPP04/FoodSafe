@@ -48,10 +48,10 @@ export default function SymptomPage() {
   const urgencyCfg = result?.urgency ? (URGENCY_CONFIG[result.urgency] || URGENCY_CONFIG.MONITOR) : null
 
   return (
-    <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-3xl mx-auto w-full">
+    <div className="flex flex-col fade-up px-4 md:px-8 py-6 max-w-3xl mx-auto w-full">
       
       {/* Header Form */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
+      <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[50px] rounded-full pointer-events-none" />
         
         <div className="relative z-10">
@@ -61,7 +61,7 @@ export default function SymptomPage() {
             </div>
             <div>
               <h1 className="text-2xl font-sans font-bold text-ink mb-0.5">{t(lang, 'symptomChecker')}</h1>
-              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">{t(lang, 'symptomSub')}</p>
+              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.1em]">{t(lang, 'symptomSub')}</p>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function SymptomPage() {
             )}
 
             <button
-              className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 flex justify-center items-center gap-2 mt-2
+              className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] flex justify-center items-center gap-2 mt-2
                 ${!symptoms.trim() || loading 
                   ? 'bg-paper-2 text-ink-3 border border-rule cursor-not-allowed' 
                   : 'bg-brand text-accent-ink  shadow-[0_1px_2px_oklch(22%_0.03_155/0.12)] hover:shadow-[0_8px_32px_rgba(0,191,165,0.5)] border border-brand-light'}`}
@@ -102,11 +102,12 @@ export default function SymptomPage() {
             </button>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Analysis Results */}
       {result && !result.error && (
-        <div className="flex flex-col gap-6 animate-fade-up">
+        <div className="flex flex-col gap-6 fade-up">
           
           {/* Urgency banner */}
           {urgencyCfg && (
@@ -119,15 +120,15 @@ export default function SymptomPage() {
           {/* Possible causes */}
           {result.possibleCauses?.length > 0 && (
             <div>
-              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                 <ShieldAlert className="w-3.5 h-3.5" /> {t(lang, 'possibleCauses')}
               </h3>
               <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
                 {result.possibleCauses.map((c, i) => (
-                  <div key={i} className="p-4 md:p-5 hover:bg-paper-2/50 transition-colors">
+                  <div key={i} className="p-4 md:p-5 hover:bg-paper-2/50 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-sm text-ink">{c.adulterant}</h4>
-                      <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border ${CONF_COLOR[c.confidence]}`}>
+                      <span className={`text-[11px] font-bold uppercase tracking-[0.1em] px-2 py-0.5 rounded-full border ${CONF_COLOR[c.confidence]}`}>
                         {tf(lang, 'confidenceLabel', { value: c.confidence })}
                       </span>
                     </div>
@@ -146,7 +147,7 @@ export default function SymptomPage() {
           {/* Recommendation */}
           {result.recommendation && (
             <div>
-              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
+              <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1 mb-3 flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {t(lang, 'recommendation')}
               </h3>
               <div className="p-5 rounded-2xl bg-paper-2/50 border border-rule">
@@ -159,7 +160,7 @@ export default function SymptomPage() {
           )}
 
           {result.disclaimer && (
-            <p className="text-[10px] text-ink-3 text-center uppercase tracking-widest px-4 leading-relaxed mt-2">
+            <p className="text-[10px] text-ink-3 text-center uppercase tracking-[0.1em] px-4 leading-relaxed mt-2">
               {result.disclaimer}
             </p>
           )}

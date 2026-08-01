@@ -31,10 +31,10 @@ export default function FamilyPage() {
   }
 
   return (
-    <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
       
       {/* Header */}
-      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-8">
+      <div className="bezel-shell mb-8"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
         <div className="absolute -right-12 -top-12 w-64 h-64 bg-brand/10 blur-[60px] rounded-full pointer-events-none" />
         <div className="flex items-center justify-between relative z-10">
           <div className="flex items-center gap-4">
@@ -43,7 +43,7 @@ export default function FamilyPage() {
             </div>
             <div>
               <h1 className="text-2xl font-sans font-bold text-ink mb-1">{t(lang, 'familyProfiles')}</h1>
-              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">{t(lang, 'familySub')}</p>
+              <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.1em]">{t(lang, 'familySub')}</p>
             </div>
           </div>
           <button 
@@ -54,14 +54,15 @@ export default function FamilyPage() {
             {adding ? t(lang, 'cancel') : t(lang, 'addMember')}
           </button>
         </div>
+        </div>
       </div>
 
       <div className="flex justify-between items-end mb-4 md:hidden">
-        <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1">
+        <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] pl-1">
           {family.length} {family.length !== 1 ? t(lang, 'members') : t(lang, 'member')}
         </h3>
         <button 
-          className="flex items-center gap-2 px-3 py-1.5 bg-paper border border-rule rounded-lg text-[10px] font-bold text-ink-2"
+          className="flex items-center gap-2 px-3 py-1.5 bg-paper border border-rule rounded-full text-[11px] font-bold text-ink-2"
           onClick={() => setAdding(!adding)}
         >
           {adding ? <X className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
@@ -71,24 +72,24 @@ export default function FamilyPage() {
 
       {/* Add form */}
       {adding && (
-        <div className="mb-8 p-6 bg-paper border border-rule rounded-2xl shadow-soft animate-fade-up">
+        <div className="mb-8 p-6 bg-paper border border-rule rounded-2xl shadow-soft fade-up">
           <div className="flex flex-col gap-4">
             <div>
-              <label className="block text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">{t(lang, 'name')}</label>
+              <label className="block text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] mb-1.5">{t(lang, 'name')}</label>
               <input 
                 className="w-full bg-paper-2 border border-rule rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-brand/40 transition-all"
                 value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Aai, Baba, Dada…" 
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">{t(lang, 'age')}</label>
+              <label className="block text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] mb-1.5">{t(lang, 'age')}</label>
               <input 
                 className="w-full bg-paper-2 border border-rule rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-brand/40 transition-all"
                 value={age} onChange={e => setAge(e.target.value)} placeholder={t(lang, 'age')} type="number" 
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-2">{t(lang, 'healthConditions')}</label>
+              <label className="block text-[11px] font-bold text-ink-3 uppercase tracking-[0.1em] mb-2">{t(lang, 'healthConditions')}</label>
               <div className="flex flex-wrap gap-2">
                 {CONDITIONS.map(c => (
                   <button 
@@ -136,7 +137,7 @@ export default function FamilyPage() {
                   {m.conditions?.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {m.conditions.map(c => (
-                        <span key={c} className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-chili/10 text-chili border border-chili/30">
+                        <span key={c} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-chili/10 text-chili border border-chili/30">
                           <HeartPulse className="w-2.5 h-2.5" /> {c}
                         </span>
                       ))}
@@ -145,7 +146,7 @@ export default function FamilyPage() {
                 </div>
                 
                 <button 
-                  className="absolute top-4 right-4 text-ink-3 hover:text-chili transition-colors bg-paper-2 hover:bg-chili/10 p-2 rounded-lg"
+                  className="absolute top-4 right-4 text-ink-3 hover:text-chili transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] bg-paper-2 hover:bg-chili/10 p-2 rounded-lg"
                   onClick={() => removeMember(m.id)}
                   title={t(lang, 'remove')}
                 >
