@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 const RISK_CONFIG = {
   LOW:      { bg:'bg-brand/10', text:'text-brand', border:'border-brand/20' },
-  MEDIUM:   { bg:'bg-ochre/10', text:'text-ochre', border:'border-ochre/20' },
+  MEDIUM:   { bg:'bg-gold/10', text:'text-gold', border:'border-gold/20' },
   HIGH:     { bg:'bg-chili/10', text:'text-chili', border:'border-chili/30' },
   CRITICAL: { bg:'bg-chili/20', text:'text-chili', border:'border-chili/40' },
 }
@@ -43,7 +43,7 @@ export default function FestivalPage() {
     <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full">
       
       {/* Hero */}
-      <div className="relative p-6 md:p-8 rounded-[32px] bg-glass-gradient border border-surface-200 shadow-2xl overflow-hidden mb-8 backdrop-blur-xl">
+      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-8">
         <div className="absolute -right-32 -top-32 w-96 h-96 bg-brand/10 blur-[80px] rounded-full pointer-events-none" />
         <div className="absolute top-0 right-0 p-8 text-8xl opacity-10 blur-sm pointer-events-none select-none">{data.icon}</div>
         <div className="relative z-10 flex flex-col gap-4">
@@ -52,9 +52,9 @@ export default function FestivalPage() {
             <p className="text-[11px] font-medium text-ink-3 uppercase tracking-[0.15em]">{t(lang, 'festivalSafetySub')}</p>
           </div>
           
-          <div className="bg-surface-200/50 border border-rule rounded-[20px] p-5 backdrop-blur-md inline-block max-w-lg">
+          <div className="bg-paper-2/50 border border-rule rounded-2xl p-5 inline-block max-w-lg">
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl bg-surface-300 w-12 h-12 rounded-full flex items-center justify-center border border-rule">{data.icon}</span>
+              <span className="text-3xl bg-paper-3 w-12 h-12 rounded-full flex items-center justify-center border border-rule">{data.icon}</span>
               <div>
                 <h2 className="font-sans text-xl font-bold text-ink leading-tight">{data.festival}</h2>
                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[9px] font-bold tracking-widest uppercase border mt-1 ${cfg.bg} ${cfg.text} ${cfg.border}`}>
@@ -72,13 +72,13 @@ export default function FestivalPage() {
       {data.riskyFoods?.length > 0 && (
         <div className="mb-6 animate-fade-up">
           <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
-            <FileWarning className="w-3.5 h-3.5 text-ochre" /> {t(lang, 'riskyFoodsSeason')}
+            <FileWarning className="w-3.5 h-3.5 text-gold" /> {t(lang, 'riskyFoodsSeason')}
           </h3>
-          <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden divide-y divide-white/5">
+          <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
             {data.riskyFoods.map((f, i) => {
               const sev = RISK_CONFIG[f.severity] || RISK_CONFIG.MEDIUM
               return (
-                <div key={i} className="p-4 md:p-5 flex justify-between items-center hover:bg-surface-200/50 transition-colors">
+                <div key={i} className="p-4 md:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-colors">
                   <div>
                     <h4 className="text-sm font-bold text-ink">{f.name}</h4>
                     <p className="text-[11px] text-ink-3 mt-1">{f.concern}</p>
@@ -97,7 +97,7 @@ export default function FestivalPage() {
       {data.tips?.length > 0 && (
         <div className="mb-6 animate-fade-up">
           <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
-          <div className="bg-surface-100 border border-rule rounded-[24px] p-5">
+          <div className="bg-paper border border-rule rounded-2xl p-5">
             <ul className="space-y-3">
               {data.tips.map((tip, i) => (
                 <li key={i} className="flex gap-3 text-[13px] text-ink-2 leading-relaxed">
@@ -116,13 +116,13 @@ export default function FestivalPage() {
           <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5" /> {t(lang, 'yearRoundCalendar')}
           </h3>
-          <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden divide-y divide-white/5">
+          <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
             {data.allSeasons.map((s, i) => {
               const sCfg = RISK_CONFIG[s.risk] || RISK_CONFIG.MEDIUM
               return (
                 <div key={i} className="p-4 md:p-5 flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl bg-surface-200 w-10 h-10 rounded-xl flex flex-col items-center justify-center border border-rule">{s.icon}</span>
+                    <span className="text-2xl bg-paper-2 w-10 h-10 rounded-xl flex flex-col items-center justify-center border border-rule">{s.icon}</span>
                     <div>
                       <h4 className="text-[13px] font-bold text-ink">{s.name}</h4>
                       <p className="text-[10px] text-ink-3 font-medium uppercase tracking-wider">{s.months}</p>

@@ -50,7 +50,7 @@ export default function MealPlannerPage() {
     <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
       
       {/* Header */}
-      <div className="relative p-6 md:p-8 rounded-[32px] bg-glass-gradient border border-surface-200 shadow-2xl overflow-hidden mb-6 backdrop-blur-xl">
+      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand/10 blur-[60px] rounded-full pointer-events-none transform translate-x-1/4 -translate-y-1/4" />
         
         <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
@@ -66,24 +66,24 @@ export default function MealPlannerPage() {
 
           {/* Member Badge */}
           {activeMember && (
-            <div className="flex items-center gap-2 mb-6 px-3 py-1.5 rounded-xl bg-surface-200/50 border border-rule text-[11px] font-bold text-ink-2">
+            <div className="flex items-center gap-2 mb-6 px-3 py-1.5 rounded-xl bg-paper-2/50 border border-rule text-[11px] font-bold text-ink-2">
               <span className="text-brand">⚕</span> {t(lang, 'personalizingFor')} <span className="text-ink">{activeMember.name}</span>
               {activeMember.conditions?.length > 0 && <span className="text-ink-3">({activeMember.conditions.join(', ')})</span>}
             </div>
           )}
 
           {/* Type Toggles */}
-          <div className="flex bg-surface-200/50 p-1.5 rounded-2xl border border-rule w-full md:w-auto">
+          <div className="flex bg-paper-2/50 p-1.5 rounded-2xl border border-rule w-full md:w-auto">
             <button
               className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2
-                ${planType === 'single' ? 'bg-surface-300 text-brand shadow-md border border-rule' : 'text-ink-3 hover:text-ink hover:bg-surface-300/50'}`}
+                ${planType === 'single' ? 'bg-paper-3 text-brand shadow-card border border-rule' : 'text-ink-3 hover:text-ink hover:bg-paper-3/50'}`}
               onClick={() => { setPlanType('single'); setPlan(null) }}
             >
               <Calendar className="w-4 h-4" /> {t(lang, 'todaysPlan')}
             </button>
             <button
               className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2
-                ${planType === 'weekly' ? 'bg-surface-300 text-brand shadow-md border border-rule' : 'text-ink-3 hover:text-ink hover:bg-surface-300/50'}`}
+                ${planType === 'weekly' ? 'bg-paper-3 text-brand shadow-card border border-rule' : 'text-ink-3 hover:text-ink hover:bg-paper-3/50'}`}
               onClick={() => { setPlanType('weekly'); setPlan(null) }}
             >
               <Calendar className="w-4 h-4" /> {t(lang, 'weeklyPlan')}
@@ -95,8 +95,8 @@ export default function MealPlannerPage() {
       <div className="flex flex-col gap-6 w-full">
         {/* Generate Action */}
         <button 
-          className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 flex justify-center items-center gap-2 shadow-lg
-            ${loading ? 'bg-surface-200 text-ink-3 border border-rule cursor-not-allowed' : 'bg-brand hover:bg-brand-dark text-accent-ink shadow-[0_4px_24px_oklch(52%_0.13_155/0.3)] hover:shadow-[0_8px_32px_oklch(52%_0.13_155/0.4)] border border-brand-dark'}`}
+          className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 flex justify-center items-center gap-2 shadow-soft
+            ${loading ? 'bg-paper-2 text-ink-3 border border-rule cursor-not-allowed' : 'bg-brand hover:bg-brand-dark text-accent-ink shadow-[0_4px_24px_oklch(60%_0.12_175/0.3)] hover:shadow-[0_8px_32px_oklch(60%_0.12_175/0.4)] border border-brand-dark'}`}
           onClick={generate} 
           disabled={loading}
         >
@@ -114,7 +114,7 @@ export default function MealPlannerPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-[32px] bg-surface-100/30">
+          <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-2xl bg-paper/30">
             <ChefHat className="w-16 h-16 text-ink/10 mb-6 animate-pulse" />
             <p className="text-ink-2 text-[15px] leading-relaxed max-w-sm font-medium">
               🤖 {t(lang, 'creatingPlan')}<br />
@@ -138,10 +138,10 @@ export default function MealPlannerPage() {
                 const meal = plan[mealKey]
                 if (!meal) return null
                 return (
-                  <div key={mealKey} className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl hover:bg-surface-200/50 transition-colors flex flex-col group">
-                    <div className="flex justify-between items-center p-5 border-b border-rule bg-surface-200/30 group-hover:bg-transparent transition-colors">
+                  <div key={mealKey} className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft hover:bg-paper-2/50 transition-colors flex flex-col group">
+                    <div className="flex justify-between items-center p-5 border-b border-rule bg-paper-2/30 group-hover:bg-transparent transition-colors">
                       <div className="flex items-center gap-2">
-                        <span className="text-xl bg-surface-300 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">{MEAL_ICONS[mealKey]}</span>
+                        <span className="text-xl bg-paper-3 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">{MEAL_ICONS[mealKey]}</span>
                         <h3 className="text-[10px] font-bold text-ink-2 uppercase tracking-widest">{mealKey.replace('_', ' ')}</h3>
                       </div>
                       {meal.prep_time && <span className="text-[10px] font-bold text-brand flex items-center gap-1 bg-brand/10 px-2 py-1 rounded-md border border-brand/20"><Clock className="w-3 h-3" /> {meal.prep_time}</span>}
@@ -150,7 +150,7 @@ export default function MealPlannerPage() {
                       <h4 className="font-sans text-[17px] font-bold text-ink leading-snug">{meal.name}</h4>
                       <div className="flex flex-wrap gap-2">
                         {(meal.items || []).map((item, i) => (
-                          <span key={i} className="text-[10px] font-bold text-ink-2 bg-surface-300 px-2.5 py-1 rounded-lg border border-rule">
+                          <span key={i} className="text-[10px] font-bold text-ink-2 bg-paper-3 px-2.5 py-1 rounded-lg border border-rule">
                             {item}
                           </span>
                         ))}
@@ -171,7 +171,7 @@ export default function MealPlannerPage() {
               {plan.nutrition_summary && (
                 <div>
                   <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'nutritionSummary')}</h3>
-                  <div className="p-5 rounded-[24px] bg-surface-200/50 border border-rule backdrop-blur-md">
+                  <div className="p-5 rounded-2xl bg-paper-2/50 border border-rule">
                     <p className="text-[12px] text-ink leading-relaxed">
                       {plan.nutrition_summary}
                     </p>
@@ -181,7 +181,7 @@ export default function MealPlannerPage() {
               {plan.safety_tips?.length > 0 && (
                 <div>
                   <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
-                  <div className="bg-surface-100 border border-rule rounded-[24px] p-5">
+                  <div className="bg-paper border border-rule rounded-2xl p-5">
                     <ul className="space-y-3">
                       {plan.safety_tips.map((tip, i) => (
                         <li key={i} className="flex gap-3 text-[12px] text-ink-2 leading-relaxed">
@@ -203,16 +203,16 @@ export default function MealPlannerPage() {
             {(plan.days || []).map((day, i) => (
               <div key={i}>
                 <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{day.day}</h3>
-                <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl">
-                  <div className="p-4 md:p-5 bg-surface-200/50 border-b border-rule font-sans text-lg font-bold text-ink">
+                <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft">
+                  <div className="p-4 md:p-5 bg-paper-2/50 border-b border-rule font-sans text-lg font-bold text-ink">
                     {day.day}
                   </div>
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-rule">
                     {['breakfast', 'lunch', 'dinner', 'snack'].map(mealKey => {
                       const meal = day[mealKey]
                       if (!meal) return null
                       return (
-                        <div key={mealKey} className="p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center hover:bg-surface-200/30 transition-colors">
+                        <div key={mealKey} className="p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center hover:bg-paper-2/30 transition-colors">
                           <div className="w-24 shrink-0 flex items-center gap-2">
                             <span className="text-xl">{MEAL_ICONS[mealKey] || '🍽'}</span>
                             <span className="text-[9px] font-bold text-ink-3 uppercase tracking-widest">{mealKey}</span>
@@ -221,7 +221,7 @@ export default function MealPlannerPage() {
                             <h4 className="text-[13px] font-bold text-ink">{meal.name || meal}</h4>
                             <div className="flex flex-wrap gap-1.5">
                               {(meal.items || []).map((item, j) => (
-                                <span key={j} className="text-[9px] text-ink-2 bg-surface-300/50 px-2 py-0.5 rounded-md border border-rule">
+                                <span key={j} className="text-[9px] text-ink-2 bg-paper-3/50 px-2 py-0.5 rounded-md border border-rule">
                                   {item}
                                 </span>
                               ))}
@@ -238,7 +238,7 @@ export default function MealPlannerPage() {
             {plan.safety_tips?.length > 0 && (
               <div>
                 <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3">{t(lang, 'safetyTips')}</h3>
-                <div className="bg-surface-100 border border-rule rounded-[24px] p-5">
+                <div className="bg-paper border border-rule rounded-2xl p-5">
                   <ul className="space-y-3">
                     {plan.safety_tips.map((tip, i) => (
                       <li key={i} className="flex gap-3 text-[12px] text-ink-2 leading-relaxed">

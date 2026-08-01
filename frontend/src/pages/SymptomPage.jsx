@@ -7,13 +7,13 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 const URGENCY_CONFIG = {
   MONITOR:        { bg:'bg-brand/10', color:'text-brand', border:'border-brand/30', icon: '🟢', label:'Monitor at home' },
-  CONSULT_DOCTOR: { bg:'bg-orange-500/10', color:'text-orange-400', border:'border-orange-500/30', icon: '🟡', label:'Visit a doctor' },
+  CONSULT_DOCTOR: { bg:'bg-gold/10', color:'text-gold', border:'border-gold/30', icon: '🟡', label:'Visit a doctor' },
   EMERGENCY:      { bg:'bg-chili/10', color:'text-chili', border:'border-chili/30', icon: '🔴', label:'Seek emergency care' },
 }
 
 const CONF_COLOR = {
   HIGH:   'bg-chili/10 text-chili border-chili/30',
-  MEDIUM: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  MEDIUM: 'bg-gold/10 text-gold border-gold/20',
   LOW:    'bg-brand/10 text-brand border-brand/20',
 }
 
@@ -51,7 +51,7 @@ export default function SymptomPage() {
     <div className="flex flex-col animate-fade-up px-4 md:px-8 py-6 max-w-3xl mx-auto w-full">
       
       {/* Header Form */}
-      <div className="relative p-6 md:p-8 rounded-[32px] bg-glass-gradient border border-surface-200 shadow-2xl overflow-hidden mb-6 backdrop-blur-xl">
+      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[50px] rounded-full pointer-events-none" />
         
         <div className="relative z-10">
@@ -67,7 +67,7 @@ export default function SymptomPage() {
 
           <div className="flex flex-col gap-4">
             <textarea
-              className="w-full bg-surface-200/50 border border-rule rounded-2xl py-4 px-5 text-sm text-ink placeholder-white/30 focus:outline-none focus:border-brand/40 focus:ring-2 focus:ring-brand/10 transition-all shadow-inner block"
+              className="w-full bg-paper-2/50 border border-rule rounded-2xl py-4 px-5 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-brand/40 focus:ring-2 focus:ring-brand/10 transition-all shadow-inner block"
               rows={4}
               value={symptoms}
               onChange={e => setSymptoms(e.target.value)}
@@ -75,7 +75,7 @@ export default function SymptomPage() {
             />
 
             {recentFoods.length > 0 && (
-              <div className="flex items-start gap-2 text-xs text-ink-3 p-3 bg-surface-100 rounded-xl border border-rule">
+              <div className="flex items-start gap-2 text-xs text-ink-3 p-3 bg-paper rounded-xl border border-rule">
                 <Clock className="w-4 h-4 shrink-0 mt-0.5 text-brand" />
                 <div>
                   <span className="font-bold uppercase tracking-wider">{t(lang, 'recentFoods')}:</span> <span className="text-ink-2">{recentFoods.join(', ')}</span>
@@ -92,8 +92,8 @@ export default function SymptomPage() {
             <button
               className={`w-full py-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-300 flex justify-center items-center gap-2 mt-2
                 ${!symptoms.trim() || loading 
-                  ? 'bg-surface-200 text-ink-3 border border-rule cursor-not-allowed' 
-                  : 'bg-brand text-accent-ink  shadow-[0_1px_2px_oklch(22%_0.03_155/0.12)] hover:shadow-[0_8px_32px_rgba(0,224,156,0.5)] border border-brand-light'}`}
+                  ? 'bg-paper-2 text-ink-3 border border-rule cursor-not-allowed' 
+                  : 'bg-brand text-accent-ink  shadow-[0_1px_2px_oklch(22%_0.03_155/0.12)] hover:shadow-[0_8px_32px_rgba(0,191,165,0.5)] border border-brand-light'}`}
               onClick={analyze}
               disabled={loading || !symptoms.trim()}
             >
@@ -110,7 +110,7 @@ export default function SymptomPage() {
           
           {/* Urgency banner */}
           {urgencyCfg && (
-            <div className={`flex items-center gap-4 p-5 rounded-[20px] border ${urgencyCfg.bg} ${urgencyCfg.border} ${urgencyCfg.color} shadow-lg`}>
+            <div className={`flex items-center gap-4 p-5 rounded-2xl border ${urgencyCfg.bg} ${urgencyCfg.border} ${urgencyCfg.color} shadow-soft`}>
               <span className="text-2xl">{urgencyCfg.icon}</span>
               <span className="font-sans text-lg font-bold">{urgencyCfg.label}</span>
             </div>
@@ -122,9 +122,9 @@ export default function SymptomPage() {
               <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                 <ShieldAlert className="w-3.5 h-3.5" /> {t(lang, 'possibleCauses')}
               </h3>
-              <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden divide-y divide-white/5">
+              <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule">
                 {result.possibleCauses.map((c, i) => (
-                  <div key={i} className="p-4 md:p-5 hover:bg-surface-200/50 transition-colors">
+                  <div key={i} className="p-4 md:p-5 hover:bg-paper-2/50 transition-colors">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-sm text-ink">{c.adulterant}</h4>
                       <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md border ${CONF_COLOR[c.confidence]}`}>
@@ -149,7 +149,7 @@ export default function SymptomPage() {
               <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {t(lang, 'recommendation')}
               </h3>
-              <div className="p-5 rounded-[24px] bg-surface-200/50 border border-rule backdrop-blur-md">
+              <div className="p-5 rounded-2xl bg-paper-2/50 border border-rule">
                 <p className="text-[13px] text-ink leading-relaxed flex items-start gap-3">
                   <ArrowRight className="w-4 h-4 text-brand shrink-0 mt-0.5" />
                   {result.recommendation}

@@ -90,7 +90,7 @@ export default function Chatbot() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close chat' : 'Open chat'}
-        className="fixed bottom-20 md:bottom-6 right-4 z-[1000] w-11 h-11 rounded-full bg-brand text-white flex items-center justify-center shadow-lift hover:-translate-y-0.5 transition-transform"
+        className="fixed bottom-20 md:bottom-6 right-4 z-[1000] w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-lift hover:-translate-y-0.5 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
       </button>
@@ -102,7 +102,7 @@ export default function Chatbot() {
               <MessageCircle className="w-3.5 h-3.5" />
             </div>
             <div>
-              <div className="text-ink text-[13px] font-semibold leading-none">SafeThali AI</div>
+              <div className="text-ink text-[13px] font-bold leading-none">SafeThali AI</div>
               <div className="text-ink-3 text-[10px] uppercase tracking-[0.08em] mt-1">Safety assistant</div>
             </div>
           </div>
@@ -111,10 +111,10 @@ export default function Chatbot() {
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-xl text-[13px] leading-relaxed whitespace-pre-wrap
+                  className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[13px] leading-relaxed whitespace-pre-wrap
                     ${m.role === 'user'
-                      ? 'bg-brand text-white rounded-br-sm'
-                      : 'bg-paper-2 text-ink border border-rule rounded-bl-sm'}`}
+                      ? 'bg-brand text-white rounded-br-md'
+                      : 'bg-paper-2 text-ink border border-rule rounded-bl-md'}`}
                 >
                   <MessageContent text={m.content} />
                 </div>
@@ -122,7 +122,7 @@ export default function Chatbot() {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="px-3 py-2 rounded-xl bg-paper-2 border border-rule text-[13px] text-ink-3">
+                <div className="px-3.5 py-2.5 rounded-2xl bg-paper-2 border border-rule text-[13px] text-ink-3">
                   Thinking…
                 </div>
               </div>
@@ -136,7 +136,7 @@ export default function Chatbot() {
                 <button
                   key={s}
                   onClick={() => sendMessage(s)}
-                  className="text-[10px] px-2.5 py-1.5 rounded-lg border border-rule bg-paper-2 text-ink-2 font-medium hover:border-brand/40 hover:text-ink transition-colors"
+                  className="text-[10px] px-3 py-1.5 rounded-full border border-rule bg-paper-2 text-ink-2 font-bold hover:border-brand/40 hover:text-ink transition-all duration-300 active:scale-95"
                 >
                   {s}
                 </button>
@@ -150,12 +150,12 @@ export default function Chatbot() {
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !loading && sendMessage()}
               placeholder={lang === 'hi' ? 'कुछ पूछें...' : 'Ask anything...'}
-              className="flex-1 px-3 py-2 rounded-lg border border-rule bg-paper text-ink text-[13px] outline-none focus:border-brand"
+              className="flex-1 px-4 py-2.5 rounded-full border border-rule bg-paper-2 text-ink text-[13px] outline-none focus:border-brand transition-all duration-300"
             />
             <button
               onClick={() => sendMessage()}
               disabled={loading || !input.trim()}
-              className="w-9 h-9 rounded-lg flex items-center justify-center disabled:opacity-40 bg-brand text-white"
+              className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 bg-brand text-white active:scale-95 transition-all duration-300"
               aria-label="Send"
             >
               <Send className="w-4 h-4" />

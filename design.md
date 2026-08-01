@@ -1,39 +1,42 @@
 # Design — SafeThali
 
-/* frontend-design · redesign-existing · design-taste
- * Reading: food-safety consumer app for Indian households / college demo
- * Vibe: warm kitchen trust · turmeric accent · NOT Inter+slate SaaS
- * Signature: thali ring + spice-warm paper
+/* high-end-visual-design · Soft Structuralism · Asymmetrical Bento
+ * Reading: food-safety consumer app for Indian households
+ * Vibe: pure white surfaces · emerald accent · massive whitespace
+ * Signature: double-bezel cards · floating glass nav · fluid motion
  */
 
 ## Palette
-- `--paper`     #f8fafc  (cool white)
-- `--paper-2`   #eef1f5
-- `--paper-3`   #e3e7ed
-- `--ink`       #1c1917  (stone near-black)
-- `--ink-2`     #57534e
-- `--ink-3`     #a8a29e
-- `--rule`      #dde3ea
-- `--accent`    #4a90d9  (light blue — trust / clean)
-- `--accent-2`  #2563eb
-- `--safe`      #4a90d9  (risk-low / Safe tier)
-- `--focus`     #4a90d9
+- `--canvas`    #F5F5F7  (silver-grey background)
+- `--paper`     #FFFFFF  (pure white cards)
+- `--paper-2`   #FAFAFA
+- `--paper-3`   #F0F0F2  (fills / toggles)
+- `--ink`       #1D1D1F  (near-black)
+- `--ink-2`     #6E6E73
+- `--ink-3`     #AEAEB2
+- `--rule`      #E5E5E7
+- `--accent`    #00BFA5  (emerald — fresh / safe / trust)
+- `--accent-2`  #00897B
+- `--chili`     #FF3B30  (risk high/critical)
 
 ## Typography
-- Display: **Fraunces** 600–700 (soft optical serif — plate / kitchen feel)
-- Body / UI: **Source Sans 3** 400–600
+- Display: **Plus Jakarta Sans** 800 (massive, tight tracking)
+- Body: **Plus Jakarta Sans** 500–700
 - Devanagari: Noto Sans Devanagari
-- Labels: Source Sans 3 medium, slight tracking — not mono shout
+- Mono: JetBrains Mono (tabular data)
+- Eyebrow: 10px, 600 weight, 0.2em tracking, uppercase, pill-shaped
 
-## Layout
-- Marketing: full-bleed kitchen hero — brand as hero signal, one headline, one line, CTA group; thali rings as motif
-- Below fold: zig-zag features (not 3 equal cards), then dark CTA band
-- App: top nav + bottom tabs; scan content max ~576px for focus
-- Auth: warm ink brand panel with thali ring motif
+## Architecture
+- **Double-Bezel Cards**: outer shell (bg-paper-3, rounded-[2rem], p-1.5) + inner core (bg-paper, rounded-[1.625rem], shadow-inner)
+- **Floating Glass Nav**: detached from top, rounded-full, backdrop-blur, shadow-card
+- **Pill Buttons**: rounded-full, haptic press (active:scale-97), button-in-button trailing icon
+- **Bento Grid**: asymmetric card sizes (col-span-7 + col-span-5)
 
 ## Motion
-- Landing: staggered fade-up (opacity + 8px Y), 400ms ease-out
-- Buttons: 150ms color + 1px press
+- All transitions: cubic-bezier(0.32, 0.72, 0, 1) — fluid physics
+- Scroll entry: fade-up with blur(6px) → blur(0), 0.7s duration
+- Hover: translateY(-4px) + diffused shadow
+- Press: scale(0.97) haptic feedback
 - Respect prefers-reduced-motion
 
 ## Brand

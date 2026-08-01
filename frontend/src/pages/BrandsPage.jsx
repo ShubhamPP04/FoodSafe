@@ -26,7 +26,7 @@ function selectionKey(category) {
 // Score tiers — Safe / Moderate / Caution / Risky (design.md risk colors)
 function getScoreTier(score) {
   if (score >= 85) return { color: 'text-brand',    bg: 'bg-brand',    label: 'Safe' }
-  if (score >= 70) return { color: 'text-ochre',     bg: 'bg-ochre',     label: 'Moderate' }
+  if (score >= 70) return { color: 'text-gold',     bg: 'bg-gold',     label: 'Moderate' }
   if (score >= 50) return { color: 'text-brand',     bg: 'bg-brand',     label: 'Caution' }
   return              { color: 'text-chili',     bg: 'bg-chili',     label: 'Risky' }
 }
@@ -34,8 +34,8 @@ function getScoreTier(score) {
 function getRiskStyle(risk) {
   const map = {
     HIGH:   { bg: 'rgba(185,28,28,0.08)',  color: '#b91c1c', border: 'rgba(185,28,28,0.25)' },
-    MEDIUM: { bg: 'rgba(74,144,217,0.08)', color: '#2563eb', border: 'rgba(74,144,217,0.25)' },
-    LOW:    { bg: 'rgba(74,144,217,0.1)',  color: '#4a90d9', border: 'rgba(74,144,217,0.25)' },
+    MEDIUM: { bg: 'rgba(0,191,165,0.08)', color: '#00897B', border: 'rgba(0,191,165,0.25)' },
+    LOW:    { bg: 'rgba(0,191,165,0.1)',  color: '#00BFA5', border: 'rgba(0,191,165,0.25)' },
   }
   return map[risk] || map.MEDIUM
 }
@@ -227,7 +227,7 @@ export default function BrandsPage() {
     <div className="flex flex-col min-h-screen animate-fade-up px-4 md:px-8 py-6 max-w-5xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-[28px] mb-6 overflow-hidden bg-glass-gradient border border-surface-200">
+      <div className="relative p-6 md:p-8 rounded-2xl mb-6 overflow-hidden bg-paper border border-rule">
         <div className="absolute -right-6 -top-10 text-[120px] font-black italic pointer-events-none select-none text-ink/[0.03]">VS</div>
         <div className="relative z-10 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
@@ -250,7 +250,7 @@ export default function BrandsPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search food category (e.g. honey, ghee, atta…)"
-            className="w-full pl-10 pr-4 py-3 rounded-2xl text-sm text-ink placeholder:text-ink-3 outline-none transition-all bg-surface-200/50 border border-rule focus:border-brand/40"
+            className="w-full pl-10 pr-4 py-3 rounded-2xl text-sm text-ink placeholder:text-ink-3 outline-none transition-all bg-paper-2/50 border border-rule focus:border-brand/40"
           />
         </div>
         <button type="submit"
@@ -259,7 +259,7 @@ export default function BrandsPage() {
         </button>
         {search && (
           <button type="button" onClick={() => { setSearch(''); loadInitial() }}
-            className="px-4 py-3 rounded-2xl text-sm text-ink-3 hover:text-ink transition-all bg-surface-200/50 border border-rule">
+            className="px-4 py-3 rounded-2xl text-sm text-ink-3 hover:text-ink transition-all bg-paper-2/50 border border-rule">
             <XCircle className="w-4 h-4" />
           </button>
         )}
@@ -278,10 +278,10 @@ export default function BrandsPage() {
         <div className="flex flex-wrap gap-2 mb-6">
           {categories.map(cat => (
             <button key={cat} onClick={() => handleCatChange(cat)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 border ${
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border ${
                 activeCat === cat
-                  ? 'bg-brand text-accent-ink border-brand-dark shadow-[0_4px_16px_oklch(52%_0.13_155/0.25)] scale-105'
-                  : 'bg-surface-200/50 text-ink-3 border-rule'
+                  ? 'bg-brand text-accent-ink border-brand-dark shadow-[0_4px_16px_oklch(60%_0.12_175/0.25)] scale-105'
+                  : 'bg-paper-2/50 text-ink-3 border-rule'
               }`}>
               {cat}
             </button>
@@ -309,11 +309,11 @@ export default function BrandsPage() {
         {loading || catLoading ? (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-28 rounded-2xl animate-pulse bg-surface-200/50 border border-rule" />
+              <div key={i} className="h-28 rounded-2xl animate-pulse bg-paper-2/50 border border-rule" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-2xl bg-surface-100/50 border border-rule">
+          <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-2xl bg-paper/50 border border-rule">
             <Search className="w-8 h-8 text-ink/10" />
             <p className="text-ink-3 text-sm">No brands found for this category</p>
             <button onClick={() => loadBrandsForCategory(activeCat)}
@@ -334,12 +334,12 @@ export default function BrandsPage() {
                   onClick={() => !isDisabled && toggleBrand(b)}
                   className="relative p-4 rounded-2xl transition-all duration-200 overflow-hidden border"
                   style={{
-                    background:  isSel ? 'rgba(74,144,217,0.08)' : isRisky ? 'rgba(185,28,28,0.06)' : 'var(--color-paper)',
-                    borderColor: isSel ? 'rgba(74,144,217,0.4)' : isRisky ? 'rgba(185,28,28,0.25)' : 'var(--color-rule)',
+                    background:  isSel ? 'rgba(0,191,165,0.08)' : isRisky ? 'rgba(185,28,28,0.06)' : 'var(--color-paper)',
+                    borderColor: isSel ? 'rgba(0,191,165,0.4)' : isRisky ? 'rgba(185,28,28,0.25)' : 'var(--color-rule)',
                     opacity:     isDisabled ? 0.35 : 1,
                     cursor:      isDisabled ? 'not-allowed' : 'pointer',
                     transform:   isSel ? 'scale(1.02)' : 'scale(1)',
-                    boxShadow:   isSel ? '0 4px 20px rgba(74,144,217,0.14)' : 'none',
+                    boxShadow:   isSel ? '0 4px 20px rgba(0,191,165,0.14)' : 'none',
                   }}>
 
                   {isSel && (
@@ -374,7 +374,7 @@ export default function BrandsPage() {
                     </div>
                   </div>
 
-                  <div className="h-1 w-full mt-3 rounded-full overflow-hidden bg-surface-300">
+                  <div className="h-1 w-full mt-3 rounded-full overflow-hidden bg-paper-3">
                     <div className={`h-full rounded-full transition-all duration-500 ${tier.bg}`}
                       style={{ width: `${b.score}%` }} />
                   </div>
@@ -390,13 +390,13 @@ export default function BrandsPage() {
         <button
           disabled={selected.length < 2 || comparing}
           onClick={() => handleCompare()}
-          className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all duration-300 border shadow-xl"
+          className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 transition-all duration-300 border shadow-soft"
           style={{
-            background:  selected.length >= 2 && !comparing ? 'oklch(52% 0.13 155 / 0.12)' : 'var(--color-paper-3)',
-            borderColor: selected.length >= 2 && !comparing ? 'oklch(52% 0.13 155 / 0.3)' : 'var(--color-rule)',
-            color:       selected.length >= 2 && !comparing ? '#2f8f52' : 'var(--color-ink-3)',
+            background:  selected.length >= 2 && !comparing ? 'oklch(60% 0.12 175 / 0.12)' : 'var(--color-paper-3)',
+            borderColor: selected.length >= 2 && !comparing ? 'oklch(60% 0.12 175 / 0.3)' : 'var(--color-rule)',
+            color:       selected.length >= 2 && !comparing ? '#00897B' : 'var(--color-ink-3)',
             cursor:      selected.length < 2 || comparing ? 'not-allowed' : 'pointer',
-            boxShadow:   selected.length >= 2 && !comparing ? '0 8px 32px oklch(52% 0.13 155 / 0.1)' : 'none',
+            boxShadow:   selected.length >= 2 && !comparing ? '0 8px 32px oklch(60% 0.12 175 / 0.1)' : 'none',
           }}>
           {comparing ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> {t(lang, 'buildingComparison')}</>
@@ -431,7 +431,7 @@ export default function BrandsPage() {
             </span>
           </div>
 
-          <div className="rounded-[24px] overflow-hidden shadow-2xl bg-surface-100 border border-rule">
+          <div className="rounded-2xl overflow-hidden shadow-soft bg-paper border border-rule">
 
             {/* Brand headers */}
             <div className="grid border-b border-rule" style={{ gridTemplateColumns: gridCols }}>
@@ -442,14 +442,14 @@ export default function BrandsPage() {
                     style={{ borderRight: i < items.length - 1 ? '1px solid var(--color-rule)' : 'none' }}>
                     {isWinner && (
                       <div className="absolute top-0 left-0 right-0 h-0.5"
-                        style={{ background: 'linear-gradient(90deg, #4aad68, #2f8f52)' }} />
+                        style={{ background: 'linear-gradient(90deg, #4aad68, #00897B)' }} />
                     )}
                     <div className="text-[9px] text-ink/25 uppercase tracking-widest mb-1 font-bold">{activeCat}</div>
                     <div className="text-sm font-bold text-ink leading-tight mb-1">{b.brand}</div>
                     <div className="text-[10px] text-ink-3">{b.price}</div>
                     {isWinner && (
                       <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand/10 border border-brand/25">
-                        <Zap className="w-3 h-3 text-brand" style={{ fill: 'oklch(52% 0.13 155 / 0.3)' }} />
+                        <Zap className="w-3 h-3 text-brand" style={{ fill: 'oklch(60% 0.12 175 / 0.3)' }} />
                         <span className="text-[9px] font-bold text-brand uppercase tracking-widest">Top Pick</span>
                       </div>
                     )}
@@ -461,7 +461,7 @@ export default function BrandsPage() {
             <div className="divide-y divide-rule">
 
               {/* Safety Score */}
-              <div className="pt-4 pb-1 bg-surface-200/30">
+              <div className="pt-4 pb-1 bg-paper-2/30">
                 <div className="px-5 mb-3 flex items-center gap-2 text-[9px] font-bold text-ink-3 uppercase tracking-widest">
                   <ShieldCheck className="w-3 h-3" /> Safety Score
                 </div>
@@ -478,7 +478,7 @@ export default function BrandsPage() {
                         <div className={`text-[9px] font-bold uppercase tracking-wider mt-1 ${tier.color}`}>
                           {tier.label}
                         </div>
-                        <div className="h-1.5 rounded-full mt-3 overflow-hidden bg-surface-300">
+                        <div className="h-1.5 rounded-full mt-3 overflow-hidden bg-paper-3">
                           <div className={`h-full rounded-full ${tier.bg}`}
                             style={{ width: `${b.score}%`, transition: 'width 1s ease-out' }} />
                         </div>
@@ -521,7 +521,7 @@ export default function BrandsPage() {
 
               {/* Pros & Cons */}
               {items.some(b => b.pros?.length || b.cons?.length) && (
-                <div className="pt-4 pb-1 bg-surface-200/30">
+                <div className="pt-4 pb-1 bg-paper-2/30">
                   <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">Pros & Cons</div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                     {items.map((b, i) => (
@@ -549,15 +549,15 @@ export default function BrandsPage() {
               {items.some(b => b.adulterants?.length) && (
                 <div className="pt-4 pb-1">
                   <div className="px-5 mb-3 flex items-center gap-2 text-[9px] font-bold text-ink-3 uppercase tracking-widest">
-                    <AlertTriangle className="w-3 h-3 text-ochre" /> Adulterants to Watch
+                    <AlertTriangle className="w-3 h-3 text-gold" /> Adulterants to Watch
                   </div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                     {items.map((b, i) => (
                       <div key={i} className="px-5 pb-4 space-y-1.5"
                         style={{ borderRight: i < items.length - 1 ? '1px solid var(--color-rule)' : 'none' }}>
                         {(b.adulterants || []).map((a, j) => (
-                          <div key={j} className="flex items-center gap-2 text-xs text-ink-2 px-2.5 py-1.5 rounded-lg bg-surface-200/50 border border-rule">
-                            <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${j === 0 ? 'bg-chili' : 'bg-ochre'}`} />
+                          <div key={j} className="flex items-center gap-2 text-xs text-ink-2 px-2.5 py-1.5 rounded-lg bg-paper-2/50 border border-rule">
+                            <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${j === 0 ? 'bg-chili' : 'bg-gold'}`} />
                             {a}
                           </div>
                         ))}
@@ -569,17 +569,17 @@ export default function BrandsPage() {
 
               {/* Home Test */}
               {items.some(b => b.home_test) && (
-                <div className="pt-4 pb-1 bg-surface-200/30">
+                <div className="pt-4 pb-1 bg-paper-2/30">
                   <div className="px-5 mb-3 text-[9px] font-bold text-ink-3 uppercase tracking-widest">DIY Home Test</div>
                   <div className="grid" style={{ gridTemplateColumns: gridCols }}>
                     {items.map((b, i) => (
                       <div key={i} className="px-5 pb-4"
                         style={{ borderRight: i < items.length - 1 ? '1px solid var(--color-rule)' : 'none' }}>
                         {b.home_test ? (
-                          <div className="p-3 rounded-xl bg-indigo-500/[0.06] border border-indigo-500/[0.15]">
+                          <div className="p-3 rounded-xl bg-brand/[0.06] border border-brand/[0.15]">
                             <div className="flex items-center gap-1.5 mb-1.5">
-                              <Beaker className="w-3.5 h-3.5 text-indigo-500" />
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-indigo-500">Test Method</span>
+                              <Beaker className="w-3.5 h-3.5 text-brand" />
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-brand">Test Method</span>
                             </div>
                             <p className="text-xs text-ink-2 leading-relaxed">{b.home_test}</p>
                           </div>
@@ -595,10 +595,10 @@ export default function BrandsPage() {
 
             {/* Footer tip */}
             {(compared.tip || source) && (
-              <div className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between border-t border-rule bg-surface-200/30">
+              <div className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between border-t border-rule bg-paper-2/30">
                 {compared.tip && (
                   <div className="flex items-center gap-2 text-xs px-4 py-2 rounded-xl bg-brand/10 border border-brand/20 text-brand-dark">
-                    <Lightbulb className="w-4 h-4 shrink-0" style={{ fill: 'oklch(52% 0.13 155 / 0.15)' }} />
+                    <Lightbulb className="w-4 h-4 shrink-0" style={{ fill: 'oklch(60% 0.12 175 / 0.15)' }} />
                     <span>{compared.tip}</span>
                   </div>
                 )}
@@ -612,7 +612,7 @@ export default function BrandsPage() {
 
           <div className="flex justify-center mt-6">
             <button onClick={reset}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold text-ink-3 hover:text-ink hover:bg-surface-200/50 border border-rule transition-all">
+              className="flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold text-ink-3 hover:text-ink hover:bg-paper-2/50 border border-rule transition-all">
               <XCircle className="w-4 h-4" />
               {t(lang, 'clearComparison')}
             </button>

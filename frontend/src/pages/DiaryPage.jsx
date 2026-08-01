@@ -7,10 +7,10 @@ import { BookOpen, AlertTriangle, Download, FileText, PieChart, BarChart2, Light
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
 
-const RISK_COLOR = { LOW: '#00e09c', MEDIUM: '#fac775', HIGH: '#f7c1c1', CRITICAL: '#ff7b7b' }
-const RISK_BG = { LOW: 'bg-brand/10', MEDIUM: 'bg-orange-500/10', HIGH: 'bg-chili/10', CRITICAL: 'bg-red-900/40' }
-const RISK_BORDER = { LOW: 'border-brand/20', MEDIUM: 'border-orange-500/20', HIGH: 'border-chili/30', CRITICAL: 'border-red-500/40' }
-const RISK_TEXT = { LOW: 'text-brand', MEDIUM: 'text-orange-400', HIGH: 'text-chili', CRITICAL: 'text-chili' }
+const RISK_COLOR = { LOW: '#00BFA5', MEDIUM: '#fac775', HIGH: '#f7c1c1', CRITICAL: '#ff7b7b' }
+const RISK_BG = { LOW: 'bg-brand/10', MEDIUM: 'bg-gold/10', HIGH: 'bg-chili/10', CRITICAL: 'bg-chili/10' }
+const RISK_BORDER = { LOW: 'border-brand/20', MEDIUM: 'border-gold/20', HIGH: 'border-chili/30', CRITICAL: 'border-chili/30' }
+const RISK_TEXT = { LOW: 'text-brand', MEDIUM: 'text-gold', HIGH: 'text-chili', CRITICAL: 'text-chili' }
 
 function DonutChart({ data, size = 120 }) {
   const total = data.reduce((s, d) => s + d.value, 0)
@@ -30,7 +30,7 @@ function DonutChart({ data, size = 120 }) {
   })
 
   return (
-    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} className="drop-shadow-lg">
+    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }} className="drop-shadow-soft">
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="16" />
       {slices.map((s, i) => (
         <circle key={i} cx={cx} cy={cy} r={r} fill="none"
@@ -63,7 +63,7 @@ export default function DiaryPage() {
     : grade === 'B'
     ? { color: 'text-brand-light', bg: 'bg-brand-light/10', border: 'border-brand-light/30' }
     : grade === 'C'
-    ? { color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30' }
+    ? { color: 'text-gold', bg: 'bg-gold/10', border: 'border-gold/30' }
     : { color: 'text-chili', bg: 'bg-chili/10', border: 'border-chili/30' }
 
   const riskCounts = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].map(r => ({
@@ -140,7 +140,7 @@ export default function DiaryPage() {
       <style>{OC_STYLES}</style>
 
       {/* Header */}
-      <div className="relative p-6 md:p-8 rounded-[32px] bg-glass-gradient border border-surface-200 shadow-2xl overflow-hidden mb-8 backdrop-blur-xl">
+      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-8">
         <div className="absolute -right-32 -top-32 w-96 h-96 bg-brand/10 blur-[80px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -155,18 +155,18 @@ export default function DiaryPage() {
           </div>
 
           <div className="grid grid-cols-3 gap-3 md:gap-4 w-full md:w-auto">
-            <div className="bg-surface-200/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center backdrop-blur-md">
+            <div className="bg-paper-2/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center">
               <span className="text-2xl font-sans font-bold text-ink leading-none mb-1">{total}</span>
               <span className="text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center">{t(lang, 'totalScans')}</span>
             </div>
-            <div className="bg-surface-200/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center backdrop-blur-md relative overflow-hidden">
+            <div className="bg-paper-2/50 border border-rule rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center relative overflow-hidden">
               {high > 0 && <div className="absolute top-0 right-0 w-8 h-8 bg-chili/20 blur-xl rounded-full" />}
               <span className={`text-2xl font-sans font-bold leading-none mb-1 ${high > 0 ? 'text-chili' : 'text-ink'}`}>{high}</span>
               <span className="text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center flex items-center gap-1">
                 {high > 0 && <AlertTriangle className="w-2.5 h-2.5 text-chili" />} {t(lang, 'highRisk')}
               </span>
             </div>
-            <div className={`bg-surface-200/50 border ${gradeConfig.border} rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center backdrop-blur-md relative overflow-hidden`}>
+            <div className={`bg-paper-2/50 border ${gradeConfig.border} rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center relative overflow-hidden`}>
               <div className={`absolute inset-0 ${gradeConfig.bg} opacity-50`} />
               <span className={`relative z-10 text-3xl font-sans font-bold ${gradeConfig.color} leading-none mb-0.5`}>{total ? grade : '—'}</span>
               <span className="relative z-10 text-[9px] uppercase tracking-widest text-ink-3 font-bold text-center">{t(lang, 'reportGrade')}</span>
@@ -180,7 +180,7 @@ export default function DiaryPage() {
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="flex items-center justify-center gap-2 w-full md:w-auto md:ml-auto mb-6 px-6 py-3 rounded-xl bg-surface-100 border border-rule hover:border-rule hover:bg-surface-200 text-ink-2 hover:text-ink transition-all text-sm font-bold shadow-sm disabled:opacity-50"
+          className="flex items-center justify-center gap-2 w-full md:w-auto md:ml-auto mb-6 px-6 py-3 rounded-xl bg-paper border border-rule hover:border-rule hover:bg-paper-2 text-ink-2 hover:text-ink transition-all text-sm font-bold shadow-sm disabled:opacity-50"
         >
           {downloading
             ? <><RefreshCw className="w-4 h-4 animate-spin" /> Generating…</>
@@ -190,7 +190,7 @@ export default function DiaryPage() {
       )}
 
       {total === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-[32px] bg-surface-100/30">
+        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-2xl bg-paper/30">
           <FileText className="w-16 h-16 text-ink/10 mb-6" />
           <p className="text-ink-2 text-[15px] leading-relaxed max-w-sm font-medium">
             {t(lang, 'noScansYet')}<br />
@@ -206,7 +206,7 @@ export default function DiaryPage() {
               <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                 <PieChart className="w-3.5 h-3.5" /> {t(lang, 'riskDistribution')}
               </h3>
-              <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden p-6 shadow-xl relative backdrop-blur-sm">
+              <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-6 shadow-soft relative">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-ink/5 rounded-full blur-[60px] pointer-events-none" />
                 <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
                   <div className="shrink-0 relative">
@@ -222,7 +222,7 @@ export default function DiaryPage() {
                           <div className="w-2.5 h-2.5 rounded-full" style={{ background: r.color, boxShadow: `0 0 8px ${r.color}` }} />
                           <span className="text-ink-2 font-medium">{r.label}</span>
                         </div>
-                        <span className="font-bold text-ink bg-surface-200 px-2 py-0.5 rounded-md border border-rule">{r.value}</span>
+                        <span className="font-bold text-ink bg-paper-2 px-2 py-0.5 rounded-md border border-rule">{r.value}</span>
                       </div>
                     ))}
                   </div>
@@ -236,7 +236,7 @@ export default function DiaryPage() {
                 <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5 text-brand" /> {t(lang, 'aiInsights')}
                 </h3>
-                <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden p-5 shadow-xl">
+                <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-5 shadow-soft">
                   {loadingInsights ? (
                     <div className="flex items-center justify-center py-6 text-ink-3 text-xs gap-2 font-bold uppercase tracking-widest">
                       <RefreshCw className="w-4 h-4 animate-spin" /> {t(lang, 'analyzingHistory')}
@@ -244,7 +244,7 @@ export default function DiaryPage() {
                   ) : (
                     <div className="flex flex-col gap-3">
                       {aiInsights?.main && (
-                        <div className="p-4 rounded-xl bg-surface-200 border border-rule text-[13px] text-ink leading-relaxed flex gap-3">
+                        <div className="p-4 rounded-xl bg-paper-2 border border-rule text-[13px] text-ink leading-relaxed flex gap-3">
                           <Lightbulb className="w-4 h-4 text-brand shrink-0 mt-0.5" /> <p>{aiInsights.main}</p>
                         </div>
                       )}
@@ -254,8 +254,8 @@ export default function DiaryPage() {
                         </div>
                       )}
                       {aiInsights?.pattern && (
-                        <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 text-[13px] text-orange-400 leading-relaxed flex gap-3">
-                          <BarChart2 className="w-4 h-4 shrink-0 mt-0.5" /> <p><span className="font-bold text-orange-300 mr-2">{t(lang, 'pattern')}</span>{aiInsights.pattern}</p>
+                        <div className="p-4 rounded-xl bg-gold/10 border border-gold/20 text-[13px] text-gold leading-relaxed flex gap-3">
+                          <BarChart2 className="w-4 h-4 shrink-0 mt-0.5" /> <p><span className="font-bold text-gold mr-2">{t(lang, 'pattern')}</span>{aiInsights.pattern}</p>
                         </div>
                       )}
                       {aiInsights?.swap && (
@@ -276,18 +276,18 @@ export default function DiaryPage() {
               <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                 <BarChart2 className="w-3.5 h-3.5" /> {t(lang, 'last7Days')}
               </h3>
-              <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden p-6 shadow-xl flex items-end justify-between h-[160px] pb-4">
+              <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-6 shadow-soft flex items-end justify-between h-[160px] pb-4">
                 {weekDays.map((d, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 flex-1 group relative">
                     {d.scans > 0 && (
-                      <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-300 text-ink text-[10px] font-bold px-2 py-1 rounded border border-rule z-20 pointer-events-none whitespace-nowrap">
+                      <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-paper-3 text-ink text-[10px] font-bold px-2 py-1 rounded border border-rule z-20 pointer-events-none whitespace-nowrap">
                         {d.scans} scans ({d.avgScore}/100)
                       </div>
                     )}
                     <div className="w-full px-1.5 flex justify-center">
                       <div
-                        className={`w-full max-w-[24px] rounded-t-lg transition-all duration-1000 ease-in-out hover:brightness-125 hover:shadow-[0_0_12px_rgba(0,224,156,0.3)]
-                          ${d.scans ? 'bg-gradient-to-t from-brand/40 to-brand border-t border-brand-light/50' : 'bg-surface-200'}`}
+                        className={`w-full max-w-[24px] rounded-t-lg transition-all duration-1000 ease-in-out hover:brightness-125 hover:shadow-[0_0_12px_rgba(0,191,165,0.3)]
+                          ${d.scans ? 'bg-gradient-to-t from-brand/40 to-brand border-t border-brand-light/50' : 'bg-paper-2'}`}
                         style={{ height: d.scans ? `${Math.max((d.scans / maxScans) * 100, 4)}px` : '4px' }}
                       />
                     </div>
@@ -302,7 +302,7 @@ export default function DiaryPage() {
               <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                 <FileWarning className="w-3.5 h-3.5" /> {t(lang, 'weeklyOverconsumption')}
               </h3>
-              <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden p-5 shadow-xl">
+              <div className="bg-paper border border-rule rounded-2xl overflow-hidden p-5 shadow-soft">
                 <DigestPanel digest={digest} loading={loadingDigest} />
               </div>
             </div>
@@ -313,11 +313,11 @@ export default function DiaryPage() {
                 <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
                   <UserCheck className="w-3.5 h-3.5" /> {t(lang, 'mostScanned')}
                 </h3>
-                <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden divide-y divide-white/5 shadow-xl">
+                <div className="bg-paper border border-rule rounded-2xl overflow-hidden divide-y divide-rule shadow-soft">
                   {topFoods.map(([food, count], i) => (
-                    <div key={i} className="flex justify-between items-center p-4 hover:bg-surface-200/50 transition-colors">
+                    <div key={i} className="flex justify-between items-center p-4 hover:bg-paper-2/50 transition-colors">
                       <div className="text-sm font-bold text-ink">{food}</div>
-                      <div className="text-[11px] font-bold text-ink-3 uppercase tracking-widest bg-surface-300 px-2.5 py-1 rounded-lg border border-rule">
+                      <div className="text-[11px] font-bold text-ink-3 uppercase tracking-widest bg-paper-3 px-2.5 py-1 rounded-lg border border-rule">
                         {count}×
                       </div>
                     </div>
@@ -332,19 +332,19 @@ export default function DiaryPage() {
             <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1 mb-3 flex items-center gap-2">
               <ShieldAlert className="w-3.5 h-3.5" /> {t(lang, 'recentScans')}
             </h3>
-            <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl">
-              <div className="divide-y divide-white/5">
+            <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft">
+              <div className="divide-y divide-rule">
                 {scanHistory.slice(0, 10).map((s, i) => {
                   const rCfg = { bg: RISK_BG[s.risk_level] || RISK_BG.LOW, text: RISK_TEXT[s.risk_level] || RISK_TEXT.LOW, border: RISK_BORDER[s.risk_level] || RISK_BORDER.LOW }
                   const barColor = RISK_COLOR[s.risk_level] || RISK_COLOR.LOW
                   return (
-                    <div key={s.id || i} className="p-4 sm:p-5 flex justify-between items-center hover:bg-surface-200/50 transition-colors">
+                    <div key={s.id || i} className="p-4 sm:p-5 flex justify-between items-center hover:bg-paper-2/50 transition-colors">
                       <div className="flex-1">
                         <div className="text-sm font-bold text-ink mb-0.5">{s.food_name}</div>
                         <div className="text-[10px] text-ink-3 uppercase tracking-widest font-medium mb-2.5">
                           {new Date(s.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </div>
-                        <div className="h-1.5 w-full max-w-[120px] bg-surface-300 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full max-w-[120px] bg-paper-3 rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${s.safety_score || 50}%`, backgroundColor: barColor }} />
                         </div>
                       </div>

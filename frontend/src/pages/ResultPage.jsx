@@ -15,8 +15,8 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 // ── Risk config — derived from risk level string, not hardcoded per item ──
 function getRiskConfig(risk) {
   const configs = {
-    LOW:      { bg: 'bg-brand/10',   text: 'text-brand',  border: 'border-brand/30',  accent: '#4a90d9', label: 'Low Risk',      bar: '#4a90d9', glow: 'rgba(74,144,217,0.12)' },
-    MEDIUM:   { bg: 'bg-ochre/10',   text: 'text-ochre',  border: 'border-ochre/30',  accent: '#c4892e', label: 'Medium Risk',   bar: '#c4892e', glow: 'oklch(70% 0.12 75 / 0.12)' },
+    LOW:      { bg: 'bg-brand/10',   text: 'text-brand',  border: 'border-brand/30',  accent: '#00BFA5', label: 'Low Risk',      bar: '#00BFA5', glow: 'rgba(0,191,165,0.12)' },
+    MEDIUM:   { bg: 'bg-gold/10',   text: 'text-gold',  border: 'border-gold/30',  accent: '#F57F17', label: 'Medium Risk',   bar: '#F57F17', glow: 'oklch(75% 0.15 70 / 0.12)' },
     HIGH:     { bg: 'bg-chili/10',   text: 'text-chili',  border: 'border-chili/30',  accent: '#c93d32', label: 'High Risk',     bar: '#c93d32', glow: 'oklch(55% 0.17 28 / 0.12)' },
     CRITICAL: { bg: 'bg-chili/15',   text: 'text-chili',  border: 'border-chili/40',  accent: '#9a241c', label: 'Critical Risk', bar: '#9a241c', glow: 'oklch(45% 0.16 25 / 0.14)' },
   }
@@ -51,7 +51,7 @@ function NutritionBar({ label, value, max, unit, warn }) {
         <span>{label}</span>
         <span style={{ color: warn ? '#e07c1a' : 'inherit' }}>{value}{unit}</span>
       </div>
-      <div className="h-1.5 rounded-full overflow-hidden bg-surface-300">
+      <div className="h-1.5 rounded-full overflow-hidden bg-paper-3">
         <div className="h-full rounded-full transition-all duration-700"
           style={{ width: `${pct}%`, background: color }} />
       </div>
@@ -281,7 +281,7 @@ function FeedbackRow({ scanId, lang }) {
       </button>
       <button
         onClick={() => submit('down')}
-        className={`p-2 rounded-xl border transition-all ${feedback === 'down' ? 'bg-chili/20 border-red-500/40 text-chili' : 'border-rule text-ink-3 hover:text-ink hover:border-rule'}`}
+        className={`p-2 rounded-xl border transition-all ${feedback === 'down' ? 'bg-chili/20 border-chili/30 text-chili' : 'border-rule text-ink-3 hover:text-ink hover:border-rule'}`}
       >
         <ThumbsDown className="w-4 h-4" />
       </button>
@@ -326,7 +326,7 @@ export default function ResultPage() {
         <p className="text-ink-3 text-sm mb-6">{t(lang, 'noResult')}</p>
         <button
           onClick={() => nav('/scan')}
-          className="px-6 py-3 rounded-xl border border-rule text-ink font-semibold text-sm transition-colors"
+          className="px-6 py-3 rounded-xl border border-rule text-ink font-bold text-sm transition-colors"
           style={{ background: 'rgba(255,255,255,0.05)' }}
         >
           {t(lang, 'backToScan')}
@@ -362,9 +362,9 @@ export default function ResultPage() {
 
       {/* ── Hero ── */}
       <div
-        className="relative p-6 md:p-8 rounded-[32px] border shadow-2xl overflow-hidden mb-6 backdrop-blur-xl"
+        className="relative p-6 md:p-8 rounded-2xl border shadow-soft overflow-hidden mb-6"
         style={{
-          background: `linear-gradient(135deg, ${cfg.glow}, rgba(255,255,255,0.02))`,
+          background: `linear-gradient(135deg, ${cfg.glow}, rgba(0,0,0,0.01))`,
           borderColor: cfg.accent + '33',
           boxShadow: `0 0 60px ${cfg.glow}`,
         }}
@@ -384,7 +384,7 @@ export default function ResultPage() {
             {activeMember && (
               <div className="text-xs text-ink-3 mb-3 flex items-center justify-center md:justify-start gap-1.5">
                 <Activity className="w-3.5 h-3.5" />
-                {t(lang, 'personalizedFor')} <span className="text-ink font-semibold ml-1">{activeMember.name}</span>
+                {t(lang, 'personalizedFor')} <span className="text-ink font-bold ml-1">{activeMember.name}</span>
               </div>
             )}
 
@@ -415,7 +415,7 @@ export default function ResultPage() {
         </div>
 
         {r.summary && (
-          <div className="mt-6 p-4 rounded-xl border border-rule backdrop-blur-md text-sm leading-relaxed text-ink-2"
+          <div className="mt-6 p-4 rounded-xl border border-rule text-sm leading-relaxed text-ink-2"
             style={{ background: 'rgba(0,0,0,0.25)' }}>
             {r.summary}
           </div>
@@ -432,7 +432,7 @@ export default function ResultPage() {
             </div>
           )}
           {r.personalizedWarning && (
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm">
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-gold/10 border border-gold/20 text-gold text-sm">
               <Activity className="w-5 h-5 shrink-0 mt-0.5" />
               <p className="leading-snug">{r.personalizedWarning}</p>
             </div>
@@ -443,12 +443,12 @@ export default function ResultPage() {
       {/* ── Collaborative signal ── */}
       {collab && (
         <div className="mb-6 flex items-start gap-3 p-4 rounded-2xl border border-rule text-sm"
-          style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <TrendingUp className="w-5 h-5 shrink-0 mt-0.5 text-orange-400" />
+          style={{ background: 'rgba(0,0,0,0.015)' }}>
+          <TrendingUp className="w-5 h-5 shrink-0 mt-0.5 text-gold" />
           <p className="text-ink-2 leading-snug">
             {tParts(lang, 'communityFlagMessage', {
-              percent: <span className="text-ink font-semibold">{collab.flag_rate_percent}%</span>,
-              food:    <span className="text-ink font-semibold">{r.foodName || r.productName}</span>,
+              percent: <span className="text-ink font-bold">{collab.flag_rate_percent}%</span>,
+              food:    <span className="text-ink font-bold">{r.foodName || r.productName}</span>,
             }).map((part, i) => <span key={i}>{part}</span>)}
           </p>
         </div>
@@ -463,8 +463,8 @@ export default function ResultPage() {
           {/* Adulterants */}
           {r.adulterants?.length > 0 && (
             <Section icon={ShieldAlert} label={t(lang, 'adulterants') || 'Detected Risks'}>
-              <div className="rounded-[24px] overflow-hidden border border-rule divide-y divide-white/5"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl overflow-hidden border border-rule divide-y divide-rule"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {r.adulterants.map((a, i) => {
                   const sev = getRiskConfig(a.severity)
                   return (
@@ -491,8 +491,8 @@ export default function ResultPage() {
           {/* FSSAI Citations */}
           {r.fssaiCitations?.length > 0 && (
             <Section icon={FileText} label={r.ragGrounded ? t(lang, 'fssaiVerified') : t(lang, 'fssaiRef')}>
-              <div className="rounded-[24px] border border-rule p-4 space-y-3"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule p-4 space-y-3"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {r.fssaiCitations.map((c, i) => (
                   <div key={i} className={`flex gap-3 pb-3 ${i < r.fssaiCitations.length - 1 ? 'border-b border-rule' : ''}`}>
                     <div className="w-8 h-8 rounded-lg bg-brand/10 text-brand border border-brand/20 flex items-center justify-center text-[11px] font-bold shrink-0">
@@ -525,10 +525,10 @@ export default function ResultPage() {
           {/* Allergens */}
           {hasAllergens && (
             <Section icon={AlertTriangle} label={t(lang, 'allergens') || 'Allergens'}>
-              <div className="rounded-[24px] border border-orange-500/20 p-4 flex flex-wrap gap-2"
-                style={{ background: 'rgba(224,124,26,0.05)' }}>
+              <div className="rounded-2xl border border-gold/20 p-4 flex flex-wrap gap-2"
+                style={{ background: 'rgba(245,127,23,0.06)' }}>
                 {r.allergens.map((a, i) => (
-                  <span key={i} className="px-3 py-1.5 rounded-full text-[11px] font-bold text-orange-400 border border-orange-500/20 bg-orange-500/10">
+                  <span key={i} className="px-3 py-1.5 rounded-full text-[11px] font-bold text-gold border border-gold/20 bg-gold/10">
                     {a}
                   </span>
                 ))}
@@ -539,8 +539,8 @@ export default function ResultPage() {
           {/* Ingredients */}
           {hasIngredients && (
             <Section icon={Info} label={t(lang, 'ingredients') || 'Ingredients'}>
-              <div className="rounded-[24px] border border-rule p-4"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule p-4"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 <p className="text-xs text-ink-2 leading-relaxed">
                   {r.ingredients.join(', ')}
                 </p>
@@ -555,8 +555,8 @@ export default function ResultPage() {
           {/* Nutrition */}
           {hasNutrition && (
             <Section icon={TrendingUp} label={t(lang, 'nutrition') || 'Nutrition'}>
-              <div className="rounded-[24px] border border-rule p-5 flex flex-col gap-4"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule p-5 flex flex-col gap-4"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {r.nutrition.calories !== undefined && (
                   <div className="flex justify-between items-center pb-3 border-b border-rule">
                     <span className="text-xs font-bold text-ink-2">Calories</span>
@@ -578,8 +578,8 @@ export default function ResultPage() {
           {/* Home Tests */}
           {validHomeTests.length > 0 && (
             <Section icon={Beaker} label={t(lang, 'homeTests')}>
-              <div className="rounded-[24px] border border-rule overflow-hidden divide-y divide-white/5"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule overflow-hidden divide-y divide-rule"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {validHomeTests.map((test, i) => (
                   <div key={i} className="p-4 md:p-5">
                     <div className="flex justify-between items-center mb-3">
@@ -603,8 +603,8 @@ export default function ResultPage() {
           {/* Buying Tips */}
           {r.buyingTips?.length > 0 && (
             <Section icon={Lightbulb} label={t(lang, 'buyingTips') || 'Buying Advice'}>
-              <div className="rounded-[24px] border border-rule p-5"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule p-5"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 <ul className="space-y-3">
                   {r.buyingTips.map((tip, i) => (
                     <li key={i} className="flex gap-3 text-xs text-ink-2 leading-relaxed">
@@ -620,8 +620,8 @@ export default function ResultPage() {
           {/* Alternatives */}
           {r.alternatives?.length > 0 && (
             <Section icon={Star} label={t(lang, 'alternatives') || 'Safer Alternatives'}>
-              <div className="rounded-[24px] border border-rule p-5 flex flex-col gap-2"
-                style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div className="rounded-2xl border border-rule p-5 flex flex-col gap-2"
+                style={{ background: 'rgba(0,0,0,0.015)' }}>
                 {r.alternatives.map((alt, i) => (
                   <div key={i} className="flex items-center gap-3 text-xs text-ink-2">
                     <CheckCircle2 className="w-4 h-4 text-brand shrink-0" />
@@ -636,8 +636,8 @@ export default function ResultPage() {
 
       {/* ── Verdict Banner ── */}
       {r.verdict && (
-        <div className="mt-6 w-full relative overflow-hidden rounded-[24px] border border-surface-200 shadow-2xl p-6"
-          style={{ background: 'rgba(255,255,255,0.03)' }}>
+        <div className="mt-6 w-full relative overflow-hidden rounded-2xl border border-rule shadow-soft p-6"
+          style={{ background: 'rgba(0,0,0,0.015)' }}>
           <div className="absolute -top-12 -right-12 w-32 h-32 bg-brand/20 blur-[50px] rounded-full pointer-events-none" />
           <div className="relative z-10 flex items-start gap-4">
             <div className="w-10 h-10 rounded-full border border-rule flex items-center justify-center shrink-0"
@@ -653,7 +653,7 @@ export default function ResultPage() {
       {r.scanType === 'image' && r.fake_probability !== undefined && (() => {
         const fake       = r.fake_probability ?? 50
         const real       = r.authenticity_score ?? (100 - fake)
-        const gaugeColor = fake >= 60 ? '#b91c1c' : fake >= 40 ? '#4a5260' : '#4a90d9'
+        const gaugeColor = fake >= 60 ? '#b91c1c' : fake >= 40 ? '#4a5260' : '#00BFA5'
         const verdict    = fake >= 70 ? 'Likely Fake' : fake >= 45 ? 'Suspicious' : 'Likely Genuine'
         const desc       = fake >= 70
           ? 'Multiple visual red flags detected. High risk of adulteration or counterfeiting.'
@@ -666,7 +666,7 @@ export default function ResultPage() {
             <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] pl-1">
               🔬 {t(lang, 'authenticityAnalysis')}
             </h3>
-            <div className="rounded-[24px] border border-rule p-6 lg:p-8 shadow-xl bg-surface-100/50">
+            <div className="rounded-2xl border border-rule p-6 lg:p-8 shadow-soft bg-paper/50">
               <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
                 <ScoreRing score={fake} accent={gaugeColor} size={96} />
                 <div className="text-center md:text-left">
@@ -678,7 +678,7 @@ export default function ResultPage() {
                 <div className="flex justify-between text-[10px] text-ink-3 font-bold uppercase tracking-wider mb-2">
                   <span>Genuine {real}%</span><span>Fake {fake}%</span>
                 </div>
-                <div className="h-2 flex rounded-full overflow-hidden bg-surface-300">
+                <div className="h-2 flex rounded-full overflow-hidden bg-paper-3">
                   <div className="h-full bg-brand transition-all duration-700" style={{ width: `${real}%` }} />
                   <div className="h-full bg-chili transition-all duration-700" style={{ width: `${fake}%` }} />
                 </div>
@@ -696,7 +696,7 @@ export default function ResultPage() {
             className="flex-1 md:flex-none font-bold text-sm py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
             style={{
               background: cfg.accent,
-              color: '#04090e',
+              color: '#ffffff',
               boxShadow: `0 4px 24px ${cfg.glow}`,
             }}
           >

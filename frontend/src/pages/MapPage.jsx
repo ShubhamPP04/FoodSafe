@@ -11,8 +11,8 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 // ── Risk config (clean SaaS tokens) ───────────────────────────────────────────
 const RISK_CONFIG = {
-  LOW:      { bg: 'bg-brand/10',     text: 'text-brand',     border: 'border-brand/30',     dot: '#4a90d9', glow: 'rgba(74,144,217,0.25)', label: 'Low Risk',      icon: Shield },
-  MEDIUM:   { bg: 'bg-ochre/10',     text: 'text-ochre',     border: 'border-ochre/30',     dot: '#c4892e', glow: 'rgba(196,137,46,0.25)', label: 'Medium Risk',   icon: TrendingUp },
+  LOW:      { bg: 'bg-brand/10',     text: 'text-brand',     border: 'border-brand/30',     dot: '#00BFA5', glow: 'rgba(0,191,165,0.25)', label: 'Low Risk',      icon: Shield },
+  MEDIUM:   { bg: 'bg-gold/10',     text: 'text-gold',     border: 'border-gold/30',     dot: '#F57F17', glow: 'rgba(245,127,23,0.25)', label: 'Medium Risk',   icon: TrendingUp },
   HIGH:     { bg: 'bg-chili/10',     text: 'text-chili',     border: 'border-chili/30',     dot: '#c93d32', glow: 'rgba(201,61,50,0.30)',  label: 'High Risk',     icon: AlertCircle },
   CRITICAL: { bg: 'bg-chili/15',     text: 'text-chili',     border: 'border-chili/40',     dot: '#a52a20', glow: 'rgba(165,42,32,0.40)',  label: 'Critical Risk', icon: Flame },
 }
@@ -103,10 +103,10 @@ function LeafletMap({ cities, selected, onSelect, filter }) {
         .on('click', () => onSelect(selected === city.city ? null : city.city))
 
       marker.bindTooltip(`
-        <div style="background:#f8fafc;border:1px solid #dde3ea;border-radius:10px;padding:8px 12px;color:#1c1917;font-family:'Source Sans 3',system-ui,sans-serif;min-width:120px;box-shadow:0 4px 16px rgba(28,25,23,0.08)">
+        <div style="background:#F5F5F7;border:1px solid #E5E5E7;border-radius:10px;padding:8px 12px;color:#1D1D1F;font-family:'Plus Jakarta Sans',system-ui,sans-serif;min-width:120px;box-shadow:0 4px 16px rgba(29,29,31,0.08)">
           <div style="font-weight:700;font-size:13px;margin-bottom:4px">${city.city}</div>
-          <div style="font-size:10px;color:${cfg.dot};text-transform:uppercase;letter-spacing:0.1em;font-weight:600">${cfg.label}</div>
-          <div style="font-size:11px;color:#57534e;margin-top:4px">${city.reports} reports · ${city.topFood}</div>
+          <div style="font-size:10px;color:${cfg.dot};text-transform:uppercase;letter-spacing:0.1em;font-weight:800">${cfg.label}</div>
+          <div style="font-size:11px;color:#6E6E73;margin-top:4px">${city.reports} reports · ${city.topFood}</div>
         </div>
       `, { permanent: false, direction: 'top', offset: [0, -size / 2], opacity: 1, className: 'custom-tooltip' })
 
@@ -115,7 +115,7 @@ function LeafletMap({ cities, selected, onSelect, filter }) {
   }, [cities, selected, filter, leafletLoaded])
 
   return (
-    <div className="relative w-full h-full min-h-[420px] rounded-[20px] overflow-hidden" style={{ zIndex: 0 }}>
+    <div className="relative w-full h-full min-h-[420px] rounded-2xl overflow-hidden" style={{ zIndex: 0 }}>
       {!leafletLoaded && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-paper-2 gap-3" style={{ zIndex: 1 }}>
           <MapPin className="w-8 h-8 text-ink-3 animate-bounce" />
@@ -136,7 +136,7 @@ function CityCard({ city, selected, onSelect, index }) {
   return (
     <div
       onClick={() => onSelect(isSel ? null : city.city)}
-      className={`group relative flex items-center gap-3 p-3.5 cursor-pointer transition-all duration-300 rounded-[14px] mx-2 my-1
+      className={`group relative flex items-center gap-3 p-3.5 cursor-pointer transition-all duration-300 rounded-xl mx-2 my-1
         ${isSel
           ? `${cfg.bg} border ${cfg.border}`
           : 'hover:bg-paper-2 border border-transparent'
@@ -177,12 +177,12 @@ function CityDetail({ city, onClose }) {
   const Icon = cfg.icon
 
   return (
-    <div className={`relative overflow-hidden rounded-[20px] border ${cfg.border} p-5 animate-fade-up bg-glass-gradient backdrop-blur`}>
+    <div className={`relative overflow-hidden rounded-2xl border ${cfg.border} p-5 animate-fade-up bg-paper backdrop-blur`}>
 
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[12px] flex items-center justify-center"
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
               style={{ background: `${cfg.dot}20`, border: `1px solid ${cfg.dot}40` }}>
               <Icon className={`w-5 h-5 ${cfg.text}`} />
             </div>
@@ -198,11 +198,11 @@ function CityDetail({ city, onClose }) {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-[12px] p-3.5 bg-paper-2 border border-rule">
+          <div className="rounded-xl p-3.5 bg-paper-2 border border-rule">
             <div className="text-[9px] uppercase tracking-widest text-ink-3 font-bold mb-1.5">Reports</div>
             <div className="text-2xl font-black text-ink tabular-nums">{city.reports}</div>
           </div>
-          <div className="rounded-[12px] p-3.5 bg-paper-2 border border-rule">
+          <div className="rounded-xl p-3.5 bg-paper-2 border border-rule">
             <div className="text-[9px] uppercase tracking-widest text-ink-3 font-bold mb-1.5">Top Risk</div>
             <div className="text-sm font-bold text-ink leading-tight">{city.topFood || 'Various'}</div>
           </div>
@@ -266,13 +266,13 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
       style={{ background: 'rgba(20,36,28,0.45)', backdropFilter: 'blur(12px)', zIndex: 2000 }}
       onClick={e => e.target === e.currentTarget && onClose()}>
 
-      <div className="w-full max-w-md rounded-[24px] overflow-hidden animate-fade-up bg-paper border border-rule shadow-[0_24px_64px_rgba(20,36,28,0.18)]">
+      <div className="w-full max-w-md rounded-2xl overflow-hidden animate-fade-up bg-paper border border-rule shadow-[0_24px_64px_rgba(20,36,28,0.18)]">
 
         {/* Header */}
-        <div className="relative p-6 pb-4 border-b border-rule bg-glass-gradient">
+        <div className="relative p-6 pb-4 border-b border-rule bg-paper">
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-[12px] bg-chili/10 border border-chili/25 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-chili/10 border border-chili/25 flex items-center justify-center">
                 <AlertCircle className="w-4.5 h-4.5 text-chili" />
               </div>
               <div>
@@ -297,13 +297,13 @@ function ReportForm({ lang, token, onClose, onSuccess }) {
         {/* Body */}
         <div className="p-6 flex flex-col gap-4 bg-paper">
           {msg === 'success' && (
-            <div className="flex items-center gap-3 p-3.5 rounded-[12px] bg-brand/10 border border-brand/20 animate-fade-up">
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-brand/10 border border-brand/20 animate-fade-up">
               <CheckCircle2 className="w-5 h-5 text-brand shrink-0" />
               <span className="text-sm text-brand-dark font-medium">Report submitted! Thank you.</span>
             </div>
           )}
           {msg === 'error' && (
-            <div className="flex items-center gap-3 p-3.5 rounded-[12px] bg-chili/10 border border-chili/30">
+            <div className="flex items-center gap-3 p-3.5 rounded-xl bg-chili/10 border border-chili/30">
               <AlertCircle className="w-5 h-5 text-chili shrink-0" />
               <span className="text-sm text-chili font-medium">Failed to submit. Try again.</span>
             </div>
@@ -410,10 +410,10 @@ export default function MapPage() {
     <div className="flex flex-col animate-fade-up px-3 md:px-8 py-6 max-w-6xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-[20px] mb-6 overflow-hidden bg-glass-gradient border border-rule">
+      <div className="relative p-6 md:p-8 rounded-2xl mb-6 overflow-hidden bg-paper border border-rule">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0 bg-brand/10 border border-brand/20">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-brand/10 border border-brand/20">
               <MapIcon className="w-6 h-6 text-brand" />
             </div>
             <div>
@@ -428,7 +428,7 @@ export default function MapPage() {
               { label: 'Cities Tracked', value: cities.length, color: 'text-ink', icon: null },
               { label: 'High Risk', value: criticalCount + highCount, color: 'text-chili', icon: AlertOctagon },
             ].map(({ label, value, color, icon: Icon }) => (
-              <div key={label} className="flex flex-col items-center justify-center px-4 py-3 rounded-[14px] min-w-[80px] bg-paper-2 border border-rule">
+              <div key={label} className="flex flex-col items-center justify-center px-4 py-3 rounded-xl min-w-[80px] bg-paper-2 border border-rule">
                 <span className={`text-xl font-black leading-none mb-1 ${color} flex items-center gap-1`}>
                   {Icon && <Icon className="w-4 h-4" />}{value}
                 </span>
@@ -462,7 +462,7 @@ export default function MapPage() {
           </div>
 
           {/* Leaflet map */}
-          <div className="rounded-[20px] overflow-hidden border border-rule" style={{ height: 460 }}>
+          <div className="rounded-2xl overflow-hidden border border-rule" style={{ height: 460 }}>
             <LeafletMap cities={cities} selected={selected} onSelect={setSelected} filter={filter} />
           </div>
 
@@ -490,12 +490,12 @@ export default function MapPage() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-3" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search city or food…"
-              className="w-full pl-10 pr-4 py-3 rounded-[14px] text-sm text-ink placeholder-ink-3/40 outline-none transition-all bg-paper-2 border border-rule focus:border-brand/40"
+              className="w-full pl-10 pr-4 py-3 rounded-xl text-sm text-ink placeholder-ink-3/40 outline-none transition-all bg-paper-2 border border-rule focus:border-brand/40"
             />
           </div>
 
           {/* City list */}
-          <div className="rounded-[20px] overflow-hidden flex flex-col bg-paper-2 border border-rule" style={{ minHeight: 200 }}>
+          <div className="rounded-2xl overflow-hidden flex flex-col bg-paper-2 border border-rule" style={{ minHeight: 200 }}>
             <div className="flex items-center gap-2 px-4 py-3 border-b border-rule">
               <Database className="w-3.5 h-3.5 text-ink-3" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-ink-3">

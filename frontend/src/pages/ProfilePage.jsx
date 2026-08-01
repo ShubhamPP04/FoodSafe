@@ -48,16 +48,16 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col gap-8 px-5 pt-8 pb-4">
       {/* Header */}
-      <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">Profile</h1>
+      <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Profile</h1>
 
       {/* Identity */}
       <div className="flex items-center gap-4">
         <div className="w-14 h-14 rounded-full bg-stone-900 flex items-center justify-center
-                        text-ink text-xl font-semibold shrink-0">
+                        text-ink text-xl font-bold shrink-0">
           {INITIAL_USER.name.charAt(0)}
         </div>
         <div>
-          <p className="text-lg font-semibold text-stone-900">{INITIAL_USER.name}</p>
+          <p className="text-lg font-bold text-stone-900">{INITIAL_USER.name}</p>
           <p className="text-sm text-stone-500">{INITIAL_USER.email}</p>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function ProfilePage() {
                 className="w-full flex items-center justify-between px-4 py-3
                            hover:bg-stone-50 text-left transition-colors"
               >
-                <span className={`text-[15px] ${lang === l.code ? 'font-semibold text-stone-900' : 'text-stone-700'}`}>
+                <span className={`text-[15px] ${lang === l.code ? 'font-bold text-stone-900' : 'text-stone-700'}`}>
                   {l.label}
                 </span>
                 {lang === l.code && <span className="text-emerald-600 text-sm font-medium">✓</span>}
@@ -193,7 +193,7 @@ export default function ProfilePage() {
 function Section({ title, children }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2 px-1">
+      <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2 px-1">
         {title}
       </p>
       <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">

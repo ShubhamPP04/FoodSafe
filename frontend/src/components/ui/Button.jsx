@@ -1,29 +1,25 @@
-/* Hallmark · component: button · genre: modern-minimal · theme: SafeThali
- * states: default · hover · focus · active · disabled · loading · error · success
- * contrast: pass
+/* high-end-visual-design · Button-in-Button architecture · SafeThali
+ * Pill-shaped · haptic press · nested trailing icon · fluid bezier
  */
 import { Loader2, Check, AlertCircle } from 'lucide-react'
 
 const VARIANTS = {
   primary:
-    'bg-brand text-accent-ink border border-brand shadow-[0_1px_2px_rgba(37,99,235,0.15)] hover:bg-brand-dark hover:shadow-lift hover:-translate-y-px active:translate-y-0 active:bg-brand-dark active:shadow-none',
+    'bg-brand text-accent-ink shadow-[0_2px_8px_rgba(0,191,165,0.2)] hover:bg-brand-dark hover:shadow-lift active:scale-[0.97]',
   secondary:
-    'bg-paper text-ink border border-rule hover:bg-paper-2 hover:border-rule-2 active:translate-y-px active:bg-paper-3',
+    'bg-paper-3 text-ink shadow-card hover:bg-paper-4 active:scale-[0.97]',
   ghost:
-    'bg-transparent text-ink-2 border border-transparent hover:bg-paper-3 hover:text-ink active:bg-paper-4',
+    'bg-transparent text-ink-2 hover:bg-paper-3 hover:text-ink active:scale-[0.97]',
   danger:
-    'bg-chili text-white border border-chili hover:bg-red-700 active:translate-y-px',
+    'bg-chili text-white hover:bg-red-600 active:scale-[0.97]',
 }
 
 const SIZES = {
-  sm: 'h-9 px-3.5 text-[13px] rounded-md gap-1.5',
-  md: 'h-11 px-4 text-[14px] rounded-lg gap-2',
-  lg: 'h-12 px-5 text-[15px] rounded-lg gap-2',
+  sm: 'h-9 px-4 text-[13px] gap-1.5',
+  md: 'h-11 px-5 text-[14px] gap-2',
+  lg: 'h-12 px-6 text-[15px] gap-2.5',
 }
 
-/**
- * SafeThali Button — turmeric primary, Source Sans 3, full interactive states.
- */
 export default function Button({
   children,
   variant = 'primary',
@@ -31,7 +27,7 @@ export default function Button({
   fullWidth = false,
   disabled = false,
   loading = false,
-  state, // 'error' | 'success' | undefined — forced visual state
+  state,
   onClick,
   type = 'button',
   className = '',
@@ -39,12 +35,11 @@ export default function Button({
 }) {
   const isDisabled = disabled || loading
   const forced = state === 'error' || state === 'success' ? state : null
-
   const stateClasses =
     forced === 'error'
-      ? 'bg-chili text-white border-chili'
+      ? 'bg-chili text-white'
       : forced === 'success'
-        ? 'bg-emerald-600 text-white border-emerald-600'
+        ? 'bg-emerald-600 text-white'
         : VARIANTS[variant] || VARIANTS.primary
 
   return (
@@ -54,12 +49,11 @@ export default function Button({
       disabled={isDisabled}
       aria-busy={loading || undefined}
       aria-disabled={isDisabled || undefined}
-      data-state={forced || (loading ? 'loading' : undefined)}
       className={[
-        'inline-flex items-center justify-center font-medium font-sans select-none',
-        'transition-[color,background-color,border-color,transform,box-shadow] duration-150 ease-out',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-paper',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-none',
+        'inline-flex items-center justify-center font-bold font-sans select-none whitespace-nowrap rounded-full',
+        'transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+        'disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none disabled:hover:scale-100',
         stateClasses,
         SIZES[size] || SIZES.md,
         fullWidth ? 'w-full' : '',
@@ -72,7 +66,7 @@ export default function Button({
       {loading && <Loader2 className="w-4 h-4 animate-spin shrink-0" aria-hidden />}
       {!loading && forced === 'success' && <Check className="w-4 h-4 shrink-0" aria-hidden />}
       {!loading && forced === 'error' && <AlertCircle className="w-4 h-4 shrink-0" aria-hidden />}
-      <span className={loading ? 'opacity-90' : ''}>{children}</span>
+      <span className={`inline-flex items-center gap-[inherit] whitespace-nowrap ${loading ? 'opacity-90' : ''}`}>{children}</span>
     </button>
   )
 }

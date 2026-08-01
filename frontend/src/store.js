@@ -14,9 +14,12 @@ export const useStore = create(
       user:         null,
       accessToken:  null,  // short-lived (15 min), not persisted
       refreshToken: null,  // long-lived (7 days), persisted
+      guestMode:    false, // skip-auth browsing mode
+
+      setGuestMode: (val) => set({ guestMode: val }),
 
       setAuth: async (user, accessToken, refreshToken) => {
-        set({ user, accessToken, refreshToken })
+        set({ user, accessToken, refreshToken, guestMode: false })
 
         // Sync any locally-cached scans to DB on login
         const history = get().scanHistory
@@ -70,7 +73,7 @@ export const useStore = create(
 
       logout: () => {
         const { refreshToken } = get()
-        set({ user: null, accessToken: null, refreshToken: null })
+        set({ user: null, accessToken: null, refreshToken: null, guestMode: false })
         if (refreshToken) {
           fetch(`${API_URL}/users/logout`, {
             method: 'POST',
@@ -161,6 +164,7 @@ export const useStore = create(
         scanHistory:  state.scanHistory,
         user:         state.user,
         refreshToken: state.refreshToken,
+        guestMode:    state.guestMode,
         // accessToken is intentionally excluded — re-acquired via refresh on page load
       }),
     }

@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL || '/api'
 function getSeverityStyle(severity) {
   const styles = {
     HIGH:   { bg: 'bg-chili/10',    border: 'border-chili/30',    text: 'text-chili',    dot: 'bg-chili',    label: 'High'   },
-    MEDIUM: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400', dot: 'bg-orange-400', label: 'Medium' },
+    MEDIUM: { bg: 'bg-gold/10', border: 'border-gold/30', text: 'text-gold', dot: 'bg-gold', label: 'Medium' },
     LOW:    { bg: 'bg-brand/10',      border: 'border-brand/30',      text: 'text-brand',      dot: 'bg-brand',      label: 'Low'    },
   }
   return styles[severity?.toUpperCase()] || styles.MEDIUM
@@ -88,16 +88,16 @@ export default function NewsPage() {
     <div className="flex flex-col animate-fade-up px-3 md:px-8 py-6 max-w-4xl mx-auto w-full pb-32">
 
       {/* ── Header ── */}
-      <div className="relative p-6 md:p-8 rounded-[32px] bg-glass-gradient border border-surface-200 shadow-2xl overflow-hidden mb-6 backdrop-blur-xl">
+      <div className="relative p-6 md:p-8 rounded-2xl bg-paper border border-rule shadow-soft overflow-hidden mb-6">
         <div className="absolute top-0 right-1/4 w-40 h-40 bg-brand/10 blur-[50px] rounded-full pointer-events-none transform -translate-y-1/2" />
 
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-surface-200 border border-rule flex items-center justify-center relative">
+            <div className="w-14 h-14 rounded-2xl bg-paper-2 border border-rule flex items-center justify-center relative">
               <Newspaper className="w-6 h-6 text-ink" />
               <div className="absolute -top-1 -right-1 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-brand shadow-[0_0_8px_rgba(0,224,156,0.8)] border border-background" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-brand shadow-[0_0_8px_rgba(0,191,165,0.8)] border border-background" />
               </div>
             </div>
             <div>
@@ -117,8 +117,8 @@ export default function NewsPage() {
             disabled={refreshing}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-rule text-[11px] font-bold uppercase tracking-widest transition-all
               ${refreshing
-                ? 'bg-surface-300 text-ink-3 cursor-not-allowed'
-                : 'bg-surface-100 hover:bg-surface-200 text-ink-2 hover:text-ink'}`}
+                ? 'bg-paper-3 text-ink-3 cursor-not-allowed'
+                : 'bg-paper hover:bg-paper-2 text-ink-2 hover:text-ink'}`}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Syncing...' : 'Refresh'}
@@ -133,8 +133,8 @@ export default function NewsPage() {
           onClick={() => setActiveTab(null)}
           className={`shrink-0 px-5 py-2.5 rounded-xl text-xs font-bold transition-all border
             ${activeTab === null
-              ? 'bg-brand/10 text-brand border-brand/30 shadow-[0_0_12px_rgba(0,224,156,0.1)]'
-              : 'bg-surface-100 text-ink-3 border-rule hover:bg-surface-200 hover:text-ink'}`}
+              ? 'bg-brand/10 text-brand border-brand/30 shadow-[0_0_12px_rgba(0,191,165,0.1)]'
+              : 'bg-paper text-ink-3 border-rule hover:bg-paper-2 hover:text-ink'}`}
         >
           All
         </button>
@@ -146,8 +146,8 @@ export default function NewsPage() {
             onClick={() => setActiveTab(sev)}
             className={`shrink-0 px-5 py-2.5 rounded-xl text-xs font-bold transition-all border
               ${activeTab === sev
-                ? 'bg-brand/10 text-brand border-brand/30 shadow-[0_0_12px_rgba(0,224,156,0.1)]'
-                : 'bg-surface-100 text-ink-3 border-rule hover:bg-surface-200 hover:text-ink'}`}
+                ? 'bg-brand/10 text-brand border-brand/30 shadow-[0_0_12px_rgba(0,191,165,0.1)]'
+                : 'bg-paper text-ink-3 border-rule hover:bg-paper-2 hover:text-ink'}`}
           >
             {severityEmoji[sev]} {sev.charAt(0) + sev.slice(1).toLowerCase()} Risk
           </button>
@@ -161,11 +161,11 @@ export default function NewsPage() {
         {loading && (
           <div className="flex flex-col gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-32 rounded-[24px] bg-surface-100/50 border border-rule animate-pulse p-6 flex flex-col justify-between overflow-hidden relative">
-                <div className="absolute top-0 left-0 bottom-0 w-1 bg-surface-300" />
-                <div className="h-3 bg-surface-300 rounded w-1/4 mb-4" />
-                <div className="h-4 bg-surface-300 rounded w-3/4 mb-3" />
-                <div className="h-3 bg-surface-300 rounded w-1/2" />
+              <div key={i} className="h-32 rounded-2xl bg-paper/50 border border-rule animate-pulse p-6 flex flex-col justify-between overflow-hidden relative">
+                <div className="absolute top-0 left-0 bottom-0 w-1 bg-paper-3" />
+                <div className="h-3 bg-paper-3 rounded w-1/4 mb-4" />
+                <div className="h-4 bg-paper-3 rounded w-3/4 mb-3" />
+                <div className="h-3 bg-paper-3 rounded w-1/2" />
               </div>
             ))}
           </div>
@@ -173,7 +173,7 @@ export default function NewsPage() {
 
         {/* Error */}
         {error && !loading && (
-          <div className="p-5 text-center bg-chili/10 border border-chili/30 rounded-[20px] text-chili text-sm font-medium flex flex-col items-center gap-3">
+          <div className="p-5 text-center bg-chili/10 border border-chili/30 rounded-2xl text-chili text-sm font-medium flex flex-col items-center gap-3">
             <AlertCircle className="w-6 h-6" />
             {error}
             <button
@@ -189,7 +189,7 @@ export default function NewsPage() {
         {!loading && !error && (
           <div className="flex flex-col gap-4">
             {articles.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-[32px] bg-surface-100/30">
+              <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-dashed border-rule rounded-2xl bg-paper/30">
                 <Layers className="w-12 h-12 text-ink/10 mb-4" />
                 <p className="text-ink-3 text-sm font-medium">
                   No alerts found{activeTab ? ` for ${activeTab.toLowerCase()} severity` : ''}.
@@ -211,7 +211,7 @@ export default function NewsPage() {
                 return (
                   <div
                     key={i}
-                    className="bg-surface-100 border border-rule rounded-[24px] p-5 md:p-6 shadow-md relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-surface-200/50 group"
+                    className="bg-paper border border-rule rounded-2xl p-5 md:p-6 shadow-card relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft hover:bg-paper-2/50 group"
                     style={{ animationDelay: `${i * 0.05}s` }}
                   >
                     {/* Left severity bar */}
@@ -220,14 +220,14 @@ export default function NewsPage() {
                     {/* Top row */}
                     <div className="flex justify-between items-center mb-4 pl-2">
                       <div className="flex items-center gap-3">
-                        <span className="text-lg bg-surface-300 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">
+                        <span className="text-lg bg-paper-3 w-8 h-8 rounded-lg flex items-center justify-center border border-rule">
                           {catIcon}
                         </span>
                         <span className={`text-[9px] font-bold px-2.5 py-1 rounded-md border uppercase tracking-widest ${sev.bg} ${sev.border} ${sev.text}`}>
                           {sev.label} Risk
                         </span>
                       </div>
-                      <span className="text-[10px] text-ink-3 font-medium tracking-wider bg-surface-300 px-2 py-1 rounded-lg border border-rule">
+                      <span className="text-[10px] text-ink-3 font-medium tracking-wider bg-paper-3 px-2 py-1 rounded-lg border border-rule">
                         {article.date}
                       </span>
                     </div>

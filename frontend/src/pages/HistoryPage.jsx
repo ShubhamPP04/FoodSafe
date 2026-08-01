@@ -33,7 +33,7 @@ export default function HistoryPage() {
     <div className="flex flex-col gap-6 px-5 pt-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">History</h1>
+        <h1 className="text-2xl font-bold text-stone-900 tracking-tight">History</h1>
         <span className="text-sm text-stone-400 tabular-nums">{scanHistory.length} scans</span>
       </div>
 
@@ -73,7 +73,7 @@ export default function HistoryPage() {
         <div className="flex flex-col gap-6 pb-4">
           {groups.map(({ label, items }) => (
             <div key={label}>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2 px-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2 px-1">
                 {label}
               </p>
               <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden divide-y divide-stone-100">
@@ -93,7 +93,7 @@ export default function HistoryPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-2.5 shrink-0">
-                      <span className="text-sm font-semibold tabular-nums text-stone-600">
+                      <span className="text-sm font-bold tabular-nums text-stone-600">
                         {scan.safetyScore}
                       </span>
                       <Badge risk={scan.riskLevel} size="sm" />
@@ -118,7 +118,7 @@ function EmptyState({ hasHistory }) {
       <div className="w-14 h-14 rounded-2xl bg-stone-100 flex items-center justify-center mb-4">
         <ScanLine size={24} className="text-stone-400" />
       </div>
-      <p className="text-lg font-semibold text-stone-900 mb-1">
+      <p className="text-lg font-bold text-stone-900 mb-1">
         {hasHistory ? 'No results for this filter' : 'No scans yet'}
       </p>
       <p className="text-sm text-stone-500 mb-6 max-w-xs">

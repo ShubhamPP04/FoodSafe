@@ -1,17 +1,17 @@
 import { useState } from 'react'
 
 const SEVERITY_CONFIG = {
-  CRITICAL: { bg: '#2d0000', border: '#7F0000', text: '#ffb3b3', badge: '#7F0000', badgeText: '#fff', icon: '🚨' },
-  HIGH:     { bg: '#fff0f0', border: '#f7c1c1', text: '#791F1F', badge: '#c0392b', badgeText: '#fff', icon: '⚠️'  },
-  MEDIUM:   { bg: '#fff8ed', border: '#fac775', text: '#633806', badge: '#e07c1a', badgeText: '#fff', icon: '⚡'  },
-  LOW:      { bg: '#eaf3de', border: '#c0dd97', text: '#27500A', badge: '#639922', badgeText: '#fff', icon: 'ℹ️'  },
-  NONE:     { bg: '#f5f7f3', border: '#e0e8da', text: '#555',   badge: '#888',    badgeText: '#fff', icon: '✅'  },
+  CRITICAL: { bg: '#fee2e2', border: '#fca5a5', text: '#B71C1C', badge: '#FF3B30', badgeText: '#fff', icon: '🚨' },
+  HIGH:     { bg: '#fef2f2', border: '#f7c1c1', text: '#C62828', badge: '#FF3B30', badgeText: '#fff', icon: '⚠️'  },
+  MEDIUM:   { bg: '#FFF8E1', border: '#fcd34d', text: '#BF360C', badge: '#F57F17', badgeText: '#fff', icon: '⚡'  },
+  LOW:      { bg: '#E8F8F5', border: '#64DFD4', text: '#00897B', badge: '#00BFA5', badgeText: '#fff', icon: 'ℹ️'  },
+  NONE:     { bg: '#F5F5F7', border: '#E5E5E7', text: '#6E6E73',   badge: '#AEAEB2',    badgeText: '#fff', icon: '✅'  },
 }
 
 const STATUS_BAR = {
-  over:        { bar: '#c0392b', label: 'Over limit' },
-  approaching: { bar: '#e07c1a', label: 'Approaching' },
-  safe:        { bar: '#639922', label: 'Safe'        },
+  over:        { bar: '#FF3B30', label: 'Over limit' },
+  approaching: { bar: '#F57F17', label: 'Approaching' },
+  safe:        { bar: '#00BFA5', label: 'Safe'        },
 }
 
 export const OC_STYLES = `
@@ -35,20 +35,20 @@ export const OC_STYLES = `
   .ocb-count-label { font-size: 10px; font-weight: 500; white-space: nowrap; }
   .ocb-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 2px 0; }
   .ocb-all-clear { display: flex; align-items: center; gap: 8px; padding: 4px 0 2px; font-size: 12px; font-weight: 500; }
-  .ocd-category { border-radius: 12px; padding: 10px 14px; border: 1px solid #ece8df; background: #fff; margin-bottom: 6px; }
+  .ocd-category { border-radius: 12px; padding: 10px 14px; border: 1px solid #E5E5E7; background: #fff; margin-bottom: 6px; }
   .ocd-cat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .ocd-cat-icon { font-size: 16px; }
-  .ocd-cat-label { font-size: 12px; font-weight: 600; color: #1a3d2b; flex: 1; }
+  .ocd-cat-label { font-size: 12px; font-weight: 600; color: #1D1D1F; flex: 1; }
   .ocd-cat-status { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 6px; }
-  .ocd-bar-bg { height: 6px; background: #f0ede8; border-radius: 3px; overflow: hidden; }
+  .ocd-bar-bg { height: 6px; background: #F0F0F2; border-radius: 3px; overflow: hidden; }
   .ocd-bar { height: 6px; border-radius: 3px; transition: width 0.8s ease; }
   .ocd-count-text { font-size: 10px; color: #888; margin-top: 4px; }
-  .ocd-warn-box { background: #fff0f0; border: 1px solid #f7c1c1; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
-  .ocd-warn-title { font-size: 12px; font-weight: 700; color: #791F1F; margin-bottom: 6px; }
-  .ocd-warn-item { font-size: 11px; color: #791F1F; padding: 2px 0; }
-  .ocd-safe-box { background: #eaf3de; border: 1px solid #c0dd97; border-radius: 12px; padding: 12px 14px; text-align: center; }
-  .ocd-safe-text { font-size: 13px; font-weight: 600; color: #27500A; }
-  .ocd-safe-sub { font-size: 11px; color: #639922; margin-top: 3px; }
+  .ocd-warn-box { background: #fef2f2; border: 1px solid #f7c1c1; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+  .ocd-warn-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+  .ocd-warn-item { font-size: 11px; color: #C62828; padding: 2px 0; }
+  .ocd-safe-box { background: #E8F8F5; border: 1px solid #64DFD4; border-radius: 12px; padding: 12px 14px; text-align: center; }
+  .ocd-safe-text { font-size: 13px; font-weight: 600; color: #00897B; }
+  .ocd-safe-sub { font-size: 11px; color: #00BFA5; margin-top: 3px; }
   @keyframes ocSlide { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
   .oc-slide { animation: ocSlide 0.2s ease forwards; }
 `
@@ -96,7 +96,7 @@ export function ScanBanner({ warnings }) {
                 </div>
                 <div className="ocb-count-row">
                   <div className="ocb-count-bar-bg">
-                    <div className="ocb-count-bar" style={{ width: `${pct}%`, background: sev === 'CRITICAL' ? '#E24B4A' : sev === 'HIGH' ? '#c0392b' : '#e07c1a' }} />
+                    <div className="ocb-count-bar" style={{ width: `${pct}%`, background: sev === 'CRITICAL' ? '#FF3B30' : sev === 'HIGH' ? '#FF3B30' : '#F57F17' }} />
                   </div>
                   <span className="ocb-count-label" style={{ color: cfg.text }}>{flag.today_count}/{flag.limit} today</span>
                 </div>

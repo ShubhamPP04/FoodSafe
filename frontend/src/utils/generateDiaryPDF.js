@@ -20,7 +20,7 @@ const C = {
   muted:      '#94a3b8',
   border:     '#e2e8f0',
   borderDark: '#cbd5e1',
-  surface:    '#f8fafc',
+  surface:    '#f6f8f7',
   white:      '#ffffff',
 }
 

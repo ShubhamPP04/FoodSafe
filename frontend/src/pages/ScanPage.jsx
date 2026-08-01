@@ -86,10 +86,10 @@ export default function ScanPage() {
       <div className="px-5 pt-8 flex flex-col gap-8">
         {/* Header */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-1">
+          <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">
             SafeThali
           </p>
-          <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
             What are you eating?
           </h1>
           <p className="text-[15px] text-stone-500 mt-1">
@@ -167,7 +167,7 @@ export default function ScanPage() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Clock size={13} className="text-stone-400" />
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
+              <p className="text-xs font-bold uppercase tracking-widest text-stone-400">
                 Recent
               </p>
             </div>

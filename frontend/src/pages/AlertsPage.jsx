@@ -19,7 +19,7 @@ export default function AlertsPage() {
     <div className="flex flex-col gap-6 pt-8">
       {/* Header */}
       <div className="px-5">
-        <h1 className="text-2xl font-semibold text-stone-900 tracking-tight">Alerts</h1>
+        <h1 className="text-2xl font-bold text-stone-900 tracking-tight">Alerts</h1>
         <p className="text-[15px] text-stone-500 mt-1">
           FSSAI recalls and community reports near you.
         </p>
@@ -67,12 +67,12 @@ function FssaiList() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-semibold text-stone-900 leading-snug">
+                <p className="text-[15px] font-bold text-stone-900 leading-snug">
                   {alert.product}
                 </p>
                 <p className="text-sm text-stone-500 mt-0.5">{alert.brand}</p>
               </div>
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ${risk.badgeClass}`}>
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${risk.badgeClass}`}>
                 {risk.shortLabel}
               </span>
             </div>
@@ -100,7 +100,7 @@ function CommunityList() {
           className="bg-white border border-stone-200 rounded-2xl p-4 shadow-sm"
         >
           <div className="flex items-start justify-between gap-3">
-            <p className="text-[15px] font-semibold text-stone-900 capitalize">{report.food}</p>
+            <p className="text-[15px] font-bold text-stone-900 capitalize">{report.food}</p>
             <span className="text-xs font-medium text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full shrink-0">
               {report.reports} {report.reports === 1 ? 'report' : 'reports'}
             </span>

@@ -11,11 +11,11 @@ async function apiFetch(path) {
 
 function StatCard({ label, value, sub, icon: Icon, colorClass = 'text-ink' }) {
   return (
-    <div className="bg-surface-100 border border-rule rounded-[24px] p-5 shadow-xl relative overflow-hidden group hover:bg-surface-200/50 transition-colors">
+    <div className="bg-paper border border-rule rounded-2xl p-5 shadow-soft relative overflow-hidden group hover:bg-paper-2/50 transition-colors">
       <div className="absolute -right-4 -top-4 w-24 h-24 bg-ink/5 rounded-full blur-2xl group-hover:bg-brand/10 transition-colors pointer-events-none" />
       <div className="relative z-10 flex justify-between items-start mb-4">
         <div className="text-[10px] font-bold text-ink-3 uppercase tracking-[0.15em]">{label}</div>
-        {Icon && <div className="p-2 rounded-xl bg-surface-300/50 border border-rule text-ink-2 group-hover:text-brand transition-colors"><Icon className="w-4 h-4" /></div>}
+        {Icon && <div className="p-2 rounded-xl bg-paper-3/50 border border-rule text-ink-2 group-hover:text-brand transition-colors"><Icon className="w-4 h-4" /></div>}
       </div>
       <div className={`relative z-10 text-3xl font-sans font-bold ${colorClass} leading-none mb-2`}>{value}</div>
       {sub && <div className="relative z-10 text-[11px] font-medium text-ink-3">{sub}</div>}
@@ -26,10 +26,10 @@ function StatCard({ label, value, sub, icon: Icon, colorClass = 'text-ink' }) {
 function RiskBadge({ risk }) {
   const styles = {
     LOW:      'bg-brand/10 text-brand border-brand/20',
-    MEDIUM:   'bg-orange-500/10 text-orange-400 border-orange-500/20',
+    MEDIUM:   'bg-gold/10 text-gold border-gold/20',
     HIGH:     'bg-chili/10 text-chili border-chili/30',
-    CRITICAL: 'bg-red-900/40 text-chili border-red-500/40',
-    UNKNOWN:  'bg-surface-300 text-ink-2 border-rule',
+    CRITICAL: 'bg-chili/10 text-chili border-chili/30',
+    UNKNOWN:  'bg-paper-3 text-ink-2 border-rule',
   }
   const s = styles[risk] || styles.UNKNOWN
   return (
@@ -64,7 +64,7 @@ function MiniChart({ data }) {
 function ProgressBar({ value, max, colorClass = 'bg-brand' }) {
   const pct = Math.min((value / Math.max(max, 1)) * 100, 100)
   return (
-    <div className="flex-1 h-1.5 bg-surface-300 rounded-full overflow-hidden">
+    <div className="flex-1 h-1.5 bg-paper-3 rounded-full overflow-hidden">
       <div className={`h-full ${colorClass} rounded-full transition-all duration-1000 ease-out`} style={{ width: `${pct}%` }} />
     </div>
   )
@@ -117,11 +117,11 @@ export default function AdminDashboard() {
 
   useEffect(() => { load(); const t = setInterval(() => load(true), 30000); return () => clearInterval(t) }, [])
 
-  const RISK_COLORS = { LOW: 'text-brand bg-brand', MEDIUM: 'text-orange-400 bg-orange-400', HIGH: 'text-chili bg-red-400', CRITICAL: 'text-chili bg-chili' }
+  const RISK_COLORS = { LOW: 'text-brand bg-brand', MEDIUM: 'text-gold bg-gold', HIGH: 'text-chili bg-chili', CRITICAL: 'text-chili bg-chili' }
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4 animate-fade-up">
-      <div className="w-16 h-16 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center relative shadow-[0_0_32px_rgba(0,224,156,0.15)]">
+      <div className="w-16 h-16 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center relative shadow-[0_0_32px_rgba(0,191,165,0.15)]">
         <Activity className="w-8 h-8 text-brand animate-pulse" />
       </div>
       <div className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.2em] animate-pulse">Initializing System</div>
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
       <div className="text-chili text-sm font-medium">{error}</div>
       <button 
         onClick={() => load(true)} 
-        className="px-6 py-3 rounded-xl bg-surface-200 border border-rule text-ink-2 hover:text-ink hover:bg-surface-300 transition-all font-bold text-[11px] uppercase tracking-wider"
+        className="px-6 py-3 rounded-xl bg-paper-2 border border-rule text-ink-2 hover:text-ink hover:bg-paper-3 transition-all font-bold text-[11px] uppercase tracking-wider"
       >
         Retry Connection
       </button>
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
     <div className="flex flex-col min-h-screen pb-32 animate-fade-up">
       
       {/* Top App Bar */}
-      <div className="sticky top-0 z-40 bg-paper/80 backdrop-blur-xl border-b border-rule py-4 px-4 md:px-8 flex justify-between items-center shadow-sm">
+      <div className="sticky top-0 z-40 bg-paper/80 border-b border-rule py-4 px-4 md:px-8 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
             <Activity className="w-5 h-5 text-brand" />
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
             onClick={() => load(true)} 
             disabled={refreshing}
             className={`p-2 border border-rule rounded-lg transition-all flex items-center justify-center
-              ${refreshing ? 'bg-surface-300 text-ink-3' : 'bg-surface-100 hover:bg-surface-200 text-ink-2 hover:text-ink'}`}
+              ${refreshing ? 'bg-paper-3 text-ink-3' : 'bg-paper hover:bg-paper-2 text-ink-2 hover:text-ink'}`}
           >
             <RefreshCcw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
           </button>
@@ -187,18 +187,18 @@ export default function AdminDashboard() {
 
       {/* Navigation Tabs */}
       <div className="px-4 md:px-8 mt-6">
-        <div className="flex gap-2 p-1.5 bg-surface-100/50 border border-rule rounded-2xl overflow-x-auto hide-scrollbar custom-scrollbar w-full sm:w-auto">
+        <div className="flex gap-2 p-1.5 bg-paper/50 border border-rule rounded-2xl overflow-x-auto hide-scrollbar custom-scrollbar w-full sm:w-auto">
           {TABS.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all shrink-0
                 ${tab === t.key 
-                  ? 'bg-surface-300 text-ink shadow-md border border-rule' 
-                  : 'text-ink-3 hover:text-ink hover:bg-surface-200/50'}`}
+                  ? 'bg-paper-3 text-ink shadow-card border border-rule' 
+                  : 'text-ink-3 hover:text-ink hover:bg-paper-2/50'}`}
             >
               <t.Icon className={`w-4 h-4 ${tab === t.key ? 'text-brand' : ''}`} />
               {t.label}
               {t.key === 'scans' && scans.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded bg-brand/10 text-brand text-[9px] border border-brand/20">{scans.length}</span>}
-              {t.key === 'community' && reports.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-brand text-[9px] border border-blue-500/20">{reports.length}</span>}
+              {t.key === 'community' && reports.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded bg-brand/10 text-brand text-[9px] border border-brand/20">{reports.length}</span>}
             </button>
           ))}
         </div>
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Trend Chart */}
-              <div className="bg-surface-100 border border-rule rounded-[24px] p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+              <div className="bg-paper border border-rule rounded-2xl p-6 shadow-soft relative overflow-hidden flex flex-col justify-between">
                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 blur-3xl rounded-full pointer-events-none" />
                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] mb-8 relative z-10 flex items-center gap-2">
                    <BarChart2 className="w-3.5 h-3.5" /> Scan Volume (7 Days)
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Risk Breakdown */}
-              <div className="bg-surface-100 border border-rule rounded-[24px] p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+              <div className="bg-paper border border-rule rounded-2xl p-6 shadow-soft relative overflow-hidden flex flex-col justify-between">
                  <div className="absolute top-0 left-0 w-32 h-32 bg-chili/5 blur-3xl rounded-full pointer-events-none" />
                  <h3 className="text-[11px] font-bold text-ink-3 uppercase tracking-[0.15em] mb-6 relative z-10 flex items-center gap-2">
                    <AlertOctagon className="w-3.5 h-3.5" /> Risk Distribution
@@ -262,22 +262,22 @@ export default function AdminDashboard() {
 
             {/* Minor Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-surface-200/50 border border-rule rounded-[20px] p-4 flex flex-col items-center justify-center text-center">
+              <div className="bg-paper-2/50 border border-rule rounded-2xl p-4 flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">Avg Score</span>
                 <span className="text-xl font-sans font-bold text-brand">{stats.avgScore || 0}</span>
                 <span className="text-[9px] font-medium text-ink-3 mt-1">/ 100</span>
               </div>
-              <div className="bg-surface-200/50 border border-rule rounded-[20px] p-4 flex flex-col items-center justify-center text-center">
+              <div className="bg-paper-2/50 border border-rule rounded-2xl p-4 flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">Top Food</span>
                 <span className="text-sm font-bold text-ink truncate w-full px-2">{stats.topFood || '—'}</span>
               </div>
-              <div className="bg-surface-200/50 border border-rule rounded-[20px] p-4 flex flex-col items-center justify-center text-center">
+              <div className="bg-paper-2/50 border border-rule rounded-2xl p-4 flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">Top City</span>
                 <span className="text-sm font-bold text-ink truncate w-full px-2">{stats.topCity || '—'}</span>
               </div>
-              <div className="bg-surface-200/50 border border-rule rounded-[20px] p-4 flex flex-col items-center justify-center text-center">
+              <div className="bg-paper-2/50 border border-rule rounded-2xl p-4 flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] font-bold text-ink-3 uppercase tracking-widest mb-1.5">FSSAI Reports</span>
-                <span className="text-xl font-sans font-bold text-orange-400">{stats.fssaiViolations || 0}</span>
+                <span className="text-xl font-sans font-bold text-gold">{stats.fssaiViolations || 0}</span>
               </div>
             </div>
 
@@ -286,8 +286,8 @@ export default function AdminDashboard() {
 
         {/* ── Scans Tab ── */}
         {tab === 'scans' && (
-          <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl animate-fade-up">
-            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-surface-200/30">
+          <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft animate-fade-up">
+            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-paper-2/30">
               <h3 className="text-sm font-bold text-ink uppercase tracking-wider flex items-center gap-2">
                 <Search className="w-4 h-4 text-ink-2" /> Global Scans Live Feed
               </h3>
@@ -297,7 +297,7 @@ export default function AdminDashboard() {
             </div>
             
             {scans.length === 0 ? (
-              <div className="p-16 text-center flex flex-col items-center gap-4 border-t border-rule bg-surface-100/30">
+              <div className="p-16 text-center flex flex-col items-center gap-4 border-t border-rule bg-paper/30">
                 <Search className="w-10 h-10 text-ink/10" />
                 <span className="text-xs font-medium text-ink-3 uppercase tracking-widest">No scans recorded</span>
               </div>
@@ -305,15 +305,15 @@ export default function AdminDashboard() {
               <div className="overflow-x-auto hide-scrollbar custom-scrollbar pb-2">
                 <table className="w-full text-left border-collapse min-w-[600px]">
                   <thead>
-                    <tr className="bg-surface-200/50 border-b border-rule">
+                    <tr className="bg-paper-2/50 border-b border-rule">
                       {['Product / Food', 'Risk Assessment', 'Score', 'Location', 'Scanner Mode', 'Timestamp'].map(h => (
                         <th key={h} className="py-3.5 px-6 text-[9px] font-bold text-ink-3 uppercase tracking-[0.15em] whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-rule">
                     {scans.map((s, i) => (
-                      <tr key={i} className="hover:bg-surface-200/30 transition-colors group">
+                      <tr key={i} className="hover:bg-paper-2/30 transition-colors group">
                         <td className="py-4 px-6 font-bold text-ink text-sm">{s.food}</td>
                         <td className="py-4 px-6"><RiskBadge risk={s.risk} /></td>
                         <td className="py-4 px-6 text-xs font-bold text-ink-2 group-hover:text-ink">{s.score || '—'}</td>
@@ -331,8 +331,8 @@ export default function AdminDashboard() {
 
         {/* ── Community Tab ── */}
         {tab === 'community' && (
-          <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl animate-fade-up">
-            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-surface-200/30">
+          <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft animate-fade-up">
+            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-paper-2/30">
               <h3 className="text-sm font-bold text-ink uppercase tracking-wider flex items-center gap-2">
                 <Users className="w-4 h-4 text-ink-2" /> Crowdsourced Reports
               </h3>
@@ -344,14 +344,14 @@ export default function AdminDashboard() {
                 <span className="text-xs font-medium text-ink-3 uppercase tracking-widest">No reports submitted</span>
               </div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {reports.map((r, i) => (
-                  <div key={i} className="p-5 md:p-6 hover:bg-surface-200/30 transition-colors">
+                  <div key={i} className="p-5 md:p-6 hover:bg-paper-2/30 transition-colors">
                     <div className="flex justify-between items-start gap-4 mb-2">
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-bold text-ink text-[15px]">{r.food_name}</span>
-                          {r.brand && <span className="text-[10px] font-bold text-ink-3 bg-surface-300 px-2 py-0.5 rounded-md border border-rule">{r.brand}</span>}
+                          {r.brand && <span className="text-[10px] font-bold text-ink-3 bg-paper-3 px-2 py-0.5 rounded-md border border-rule">{r.brand}</span>}
                         </div>
                         <span className="text-[10px] font-bold text-ink-3 uppercase tracking-widest flex items-center gap-1.5">
                           📍 {r.city || 'Unknown Location'}
@@ -359,7 +359,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {r.verified && <span className="text-[9px] font-bold uppercase tracking-widest bg-brand/10 text-brand border border-brand/20 px-2.5 py-1 rounded-md">✓ Verified</span>}
-                        <span className="text-[10px] font-bold text-ink-2 bg-surface-300 px-2.5 py-1 rounded-md border border-rule flex items-center gap-1.5 hover:text-ink transition-colors cursor-default">
+                        <span className="text-[10px] font-bold text-ink-2 bg-paper-3 px-2.5 py-1 rounded-md border border-rule flex items-center gap-1.5 hover:text-ink transition-colors cursor-default">
                           👍 {r.upvotes || 0}
                         </span>
                       </div>
@@ -374,8 +374,8 @@ export default function AdminDashboard() {
 
         {/* ── FSSAI Tab ── */}
         {tab === 'fssai' && (
-          <div className="bg-surface-100 border border-rule rounded-[24px] overflow-hidden shadow-xl animate-fade-up">
-            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-surface-200/30">
+          <div className="bg-paper border border-rule rounded-2xl overflow-hidden shadow-soft animate-fade-up">
+            <div className="p-5 md:p-6 border-b border-rule flex justify-between items-center bg-paper-2/30">
               <h3 className="text-sm font-bold text-ink uppercase tracking-wider flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-ink-2" /> Official Violations Database
               </h3>
@@ -387,16 +387,16 @@ export default function AdminDashboard() {
                 <span className="text-xs font-medium text-ink-3 uppercase tracking-widest">No FSSAI alerts aggregated</span>
               </div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {alerts.map((a, i) => (
-                  <div key={i} className="p-5 md:p-6 hover:bg-surface-200/30 transition-colors flex flex-col md:flex-row gap-4 md:items-center">
+                  <div key={i} className="p-5 md:p-6 hover:bg-paper-2/30 transition-colors flex flex-col md:flex-row gap-4 md:items-center">
                      <div className="w-10 h-10 shrink-0 rounded-xl bg-chili/10 border border-chili/30 text-chili flex items-center justify-center">
                        <AlertOctagon className="w-5 h-5" />
                      </div>
                      <div className="flex-1 flex flex-col gap-1.5">
                        <div className="flex justify-between items-start md:items-center gap-3">
                          <h4 className="font-bold text-ink text-[14px]">{a.product || a.title || 'Regulatory Alert'}</h4>
-                         <span className="text-[9px] font-bold text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 rounded-md uppercase tracking-widest whitespace-nowrap shrink-0">
+                         <span className="text-[9px] font-bold text-gold bg-gold/10 border border-gold/20 px-2 py-0.5 rounded-md uppercase tracking-widest whitespace-nowrap shrink-0">
                            {a.state || 'National'}
                          </span>
                        </div>
@@ -421,7 +421,7 @@ export default function AdminDashboard() {
                 { id: 'llm_vision', icon: Globe, name: 'Gemini Vision', detail: 'Image and label analysis engine' },
                 { id: 'backend', icon: Database, name: 'FastAPI Router', detail: 'Traffic Director & DB Cache' },
               ].map((m) => (
-                <div key={m.id} className="bg-surface-100 border border-rule rounded-[24px] p-5 flex items-start gap-4 shadow-md group relative overflow-hidden">
+                <div key={m.id} className="bg-paper border border-rule rounded-2xl p-5 flex items-start gap-4 shadow-card group relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-20 h-20 bg-brand/5 blur-xl rounded-full group-hover:bg-brand/10 transition-colors pointer-events-none" />
                   <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 text-brand flex items-center justify-center shrink-0">
                     <m.icon className="w-6 h-6" />
@@ -446,15 +446,15 @@ export default function AdminDashboard() {
                 const desc = m.classes ? `${m.classes} classes` : m.mappings ? `${m.mappings} mappings` : m.categories ? `${m.categories} categories` : 'Sub-process'
 
                 return (
-                  <div key={key} className={`bg-surface-100 border ${isLoaded ? 'border-brand/20' : 'border-rule'} rounded-[24px] p-5 flex items-start gap-4 shadow-md group relative overflow-hidden transition-colors`}>
+                  <div key={key} className={`bg-paper border ${isLoaded ? 'border-brand/20' : 'border-rule'} rounded-2xl p-5 flex items-start gap-4 shadow-card group relative overflow-hidden transition-colors`}>
                     <div className="absolute top-0 right-0 w-20 h-20 bg-brand/5 blur-xl rounded-full group-hover:bg-brand/10 transition-colors pointer-events-none" />
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${isLoaded ? 'bg-brand/10 border-brand/20 text-brand' : 'bg-surface-300 border-rule text-ink-3'}`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${isLoaded ? 'bg-brand/10 border-brand/20 text-brand' : 'bg-paper-3 border-rule text-ink-3'}`}>
                       <Icon className="w-6 h-6" />
                     </div>
                     <div className="flex flex-col flex-1 z-10">
                       <div className="flex justify-between items-start gap-2 mb-1">
                         <h4 className="text-[13px] font-bold text-ink leading-tight">{m.label || key}</h4>
-                        <div className={`flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full border ${isLoaded ? 'bg-brand/10 border-brand/20 text-brand' : 'bg-surface-300 border-rule text-ink-3'}`}>
+                        <div className={`flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-full border ${isLoaded ? 'bg-brand/10 border-brand/20 text-brand' : 'bg-paper-3 border-rule text-ink-3'}`}>
                            {isLoaded && <div className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />}
                            <span className="text-[8px] font-bold uppercase tracking-widest">{isLoaded ? 'Active' : 'Offline'}</span>
                         </div>

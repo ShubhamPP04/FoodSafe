@@ -1,10 +1,10 @@
 import { useRef } from 'react'
 
 const RISK_COLORS = {
-  LOW:      { bg: '#1a3d2b', accent: '#c9a84c', text: '#f5f0e8', badge: '#eaf3de', badgeText: '#27500A' },
-  MEDIUM:   { bg: '#3d2800', accent: '#e07c1a', text: '#f5f0e8', badge: '#fff8ed', badgeText: '#633806' },
-  HIGH:     { bg: '#3d0808', accent: '#c0392b', text: '#f5f0e8', badge: '#fff0f0', badgeText: '#791F1F' },
-  CRITICAL: { bg: '#2d0000', accent: '#7F0000', text: '#f5f0e8', badge: '#FCEBEB', badgeText: '#501313' },
+  LOW:      { bg: '#1D1D1F', accent: '#00BFA5', text: '#F5F5F7', badge: '#E8F8F5', badgeText: '#00897B' },
+  MEDIUM:   { bg: '#2A1A05', accent: '#F57F17', text: '#F5F5F7', badge: '#FFF8E1', badgeText: '#BF360C' },
+  HIGH:     { bg: '#1A0808', accent: '#FF3B30', text: '#F5F5F7', badge: '#FFEBEE', badgeText: '#C62828' },
+  CRITICAL: { bg: '#150505', accent: '#B71C1C', text: '#F5F5F7', badge: '#FFCDD2', badgeText: '#B71C1C' },
 }
 
 export default function ShareCard({ result }) {
@@ -191,7 +191,7 @@ export default function ShareCard({ result }) {
         background: '#f0fff4',
         color: '#128C7E',
         fontSize: 13,
-        fontWeight: 600,
+        fontWeight: 800,
         cursor: 'pointer',
         fontFamily: "'DM Sans', sans-serif",
         transition: 'background 0.15s',

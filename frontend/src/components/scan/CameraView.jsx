@@ -84,7 +84,7 @@ export default function CameraView({ onCapture, onClose }) {
 
       {/* Error state */}
       {error && (
-        <div className="absolute inset-x-5 top-1/2 -translate-y-1/2 bg-white rounded-2xl p-5 shadow-xl">
+        <div className="absolute inset-x-5 top-1/2 -translate-y-1/2 bg-white rounded-2xl p-5 shadow-soft">
           <p className="text-stone-900 font-medium text-sm mb-1">Camera unavailable</p>
           <p className="text-stone-500 text-sm">{error}</p>
           <button
@@ -106,7 +106,7 @@ export default function CameraView({ onCapture, onClose }) {
             disabled={!ready}
             aria-label="Capture photo"
             className="w-[68px] h-[68px] rounded-full border-4 border-white/40 bg-white
-                       shadow-lg active:scale-95 transition-transform
+                       shadow-soft active:scale-95 transition-transform
                        disabled:opacity-40 disabled:cursor-not-allowed"
           />
         </div>

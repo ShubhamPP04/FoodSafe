@@ -19,18 +19,18 @@ export default class ErrorBoundary extends Component {
       return (
         <div style={{
           minHeight: '100dvh',
-          background: '#f8fafc',
+          background: '#F5F5F7',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           padding: '32px 24px',
-          fontFamily: '"Source Sans 3", system-ui, sans-serif',
+          fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
           textAlign: 'center',
         }}>
           <div style={{
             width: 48, height: 48, borderRadius: 999,
-            background: '#4a90d9', color: '#ffffff',
+            background: '#00BFA5', color: '#ffffff',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             marginBottom: 20,
           }}>
@@ -39,18 +39,18 @@ export default class ErrorBoundary extends Component {
             </svg>
           </div>
           <div style={{
-            fontFamily: 'Fraunces, Georgia, serif',
+            fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
             fontSize: 24,
-            fontWeight: 600,
+            fontWeight: 800,
             letterSpacing: '-0.02em',
-            color: '#1c1917',
+            color: '#1D1D1F',
             marginBottom: 8,
           }}>
             Something went wrong
           </div>
           <div style={{
             fontSize: 14,
-            color: '#57534e',
+            color: '#6E6E73',
             fontWeight: 400,
             marginBottom: 24,
             lineHeight: 1.6,
@@ -62,11 +62,11 @@ export default class ErrorBoundary extends Component {
             <div style={{
               fontSize: 11,
               fontFamily: 'ui-monospace, monospace',
-              color: '#57534e',
+              color: '#6E6E73',
               background: '#eef1f5',
               padding: '10px 14px',
               borderRadius: 8,
-              border: '1px solid #dde3ea',
+              border: '1px solid #E5E5E7',
               marginBottom: 20,
               maxWidth: 360,
               wordBreak: 'break-all',
@@ -84,11 +84,11 @@ export default class ErrorBoundary extends Component {
             style={{
               padding: '11px 28px',
               borderRadius: 10,
-              border: '1px solid #4a90d9',
-              background: '#4a90d9',
+              border: '1px solid #00BFA5',
+              background: '#00BFA5',
               color: '#ffffff',
               fontSize: 13,
-              fontWeight: 600,
+              fontWeight: 800,
               cursor: 'pointer',
               fontFamily: 'inherit',
             }}
