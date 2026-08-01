@@ -259,3 +259,326 @@ h1, h2, h3, h4 {
     opacity: 1; animation: none; filter: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Cinematic Scroll Landing Page
+   ═══════════════════════════════════════════════════════════════ */
+.cinema-page {
+  --mx: 0; --my: 0;
+  --bg-scale: 0.9; --bg-brightness: 1; --blur-px: 0px;
+  --shade-opacity: 1; --shade-z: 0;
+  --shade-alpha-top: 0; --shade-alpha-mid: 0; --shade-alpha-bot: 0;
+  --title-y: 0px; --title-scale: 1; --title-opacity: 1;
+  --intro-y: 0px; --intro-opacity: 1;
+  --panel2-opacity: 0; --panel2-y: calc(-50% + 50px);
+  --panel3-opacity: 0; --panel3-y: calc(-50% + 50px);
+  --sights-enter-x: 420vw; --sights-visibility: hidden;
+  --sights-controls-opacity: 0;
+  background: #050d0a;
+  color: #e8f5f0;
+}
+.cinema-scroll { position: relative; height: calc(100vh + 3200px); }
+.cinema-stage {
+  position: sticky; top: 0; height: 100vh; min-height: 600px;
+  overflow: hidden; isolation: isolate;
+}
+.cinema-page .bg-layer,
+.cinema-page .shade,
+.cinema-page .hero-title,
+.cinema-page .intro-copy,
+.cinema-page .story-panel,
+.cinema-page .sights-slider,
+.cinema-page .sights-controls,
+.cinema-page .site-header {
+  position: absolute;
+}
+
+/* Background gradient with scroll-driven scale/blur */
+.cinema-page .bg-layer {
+  inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(0,217,190,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 80%, rgba(0,191,165,0.04) 0%, transparent 55%),
+    linear-gradient(180deg, #0A1F1A 0%, #0D2A22 35%, #051410 70%, #020806 100%);
+  filter: blur(var(--blur-px)) brightness(var(--bg-brightness));
+  transform: scale(var(--bg-scale));
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+}
+
+/* Animated background — floating orbs + mesh + particles */
+.cinema-page .bg-animated {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  filter: blur(var(--blur-px)) brightness(var(--bg-brightness));
+  transform: scale(var(--bg-scale));
+  will-change: transform, filter;
+}
+
+/* Large floating orbs */
+.cinema-page .orb {
+  position: absolute; border-radius: 50%;
+  will-change: transform;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+.cinema-page .orb-1 {
+  width: 600px; height: 600px; top: -10%; left: -15%;
+  background: radial-gradient(circle, rgba(0,217,190,0.12) 0%, transparent 65%);
+  animation-duration: 22s; animation-delay: 0s;
+}
+.cinema-page .orb-2 {
+  width: 450px; height: 450px; bottom: -5%; right: -10%;
+  background: radial-gradient(circle, rgba(0,191,165,0.08) 0%, transparent 65%);
+  animation-duration: 26s; animation-delay: -8s;
+}
+.cinema-page .orb-3 {
+  width: 350px; height: 350px; top: 40%; left: 50%;
+  background: radial-gradient(circle, rgba(255,179,0,0.05) 0%, transparent 65%);
+  animation-duration: 30s; animation-delay: -15s;
+}
+.cinema-page .orb-4 {
+  width: 250px; height: 250px; top: 60%; left: 10%;
+  background: radial-gradient(circle, rgba(0,217,190,0.07) 0%, transparent 65%);
+  animation-duration: 18s; animation-delay: -5s;
+}
+.cinema-page .orb-5 {
+  width: 200px; height: 200px; top: 15%; right: 20%;
+  background: radial-gradient(circle, rgba(100,223,212,0.06) 0%, transparent 65%);
+  animation-duration: 24s; animation-delay: -12s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(40px, -60px) scale(1.08); }
+  50% { transform: translate(-30px, 30px) scale(0.95); }
+  75% { transform: translate(50px, 20px) scale(1.04); }
+}
+
+/* Animated gradient mesh */
+.cinema-page .mesh {
+  position: absolute; inset: -50%; z-index: 0;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(0,217,190,0.03) 60deg,
+    transparent 120deg,
+    rgba(0,191,165,0.02) 180deg,
+    transparent 240deg,
+    rgba(255,179,0,0.02) 300deg,
+    transparent 360deg
+  );
+  animation: meshRotate 60s linear infinite;
+  will-change: transform;
+}
+@keyframes meshRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Floating particles */
+.cinema-page .particles {
+  position: absolute; inset: 0; z-index: 0;
+  will-change: transform;
+}
+.cinema-page .particle {
+  position: absolute; border-radius: 50%;
+  background: rgba(0,217,190,0.3);
+  animation: particleRise linear infinite;
+  will-change: transform, opacity;
+}
+@keyframes particleRise {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* Grid texture — animated drift */
+.cinema-page .grid-tex {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.025; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,217,190,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,217,190,0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridDrift 40s linear infinite;
+}
+@keyframes gridDrift {
+  from { background-position: 0 0; }
+  to { background-position: 60px 60px; }
+}
+
+/* Shade overlay */
+.cinema-page .shade {
+  inset: 0; z-index: var(--shade-z); pointer-events: none; opacity: var(--shade-opacity);
+  background: linear-gradient(180deg,
+    rgba(0,80,60,var(--shade-alpha-top)) 0%,
+    rgba(0,60,45,var(--shade-alpha-mid)) 48%,
+    rgba(0,40,30,var(--shade-alpha-bot)) 100%);
+}
+
+/* Header */
+.cinema-page .site-header {
+  top: 0; left: 0; right: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 32px; gap: 24px;
+}
+.cinema-page .site-header .logo-grp { display: flex; align-items: center; gap: 10px; }
+.cinema-page .site-header .logo-box {
+  width: 32px; height: 32px; border-radius: 9px; background: #00BFA5;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,191,165,0.35);
+}
+.cinema-page .site-header .logo-text { font-size: 18px; font-weight: 800; color: #e8f5f0; letter-spacing: -0.02em; }
+.cinema-page .site-header nav { display: flex; gap: 28px; }
+.cinema-page .site-header nav button {
+  font-size: 14px; font-weight: 500; color: rgba(232,245,240,0.6);
+  background: none; border: 0; cursor: pointer; transition: color 0.3s;
+}
+.cinema-page .site-header nav button:hover { color: #00D9BE; }
+.cinema-page .site-header .cta {
+  padding: 8px 20px; border-radius: 999px; border: 0; cursor: pointer;
+  background: #00BFA5; color: #fff; font-size: 13px; font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.32,0.72,0,1);
+}
+.cinema-page .site-header .cta:hover { background: #00897B; transform: translateY(-1px); }
+
+/* Hero title */
+.cinema-page .hero-title {
+  left: 50%; top: clamp(90px, 18vh, 180px); z-index: 3;
+  width: 100%; margin: 0; text-align: center;
+  font-size: clamp(3.5rem, 13vw, 11rem); font-weight: 800;
+  line-height: 0.82; letter-spacing: -0.04em;
+  color: #e8f5f0; pointer-events: none;
+  transform: translate3d(-50%, var(--title-y), 0) scale(var(--title-scale));
+  opacity: var(--title-opacity);
+  will-change: transform, opacity;
+}
+.cinema-page .hero-title .accent { color: #00D9BE; }
+
+/* Intro copy */
+.cinema-page .intro-copy {
+  left: 50%; bottom: clamp(48px, 22vh, 300px); z-index: 9;
+  width: min(520px, calc(100vw - 32px)); text-align: center;
+  transform: translate3d(-50%, var(--intro-y), 0);
+  opacity: var(--intro-opacity);
+  will-change: transform, opacity;
+}
+.cinema-page .intro-copy p {
+  margin: 0 auto; max-width: 480px;
+  color: rgba(232,245,240,0.7); font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  font-weight: 500; line-height: 1.4;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+.cinema-page .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+.cinema-page .hero-tags span {
+  min-height: 38px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 18px; border-radius: 999px;
+  background: rgba(232,245,240,0.95); color: #0A1F1A;
+  font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+}
+
+/* Story panels */
+.cinema-page .story-panel {
+  left: 50%; top: 45%; z-index: 10;
+  width: min(680px, calc(100vw - 32px)); text-align: center;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, opacity;
+}
+.cinema-page .story-panel-bridge { top: 58%; opacity: var(--panel2-opacity); transform: translate3d(-50%, var(--panel2-y), 0); }
+.cinema-page .story-panel-bazaar { top: 30%; opacity: var(--panel3-opacity); transform: translate3d(-50%, var(--panel3-y), 0); }
+.cinema-page .story-panel h2 {
+  margin: 0; color: #e8f5f0;
+  font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 800;
+  line-height: 0.95; letter-spacing: -0.03em;
+  text-shadow: 0 12px 36px rgba(0,0,0,0.4);
+}
+.cinema-page .story-panel p {
+  width: min(480px, 100%); margin: 22px auto 0;
+  color: rgba(232,245,240,0.65); font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  font-weight: 500; line-height: 1.4;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+.cinema-page .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; width: min(480px, 100%); margin: 40px auto 0; }
+.cinema-page .facts dt { color: #00D9BE; font-size: clamp(1.8rem, 3.5vw, 3.2rem); font-weight: 800; line-height: 0.9; }
+.cinema-page .facts dd { margin: 10px 0 0; color: rgba(232,245,240,0.55); font-size: 0.85rem; font-weight: 500; }
+
+/* Sights slider */
+.cinema-page .sights-slider {
+  left: 0; right: 0; z-index: 2;
+  top: clamp(120px, 28vh, 280px);
+  visibility: var(--sights-visibility);
+  transform: translate3d(var(--sights-enter-x), 0, 0);
+  will-change: transform;
+}
+.cinema-page .sights-track {
+  display: flex; gap: clamp(14px, 1.5vw, 22px);
+  padding: 0 32px;
+  overflow: hidden;
+}
+.cinema-page .sight-card {
+  position: relative; flex: 0 0 clamp(300px, 22vw, 380px);
+  height: 200px; padding: 22px; overflow: hidden;
+  border: 1px solid rgba(0,217,190,0.15); border-radius: 22px;
+  color: #e8f5f0; background: rgba(15,30,25,0.9);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px); cursor: pointer; user-select: none;
+}
+.cinema-page .sight-card .kick {
+  display: block; margin-bottom: 50px;
+  color: #00D9BE; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+.cinema-page .sight-card .icon-box {
+  position: absolute; top: 22px; right: 22px;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(0,217,190,0.12); display: flex; align-items: center; justify-content: center;
+}
+.cinema-page .sight-card h3 {
+  position: absolute; left: 22px; right: 22px; bottom: 56px;
+  margin: 0; color: #e8f5f0; font-size: 20px; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cinema-page .sight-card p {
+  position: absolute; left: 22px; right: 22px; bottom: 22px;
+  margin: 0; color: rgba(232,245,240,0.5); font-size: 13px;
+  line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* Slider controls */
+.cinema-page .sights-controls {
+  left: 32px; z-index: 5;
+  top: calc(clamp(120px, 28vh, 280px) + 200px + 14px);
+  display: flex; gap: 12px;
+  opacity: var(--sights-controls-opacity);
+  pointer-events: none;
+}
+.cinema-page .sights-controls.is-ready { pointer-events: auto; }
+.cinema-page .sight-nav {
+  width: 48px; height: 48px; border-radius: 999px;
+  border: 0; cursor: pointer; font-size: 18px;
+  color: #0A1F1A; background: rgba(232,245,240,0.92);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.2);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+}
+.cinema-page .sight-nav:hover { transform: scale(1.05); }
+
+@media (max-width: 768px) {
+  .cinema-page .site-header { padding: 18px 20px; }
+  .cinema-page .site-header nav { display: none; }
+  .cinema-page .hero-title { top: 14vh; }
+  .cinema-page .intro-copy { bottom: 36px; }
+  .cinema-page .facts { grid-template-columns: 1fr; gap: 16px; }
+  .cinema-page .sight-card { flex-basis: min(80vw, 320px); }
+  .cinema-page .sights-controls { left: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-page .bg-layer,
+  .cinema-page .hero-title,
+  .cinema-page .intro-copy,
+  .cinema-page .story-panel,
+  .cinema-page .sights-slider { transition: none; }
+}
