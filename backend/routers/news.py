@@ -211,27 +211,32 @@ def _derive_severity(title: str, summary: str) -> str:
 
 
 def _best_source(title: str, sources: list[dict]) -> dict:
-    """Pick the grounding source that best matches a given article title."""
+    """Pick the grounding source that best matches a given article title.
+    Prefers sources that have a real URI."""
     if not sources:
         return {}
+    # Only consider sources that have a usable URI
+    usable = [s for s in sources if s.get("uri")]
+    if not usable:
+        usable = sources
     t = (title or "").lower()
     # 1. Exact title substring match.
-    for s in sources:
+    for s in usable:
         if s.get("title") and s["title"].lower() in t:
             return s
     # 2. Significant word overlap between title and source title.
     t_words = {w for w in re.split(r"\W+", t) if len(w) > 3}
-    for s in sources:
+    for s in usable:
         s_words = {w for w in re.split(r"\W+", (s.get("title") or "").lower()) if len(w) > 3}
         if t_words and s_words and len(t_words & s_words) >= 2:
             return s
     # 3. Domain keyword appears in title (e.g. "times of india").
-    for s in sources:
+    for s in usable:
         if s.get("domain"):
             dom_words = [w for w in s["domain"].split(".") if len(w) > 3]
             if any(w in t for w in dom_words):
                 return s
-    return sources[0]
+    return usable[0] if usable else {}
 
 
 async def _fetch_live_news() -> list[dict]:
@@ -291,18 +296,18 @@ Cover 6-10 distinct real articles. Cite each article from a different source whe
         src_idx = sources.index(src) if src else -1
         if src_idx in used_sources and len(sources) > len(used_sources):
             for i, alt in enumerate(sources):
-                if i not in used_sources:
+                if i not in used_sources and alt.get("uri"):
                     src = alt
                     src_idx = i
                     break
         if src_idx >= 0:
             used_sources.add(src_idx)
-        # Prefer a real grounding URL; otherwise build a Google News search URL
-        # from the exact headline so "Read More" always reaches real coverage.
+        # Prefer a real grounding URL; fall back to Google News search
+        # (lands on the actual article more often than generic Google Search)
         src_url = src.get("uri") or ""
         if not src_url and title:
             from urllib.parse import quote_plus
-            src_url = f"https://www.google.com/search?q={quote_plus(title + ' food safety india')}"
+            src_url = f"https://news.google.com/search?q={quote_plus(title)}"
         articles.append({
             "title": title,
             "summary": summary,
