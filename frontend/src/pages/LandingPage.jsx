@@ -62,9 +62,9 @@ export default function LandingPage() {
                 <span className="font-display text-[16px] font-extrabold tracking-tight text-white">SafeThali</span>
               </div>
               <nav className="hidden md:flex items-center gap-6">
-                {['Scan', 'Features', 'About'].map(item => (
-                  <span key={item} className="text-[13px] font-medium text-white/60 hover:text-white cursor-pointer transition-colors">{item}</span>
-                ))}
+                <button onClick={() => nav('/auth')} className="text-[13px] font-bold text-white hover:text-brand cursor-pointer transition-colors">Scan</button>
+                <button onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })} className="text-[13px] font-bold text-white/60 hover:text-white cursor-pointer transition-colors">Features</button>
+                <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="text-[13px] font-bold text-white/60 hover:text-white cursor-pointer transition-colors">About</button>
               </nav>
               <Button size="sm" onClick={() => nav('/auth')} className="!bg-brand !border-brand !text-white hover:!bg-brand-dark">
                 Get Started
@@ -206,7 +206,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA section — dark ── */}
-      <section className="relative py-24 md:py-32 px-6" style={{ background: '#0A1F1A' }}>
+      <section id="about" className="relative py-24 md:py-32 px-6" style={{ background: '#0A1F1A' }}>
         <div className="absolute top-[20%] left-[30%] w-[400px] h-[400px] rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(0,217,190,0.06) 0%, transparent 60%)' }} />
         <div className="relative max-w-4xl mx-auto text-center">
