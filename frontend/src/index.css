@@ -197,11 +197,8 @@ h1, h2, h3, h4 {
 .fade-up-5 { animation: fadeUp 0.7s var(--ease-fluid) 0.40s both; }
 .fade-up-6 { animation: fadeUp 0.7s var(--ease-fluid) 0.48s both; }
 
-/* Ticker slide-in animation (mobile only) */
+/* Ticker slide-in animation */
 .ticker-anim { animation: tickerSlide 0.5s var(--ease-fluid) forwards; }
-@media (min-width: 1024px) {
-  .ticker-anim { animation: none; }
-}
 /* ── Haptic interactions ───────────────────────────────────── */
 .haptic {
   transition: transform 0.3s var(--ease-fluid), opacity 0.3s var(--ease-fluid);

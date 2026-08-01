@@ -267,7 +267,14 @@ export default function HomePage() {
             ))}
             <button type="button"
               className="inline-flex items-center gap-1 text-[12px] font-bold text-ink-3 border border-dashed border-rule px-3 py-1 rounded-full hover:border-brand hover:text-brand transition-all duration-400 active:scale-95"
-              onClick={() => { if (query.trim()) { addCombinationFood(query.trim()); setQuery('') } }}>
+              onClick={() => {
+                if (query.trim()) {
+                  addCombinationFood(query.trim()); setQuery('')
+                } else {
+                  const food = prompt('Enter a food name to add:')
+                  if (food?.trim()) addCombinationFood(food.trim())
+                }
+              }}>
               <Plus className="w-3 h-3" /> {t(lang, 'addFood')}
             </button>
           </div>
