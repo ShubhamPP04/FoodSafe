@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store'
 import { t } from '../i18n/translations'
 import { scanFoodAPI, scanImageAPI, scanCombinationAPI } from '../services/api'
@@ -26,8 +27,9 @@ export default function HomePage() {
   const [error, setError] = useState('')
   const [ticker, setTicker] = useState(0)
   const [fssaiAlerts, setFssaiAlerts] = useState(DEFAULT_ALERTS)
-  const [cameraOpen, setCameraOpen] = useState(false)
   const [listening, setListening] = useState(false)
+  const [addingFood, setAddingFood] = useState(false)
+  const [newFood, setNewFood] = useState('')
 
   const fileRef = useRef()
   const cameraRef = useRef()
@@ -208,12 +210,24 @@ export default function HomePage() {
       {error && (
         <p className="text-[13px] text-chili bg-chili/10 border border-chili/20 rounded-full px-4 py-2 font-medium" role="alert">{error}</p>
       )}
-
-      {/* FSSAI Alert — double-bezel */}
+      {/* FSSAI Alert — double-bezel with animated ticker */}
       <div className="bezel-shell">
-        <div className="bezel-core px-4 py-3">
+        <div className="bezel-core px-4 py-3 overflow-hidden">
           <p className="text-[11px] font-bold text-chili tracking-[0.1em] uppercase">{t(lang, 'fssaiAlert')}</p>
-          <p className="text-[13px] text-ink mt-1 leading-snug font-medium ticker-anim" key={ticker}>{currentAlert}</p>
+          <div className="h-[20px] mt-1 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={ticker}
+                initial={{ y: 16, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -16, opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+                className="text-[13px] text-ink leading-snug font-medium"
+              >
+                {currentAlert}
+              </motion.p>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
@@ -265,22 +279,38 @@ export default function HomePage() {
                 <CheckCircle2 className="w-3 h-3" /> {f}
               </span>
             ))}
-            <button type="button"
-              className="inline-flex items-center gap-1 text-[12px] font-bold text-ink-3 border border-dashed border-rule px-3 py-1 rounded-full hover:border-brand hover:text-brand transition-all duration-400 active:scale-95"
-              onClick={() => {
-                if (query.trim()) {
-                  addCombinationFood(query.trim()); setQuery('')
-                } else {
-                  const food = prompt('Enter a food name to add:')
-                  if (food?.trim()) addCombinationFood(food.trim())
-                }
-              }}>
-              <Plus className="w-3 h-3" /> {t(lang, 'addFood')}
-            </button>
+            {addingFood ? (
+              <div className="inline-flex items-center gap-1.5 w-full">
+                <input
+                  autoFocus
+                  value={newFood}
+                  onChange={e => setNewFood(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood(''); setAddingFood(false) }
+                    if (e.key === 'Escape') { setNewFood(''); setAddingFood(false) }
+                  }}
+                  placeholder="Type food name…"
+                  className="flex-1 min-w-[120px] h-8 text-[12px] bg-paper-2 border border-brand rounded-full px-3 text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-brand/15"
+                />
+                <button type="button" onClick={() => { if (newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood('') }; setAddingFood(false) }}
+                  className="shrink-0 h-8 px-3 rounded-full bg-brand text-white text-[12px] font-bold active:scale-95 transition-all">
+                  Add
+                </button>
+                <button type="button" onClick={() => { setNewFood(''); setAddingFood(false) }}
+                  className="shrink-0 w-8 h-8 rounded-full bg-paper-3 text-ink-3 flex items-center justify-center active:scale-95 transition-all">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <button type="button"
+                className="inline-flex items-center gap-1 text-[12px] font-bold text-ink-3 border border-dashed border-rule px-3 py-1 rounded-full hover:border-brand hover:text-brand transition-all duration-400 active:scale-95"
+                onClick={() => setAddingFood(true)}>
+                <Plus className="w-3 h-3" /> {t(lang, 'addFood')}
+              </button>
+            )}
           </div>
         </div>
       </div>
-
       {family.length > 0 && (
         <section>
           <h2 className="text-[13px] font-bold text-ink-3 tracking-[0.1em] uppercase mb-3">{t(lang, 'scanFor')}</h2>
