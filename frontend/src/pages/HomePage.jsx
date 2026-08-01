@@ -103,8 +103,8 @@ export default function HomePage() {
     try {
       const foods = combinationFoods.length > 0 ? [query.trim(), ...combinationFoods] : [query.trim()]
       const result = foods.length > 1
-        ? await scanCombinationAPI({ foods, member: activeMember, lang })
-        : await scanFoodAPI({ food: query.trim(), member: activeMember, lang })
+        ? await scanCombinationAPI({ foods, member_profile: activeMember, lang })
+        : await scanFoodAPI({ food_name: query.trim(), member_profile: activeMember, lang })
       addScan({ ...result, food_name: query.trim() })
       setLastResult(result)
       nav('/result')
