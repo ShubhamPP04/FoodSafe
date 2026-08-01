@@ -155,8 +155,8 @@ export default function LandingPage() {
             </div>
             <nav>
               <button onClick={() => nav('/auth')}>Scan</button>
-              <button onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>Features</button>
-              <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}>About</button>
+              <button onClick={() => window.scrollTo({ top: 2400, behavior: 'smooth' })}>Features</button>
+              <button onClick={() => window.scrollTo({ top: 1400, behavior: 'smooth' })}>About</button>
             </nav>
             <button className="cta" onClick={() => nav('/auth')}>Get Started</button>
           </header>
