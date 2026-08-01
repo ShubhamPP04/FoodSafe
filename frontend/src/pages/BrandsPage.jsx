@@ -228,7 +228,6 @@ export default function BrandsPage() {
 
       {/* ── Header ── */}
       <div className="bezel-shell mb-6"><div className="bezel-core p-6 md:p-8 relative overflow-hidden">
-        <div className="absolute -right-6 -top-10 text-[120px] font-black italic pointer-events-none select-none text-ink/[0.03]">VS</div>
         <div className="relative z-10 flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-6 h-6 text-brand" />
