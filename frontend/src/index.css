@@ -182,7 +182,10 @@ h1, h2, h3, h4 {
 }
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+}
+@keyframes tickerSlide {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -194,6 +197,11 @@ h1, h2, h3, h4 {
 .fade-up-5 { animation: fadeUp 0.7s var(--ease-fluid) 0.40s both; }
 .fade-up-6 { animation: fadeUp 0.7s var(--ease-fluid) 0.48s both; }
 
+/* Ticker slide-in animation (mobile only) */
+.ticker-anim { animation: tickerSlide 0.5s var(--ease-fluid) forwards; }
+@media (min-width: 1024px) {
+  .ticker-anim { animation: none; }
+}
 /* ── Haptic interactions ───────────────────────────────────── */
 .haptic {
   transition: transform 0.3s var(--ease-fluid), opacity 0.3s var(--ease-fluid);

@@ -213,7 +213,7 @@ export default function HomePage() {
       <div className="bezel-shell">
         <div className="bezel-core px-4 py-3">
           <p className="text-[11px] font-bold text-chili tracking-[0.1em] uppercase">{t(lang, 'fssaiAlert')}</p>
-          <p className="text-[13px] text-ink mt-1 leading-snug font-medium" key={ticker}>{currentAlert}</p>
+          <p className="text-[13px] text-ink mt-1 leading-snug font-medium ticker-anim" key={ticker}>{currentAlert}</p>
         </div>
       </div>
 
