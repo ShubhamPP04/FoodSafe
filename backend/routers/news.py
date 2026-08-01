@@ -142,56 +142,56 @@ FALLBACK_ALERTS: list[dict] = [
         "summary": "Singapore Food Agency and Hong Kong CFS flagged ethylene oxide (a carcinogen) above permissible limits in several spice products from MDH and Everest. EU markets followed with reviews.",
         "severity": "HIGH", "category": "recall",
         "date": "Apr 2024", "source": "Singapore Food Agency / Hong Kong CFS",
-        "source_url": "https://www.sfa.gov.sg/food-information/food-safety-news",
+        "source_url": "https://news.google.com/search?q=MDH+Everest+spices+ethylene+oxide+recall",
     },
     {
         "title": "FSSAI: 83% paneer samples sub-standard in UP state survey",
         "summary": "A state-level milk-product survey found the majority of loose paneer samples failed fat and protein standards, with synthetic milk adulteration detected in mawa/khoya.",
         "severity": "HIGH", "category": "warning",
         "date": "Feb 2024", "source": "FSSAI / State Food Safety",
-        "source_url": "https://www.fssai.gov.in",
+        "source_url": "https://news.google.com/search?q=FSSAI+paneer+samples+sub-standard+Uttar+Pradesh",
     },
     {
         "title": "Lead chromate detected in loose turmeric, Delhi",
         "summary": "Testing of loose turmeric powder in Delhi markets found lead chromate — a toxic pigment used to fake the root's colour — above safe limits in a meaningful share of samples.",
         "severity": "HIGH", "category": "warning",
         "date": "2024", "source": "ICMR / Public Health Labs",
-        "source_url": "https://www.icmr.gov.in",
+        "source_url": "https://news.google.com/search?q=lead+chromate+turmeric+adulteration+Delhi",
     },
     {
         "title": "Sudan Red dye in chilli powder, Tamil Nadu",
         "summary": "Food safety officials detected Sudan Red — a banned industrial dye linked to cancer — in chilli powder sold loose in multiple Tamil Nadu markets.",
         "severity": "HIGH", "category": "warning",
         "date": "2024", "source": "State Food Safety Wing",
-        "source_url": "https://www.fssai.gov.in",
+        "source_url": "https://news.google.com/search?q=Sudan+Red+dye+chilli+powder+Tamil+Nadu",
     },
     {
         "title": "Argemone oil contamination in mustard oil, Rajasthan",
         "summary": "Mustard oil sold loose in parts of Rajasthan was found contaminated with argemone oil, which causes epidemic dropsy and is linked to seasonal outbreaks.",
         "severity": "HIGH", "category": "warning",
         "date": "2024", "source": "State Food Safety",
-        "source_url": "https://www.fssai.gov.in",
+        "source_url": "https://news.google.com/search?q=argemone+oil+mustard+oil+Rajasthan+adulteration",
     },
     {
         "title": "Honey adulteration with high-fructose syrup flagged by NMR testing",
         "summary": "NMR-based testing of branded honey identified rice-syrup / HFCS adulteration in several lots, prompting FSSAI to tighten traceability for the honey category.",
         "severity": "MEDIUM", "category": "update",
         "date": "2024", "source": "FSSAI / CEMC",
-        "source_url": "https://www.fssai.gov.in",
+        "source_url": "https://news.google.com/search?q=honey+adulteration+HFCS+NMR+testing+India",
     },
     {
         "title": "Synthetic milk in mawa/khoya detected pre-festival season",
         "summary": "Ahead of festive demand, food safety teams in Delhi intercepted synthetic milk (detergent + starch + urea) used to bulk up dairy sweets and mawa.",
         "severity": "HIGH", "category": "warning",
         "date": "2024", "source": "Delhi Food Safety Department",
-        "source_url": "https://health.delhi.gov.in",
+        "source_url": "https://news.google.com/search?q=synthetic+milk+mawa+khoya+Delhi+festival",
     },
     {
         "title": "FSSAI tightens labelling: front-of-pack, fortification, allergen rules",
         "summary": "The regulator notified stricter labelling requirements including clearer allergen disclosure and validated front-of-pack nutrition representation.",
         "severity": "LOW", "category": "update",
         "date": "2024", "source": "FSSAI",
-        "source_url": "https://www.fssai.gov.in",
+        "source_url": "https://news.google.com/search?q=FSSAI+labelling+front+of+pack+allergen+rules+India",
     },
 ]
 
@@ -302,9 +302,15 @@ Cover 6-10 distinct real articles. Cite each article from a different source whe
                     break
         if src_idx >= 0:
             used_sources.add(src_idx)
-        # Prefer a real grounding URL; fall back to Google News search
-        # (lands on the actual article more often than generic Google Search)
+        # Use real grounding URL, but detect generic homepages (no path)
+        # and replace with a news search for the specific headline
         src_url = src.get("uri") or ""
+        if src_url:
+            from urllib.parse import urlparse
+            parsed = urlparse(src_url)
+            # If URL has no path (just domain root), it's a homepage not an article
+            if not parsed.path or parsed.path == "/":
+                src_url = ""
         if not src_url and title:
             from urllib.parse import quote_plus
             src_url = f"https://news.google.com/search?q={quote_plus(title)}"
