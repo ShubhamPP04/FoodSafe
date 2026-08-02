@@ -41,17 +41,63 @@ export default function HomePage() {
 
   function toggleVoice() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SR) { setError('Voice input not supported in this browser'); return }
+    if (!SR) {
+      setError(lang === 'hi'
+        ? 'यह ब्राउज़र वॉइस इनपुट सपोर्ट नहीं करता। कृपया Chrome या Safari उपयोग करें।'
+        : 'Voice input not supported in this browser. Use Chrome or Safari.')
+      return
+    }
     if (listening) { recognitionRef.current?.stop(); setListening(false); return }
-    const rec = new SR()
-    rec.lang = LANG_MAP[lang] || 'en-IN'
-    rec.interimResults = false
-    rec.onresult = (e) => { setQuery(e.results[0][0].transcript); setListening(false) }
-    rec.onerror = () => setListening(false)
-    rec.onend = () => setListening(false)
-    rec.start()
-    recognitionRef.current = rec
-    setListening(true)
+
+    // Check microphone permission first
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError(lang === 'hi' ? 'माइक्रोफ़ोन एक्सेस अनुपलब्ध' : 'Microphone access unavailable')
+      return
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        // Stop the tracks immediately — we just needed permission
+        stream.getTracks().forEach(t => t.stop())
+
+        const rec = new SR()
+        rec.lang = LANG_MAP[lang] || 'en-IN'
+        rec.interimResults = true
+        rec.continuous = false
+
+        rec.onresult = (e) => {
+          let transcript = ''
+          for (let i = 0; i < e.results.length; i++) {
+            transcript += e.results[i][0].transcript
+          }
+          setQuery(transcript)
+        }
+        rec.onerror = (e) => {
+          setListening(false)
+          if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            setError(lang === 'hi' ? 'माइक्रोफ़ोन अनुमति अस्वीकृत। सेटिंग्स में अनुमति दें।' : 'Microphone permission denied. Allow it in settings.')
+          } else if (e.error === 'no-speech') {
+            setError(lang === 'hi' ? 'कुछ सुनाई नहीं दिया। फिर से कोशिश करें।' : 'No speech detected. Please try again.')
+          } else if (e.error === 'network') {
+            setError(lang === 'hi' ? 'नेटवर्क त्रुटि। इंटरनेट कनेक्शन जांचें।' : 'Network error. Check your connection.')
+          } else {
+            setError(lang === 'hi' ? 'वॉइस त्रुटि। फिर से कोशिश करें।' : 'Voice error. Please try again.')
+          }
+        }
+        rec.onend = () => setListening(false)
+
+        try {
+          rec.start()
+          recognitionRef.current = rec
+          setListening(true)
+        } catch {
+          setListening(false)
+          setError(lang === 'hi' ? 'वॉइस शुरू नहीं हुआ। फिर से कोशिश करें।' : 'Voice could not start. Please try again.')
+        }
+      })
+      .catch(() => {
+        setError(lang === 'hi' ? 'माइक्रोफ़ोन अनुमति अस्वीकृत। सेटिंग्स में अनुमति दें।' : 'Microphone permission denied. Allow it in browser settings.')
+      })
   }
 
   useEffect(() => {
