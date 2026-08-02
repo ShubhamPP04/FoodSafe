@@ -195,6 +195,14 @@ Write every "why" value in {language}. Keep brand names, food names, JSON keys, 
         return []
 
 
+# ── Static fallback categories (FSSAI + CSE based) ──────────────────────────
+FALLBACK_CATEGORIES = [
+    "Turmeric", "Milk", "Honey", "Ghee", "Mustard Oil",
+    "Chilli Powder", "Wheat Flour (Atta)", "Rice", "Sugar", "Salt",
+    "Tea", "Cooking Oil", "Paneer", "Khoya/Mawa", " pulses (Dal)",
+    "Spice Mix (Garam Masala)", "Pickles", "Jaggery", "Biscuits", "Chocolate",
+]
+
 # ── Gemini: get food categories popular in India ──────────────────────────────
 
 async def get_indian_food_categories() -> list:
@@ -205,7 +213,7 @@ async def get_indian_food_categories() -> list:
         return cached
 
     system = "You are an Indian food safety expert. Respond ONLY with valid JSON."
-    user = """List the 15 most commonly purchased and frequently adulterated food categories 
+    user = """List the 20 most commonly purchased and frequently adulterated food categories
 in Indian households, based on FSSAI annual reports and CSE studies.
 
 Return ONLY:
@@ -213,7 +221,9 @@ Return ONLY:
   "categories": ["category1", "category2", ...]
 }
 
-Use simple, common names (e.g. "Turmeric", "Milk", "Honey", "Ghee", "Mustard Oil").
+Use simple, common names (e.g. "Turmeric", "Milk", "Honey", "Ghee", "Mustard Oil",
+"Chilli Powder", "Wheat Flour", "Rice", "Sugar", "Tea", "Cooking Oil", "Paneer",
+"Pulses", "Spice Mix", "Pickles", "Jaggery", "Biscuits", "Chocolate", "Salt", "Khoya").
 Order by frequency of adulteration reports in India."""
 
     try:
@@ -221,14 +231,15 @@ Order by frequency of adulteration reports in India."""
         if result.get("error"):
             logger.warning("get_indian_food_categories parse_failed: %s",
                            str(result.get("raw", ""))[:200])
-            return []
+            return FALLBACK_CATEGORIES
         cats = result.get("categories", [])
         if cats:
             _cache_set(cache_key, cats, _TTL_CATEGORIES)
-        return cats
+            return cats
+        return FALLBACK_CATEGORIES
     except Exception as e:
         logger.warning("get_indian_food_categories failed: %s", e)
-        return []
+        return FALLBACK_CATEGORIES
 
 
 # ── GET /brands/all ───────────────────────────────────────────────────────────

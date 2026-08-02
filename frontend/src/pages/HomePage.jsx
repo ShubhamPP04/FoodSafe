@@ -9,14 +9,14 @@ import { Camera, Image as ImageIcon, Mic, Search as SearchIcon, X, Sparkles, Hea
 import { Button } from '../components/ui'
 
 const DEFAULT_ALERTS = [
-  "MDH spices flagged for pesticide residue — Apr 2024",
-  "Everest Fish Curry Masala recalled — ethylene oxide",
-  "Loose turmeric samples fail lead chromate tests in Delhi",
-  "83% paneer samples fail quality in UP cities — Feb 2024",
-  "Honey adulteration with HFCS — NMR test recommended",
-  "Argemone oil in mustard oil detected in Rajasthan",
-  "Sudan Red dye found in chilli powder — Tamil Nadu",
-  "Synthetic milk adulteration in Mawa/Khoya — Delhi",
+  "FSSAI orders recall of Wonderland Raisins — pesticide residues — Jul 2026",
+  "FSSAI suspends Switz Foods license — hygiene violations — Aug 2026",
+  "Telangana suspends EatClub central kitchen — pest infestation — Jul 2026",
+  "MDH and Everest spices under scrutiny for ethylene oxide — Jun 2026",
+  "Delhi food safety teams seize synthetic milk before festival season — Jun 2026",
+  "Lead chromate found in loose turmeric powder in Delhi markets — May 2026",
+  "NMR testing flags honey adulteration with rice syrup — May 2026",
+  "Sudan Red dye detected in loose chilli powder across Tamil Nadu — Apr 2026",
 ]
 
 export default function HomePage() {
@@ -79,11 +79,16 @@ export default function HomePage() {
   async function capturePhoto() {
     if (!cameraRef.current || !canvasRef.current) return
     const v = cameraRef.current
+    // Ensure video has dimensions before capturing
+    if (!v.videoWidth || !v.videoHeight) {
+      setError('Camera not ready yet. Please wait a moment and try again.')
+      return
+    }
     canvasRef.current.width = v.videoWidth
     canvasRef.current.height = v.videoHeight
     canvasRef.current.getContext('2d').drawImage(v, 0, 0)
     canvasRef.current.toBlob(async (blob) => {
-      if (!blob) return
+      if (!blob) { setError('Capture failed. Please try again.'); return }
       stopCamera()
       setLoading(true); setError('')
       try {
@@ -259,13 +264,17 @@ export default function HomePage() {
       {/* Combination risk — double-bezel */}
       <div className="bezel-shell">
         <div className="bezel-core px-4 py-4">
-          <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-start justify-between gap-3 mb-2">
             <div>
               <h2 className="text-[14px] font-bold text-ink flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-brand" />
                 {t(lang, 'combinationRisk')}
               </h2>
-              <p className="text-[12px] text-ink-3 mt-0.5">{t(lang, 'combinationSub')}</p>
+              <p className="text-[12px] text-ink-3 mt-0.5">
+                {lang === 'hi'
+                  ? 'कई खाद्य पदार्थ एक साथ जोड़ें और मिलाकर जोखिम देखें'
+                  : 'Add multiple foods and check their combined risk together'}
+              </p>
             </div>
             {combinationFoods.length > 0 && (
               <button type="button" className="text-[12px] font-bold text-chili shrink-0 hover:text-red-600 transition-colors" onClick={clearCombination}>
@@ -273,42 +282,57 @@ export default function HomePage() {
               </button>
             )}
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {combinationFoods.map((f, i) => (
-              <span key={i} className="inline-flex items-center gap-1 bg-brand/10 text-brand text-[12px] font-bold px-3 py-1 rounded-full border border-brand/20">
-                <CheckCircle2 className="w-3 h-3" /> {f}
-              </span>
-            ))}
-            {addingFood ? (
-              <div className="inline-flex items-center gap-1.5 w-full">
-                <input
-                  autoFocus
-                  value={newFood}
-                  onChange={e => setNewFood(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood(''); setAddingFood(false) }
-                    if (e.key === 'Escape') { setNewFood(''); setAddingFood(false) }
-                  }}
-                  placeholder="Type food name…"
-                  className="flex-1 min-w-[120px] h-8 text-[12px] bg-paper-2 border border-brand rounded-full px-3 text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-brand/15"
-                />
-                <button type="button" onClick={() => { if (newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood('') }; setAddingFood(false) }}
-                  className="shrink-0 h-8 px-3 rounded-full bg-brand text-white text-[12px] font-bold active:scale-95 transition-all">
-                  Add
-                </button>
-                <button type="button" onClick={() => { setNewFood(''); setAddingFood(false) }}
-                  className="shrink-0 w-8 h-8 rounded-full bg-paper-3 text-ink-3 flex items-center justify-center active:scale-95 transition-all">
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ) : (
+
+          {/* Added foods */}
+          {combinationFoods.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {combinationFoods.map((f, i) => (
+                <span key={i} className="inline-flex items-center gap-1 bg-brand/10 text-brand text-[12px] font-bold px-3 py-1 rounded-full border border-brand/20">
+                  <CheckCircle2 className="w-3 h-3" /> {f}
+                  <button type="button" onClick={() => addCombinationFood(f)} className="ml-0.5 text-brand/50 hover:text-chili transition-colors">
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {addingFood ? (
+            <div className="flex items-center gap-1.5 w-full">
+              <input
+                autoFocus
+                value={newFood}
+                onChange={e => setNewFood(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood(''); setAddingFood(false) }
+                  if (e.key === 'Escape') { setNewFood(''); setAddingFood(false) }
+                }}
+                placeholder={lang === 'hi' ? 'खाने का नाम लिखें…' : 'Type food name…'}
+                className="flex-1 min-w-[120px] h-9 text-[13px] bg-paper-2 border border-brand rounded-full px-3 text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-brand/15"
+              />
+              <button type="button" onClick={() => { if (newFood.trim()) { addCombinationFood(newFood.trim()); setNewFood('') }; setAddingFood(false) }}
+                className="shrink-0 h-9 px-3 rounded-full bg-brand text-white text-[12px] font-bold active:scale-95 transition-all">
+                {lang === 'hi' ? 'जोड़ें' : 'Add'}
+              </button>
+              <button type="button" onClick={() => { setNewFood(''); setAddingFood(false) }}
+                className="shrink-0 w-9 h-9 rounded-full bg-paper-3 text-ink-3 flex items-center justify-center active:scale-95 transition-all">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
               <button type="button"
-                className="inline-flex items-center gap-1 text-[12px] font-bold text-ink-3 border border-dashed border-rule px-3 py-1 rounded-full hover:border-brand hover:text-brand transition-all duration-400 active:scale-95"
+                className="inline-flex items-center gap-1 text-[12px] font-bold text-ink-3 border border-dashed border-rule px-3 py-1.5 rounded-full hover:border-brand hover:text-brand transition-all duration-400 active:scale-95"
                 onClick={() => setAddingFood(true)}>
                 <Plus className="w-3 h-3" /> {t(lang, 'addFood')}
               </button>
-            )}
-          </div>
+              {combinationFoods.length >= 2 && (
+                <Button size="sm" onClick={handleScan} loading={loading} className="!h-8 !px-3 !text-[12px]">
+                  {lang === 'hi' ? 'साथ स्कैन करें' : 'Scan Together'}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {family.length > 0 && (

@@ -392,18 +392,41 @@ h1, h2, h3, h4 {
   100% { transform: translateY(-10vh) scale(1); opacity: 0; }
 }
 
-/* Grid texture — animated drift */
+/* Grid texture — mouse-reactive lines that shift with cursor */
 .cinema-page .grid-tex {
-  position: absolute; inset: 0; z-index: 0; opacity: 0.025; pointer-events: none;
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.06;
   background-image:
-    linear-gradient(rgba(0,217,190,0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,217,190,0.3) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: gridDrift 40s linear infinite;
+    linear-gradient(rgba(0,217,190,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,217,190,0.35) 1px, transparent 1px),
+    linear-gradient(rgba(160,174,180,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160,174,180,0.12) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+  background-position:
+    calc(0px + var(--mx, 0) * 30px) calc(0px + var(--my, 0) * 30px),
+    calc(0px + var(--mx, 0) * 30px) calc(0px + var(--my, 0) * 30px),
+    calc(0px + var(--mx, 0) * 12px) calc(0px + var(--my, 0) * 12px),
+    calc(0px + var(--mx, 0) * 12px) calc(0px + var(--my, 0) * 12px);
+  transition: background-position 0.3s ease-out;
+  animation: gridDrift 60s linear infinite;
 }
 @keyframes gridDrift {
-  from { background-position: 0 0; }
-  to { background-position: 60px 60px; }
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(10deg); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+/* Mouse-reactive glow that follows cursor */
+.cinema-page .cursor-glow {
+  position: absolute; z-index: 1; pointer-events: none;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,217,190,0.08) 0%, transparent 60%);
+  left: calc(50% + var(--mx, 0) * 50vw);
+  top: calc(50% + var(--my, 0) * 50vh);
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  will-change: left, top;
 }
 
 /* Shade overlay */

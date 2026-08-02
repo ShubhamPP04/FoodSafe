@@ -146,6 +146,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="grid-tex" />
+          <div className="cursor-glow" />
 
           {/* Header */}
           <header className="site-header">

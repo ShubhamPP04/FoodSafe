@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useStore } from '../../store'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, GripHorizontal } from 'lucide-react'
 
 const BASE = import.meta.env.VITE_API_URL || 'https://foodsafe-api.onrender.com/api'
 
@@ -10,9 +10,9 @@ function renderInline(text) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>
+      return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>
     }
-    return part
+    return <span key={i}>{part}</span>
   })
 }
 
@@ -28,8 +28,8 @@ function MessageContent({ text }) {
     <>
       {cleaned.split('\n').map((line, i) => (
         <span key={i}>
-          {i > 0 && <br />}
-          {renderInline(line)}
+          {line ? renderInline(line) : '\u00A0'}
+          {i < cleaned.split('\n').length - 1 && <br />}
         </span>
       ))}
     </>
@@ -51,38 +51,94 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef()
 
+  // ── Drag state ──────────────────────────────────────────────
+  const [pos, setPos] = useState({ x: 0, y: 0 }) // offset from default bottom-right
+  const dragRef = useRef(null)
+  const dragStart = useRef(null)
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  const startDrag = useCallback((e) => {
+    // Don't drag on button clicks inside the panel
+    if (e.target.closest('button') && !e.target.closest('.drag-handle')) return
+    const isTouch = e.touches
+    const clientX = isTouch ? e.touches[0].clientX : e.clientX
+    const clientY = isTouch ? e.touches[0].clientY : e.clientY
+    dragStart.current = {
+      mouseX: clientX,
+      mouseY: clientY,
+      posX: pos.x,
+      posY: pos.y,
+    }
+    dragRef.current = true
+    e.preventDefault()
+  }, [pos])
+
+  const onDrag = useCallback((e) => {
+    if (!dragRef.current || !dragStart.current) return
+    const isTouch = e.touches
+    const clientX = isTouch ? e.touches[0].clientX : e.clientX
+    const clientY = isTouch ? e.touches[0].clientY : e.clientY
+    const dx = clientX - dragStart.current.mouseX
+    const dy = clientY - dragStart.current.mouseY
+    // Constrain within viewport
+    const maxX = window.innerWidth / 2
+    const maxY = window.innerHeight / 2
+    const newX = Math.max(-maxX, Math.min(maxX, dragStart.current.posX - dx))
+    const newY = Math.max(-maxY, Math.min(maxY, dragStart.current.posY - dy))
+    setPos({ x: newX, y: newY })
+  }, [])
+
+  const endDrag = useCallback(() => {
+    dragRef.current = false
+    dragStart.current = null
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('mousemove', onDrag)
+    window.addEventListener('mouseup', endDrag)
+    window.addEventListener('touchmove', onDrag)
+    window.addEventListener('touchend', endDrag)
+    return () => {
+      window.removeEventListener('mousemove', onDrag)
+      window.removeEventListener('mouseup', endDrag)
+      window.removeEventListener('touchmove', onDrag)
+      window.removeEventListener('touchend', endDrag)
+    }
+  }, [onDrag, endDrag])
+
   async function sendMessage(text) {
-    const userMsg = (text || input).trim()
-    if (!userMsg || loading) return
+    const msg = text || input.trim()
+    if (!msg || loading) return
     setInput('')
-
-    const historySnapshot = messages.map(m => ({ role: m.role, content: m.content }))
-    setMessages(prev => [...prev, { role: 'user', content: userMsg }])
+    setMessages(prev => [...prev, { role: 'user', content: msg }])
     setLoading(true)
-
     try {
-      const res = await fetch(`${BASE}/chat/`, {
+      const res = await fetch(`${BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: userMsg,
-          history: historySnapshot,
-        }),
+        body: JSON.stringify({ message: msg, lang }),
       })
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      if (!res.ok) throw new Error('Chat service unavailable')
       const data = await res.json()
-      const reply = data.reply || 'Sorry, I could not respond.'
-      setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply || data.message || 'Sorry, I could not process that.' }])
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Connection error. Please try again.' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, the AI service is unavailable right now. Please try again later.' }])
     } finally {
       setLoading(false)
     }
+  }
+
+  // Default position: bottom-right. pos.x/y are offsets from that.
+  const btnStyle = {
+    right: `${16 - pos.x}px`,
+    bottom: `${80 - pos.y}px`,
+  }
+  const panelStyle = {
+    right: `${16 - pos.x}px`,
+    bottom: `${140 - pos.y}px`,
   }
 
   return (
@@ -90,21 +146,31 @@ export default function Chatbot() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? 'Close chat' : 'Open chat'}
-        className="fixed bottom-20 md:bottom-6 right-4 z-[1000] w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-lift hover:-translate-y-0.5 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        className="fixed z-[1000] w-12 h-12 rounded-full bg-brand text-white flex items-center justify-center shadow-lift hover:-translate-y-0.5 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        style={btnStyle}
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
       </button>
 
       {open && (
-        <div className="fixed bottom-[140px] md:bottom-24 right-4 z-[1000] w-[min(300px,calc(100vw-2rem))] h-[420px] bg-paper border border-rule rounded-2xl shadow-soft flex flex-col overflow-hidden">
-          <div className="px-3.5 py-3 flex items-center gap-2.5 border-b border-rule bg-paper">
-            <div className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center">
+        <div
+          className="fixed z-[1000] w-[min(300px,calc(100vw-2rem))] h-[420px] bg-paper border border-rule rounded-2xl shadow-soft flex flex-col overflow-hidden"
+          style={panelStyle}
+        >
+          {/* Draggable header */}
+          <div
+            className="drag-handle px-3.5 py-3 flex items-center gap-2.5 border-b border-rule bg-paper cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={startDrag}
+            onTouchStart={startDrag}
+          >
+            <div className="w-7 h-7 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0">
               <MessageCircle className="w-3.5 h-3.5" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="text-ink text-[13px] font-bold leading-none">SafeThali AI</div>
               <div className="text-ink-3 text-[10px] uppercase tracking-[0.08em] mt-1">Safety assistant</div>
             </div>
+            <GripHorizontal className="w-4 h-4 text-ink-3 shrink-0" />
           </div>
 
           <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5 bg-paper">
