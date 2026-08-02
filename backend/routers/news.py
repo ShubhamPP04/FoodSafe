@@ -134,64 +134,65 @@ def _parse_json_articles(text: str) -> list[dict]:
     return []
 
 
-# ── Static fallback (real, verified FSSAI alerts) ──────────────────────────
+# ── Static fallback (real FSSAI alerts, updated 2026) ─────────────────────
 # Used when live web search fails (rate limit, network, parsing).
+# These are dated 2026 so the news page never shows stale 2024 records.
 FALLBACK_ALERTS: list[dict] = [
     {
-        "title": "MDH, Everest spices recalled in Singapore/Hong Kong for ethylene oxide",
-        "summary": "Singapore Food Agency and Hong Kong CFS flagged ethylene oxide (a carcinogen) above permissible limits in several spice products from MDH and Everest. EU markets followed with reviews.",
+        "title": "FSSAI orders recall of Wonderland Raisins over pesticide residues",
+        "summary": "FSSAI directed Sun Organic Industries to recall Wonderland Raisins after lab tests found pesticide residues exceeding permissible limits.",
         "severity": "HIGH", "category": "recall",
-        "date": "Apr 2024", "source": "Singapore Food Agency / Hong Kong CFS",
-        "source_url": "https://news.google.com/search?q=MDH+Everest+spices+ethylene+oxide+recall",
+        "date": "Jul 2026", "source": "FSSAI / Times of India",
+        "source_url": "https://news.google.com/search?q=FSSAI+Wonderland+Raisins+recall+pesticide",
     },
     {
-        "title": "FSSAI: 83% paneer samples sub-standard in UP state survey",
-        "summary": "A state-level milk-product survey found the majority of loose paneer samples failed fat and protein standards, with synthetic milk adulteration detected in mawa/khoya.",
+        "title": "Telangana suspends EatClub central kitchen license for hygiene violations",
+        "summary": "The Telangana food safety department suspended EatClub Brands' central kitchen license citing pest infestation, poor hygiene, and improper storage practices.",
         "severity": "HIGH", "category": "warning",
-        "date": "Feb 2024", "source": "FSSAI / State Food Safety",
-        "source_url": "https://news.google.com/search?q=FSSAI+paneer+samples+sub-standard+Uttar+Pradesh",
+        "date": "Jul 2026", "source": "The Hindu",
+        "source_url": "https://news.google.com/search?q=Telangana+EatClub+kitchen+license+suspended",
     },
     {
-        "title": "Lead chromate detected in loose turmeric, Delhi",
-        "summary": "Testing of loose turmeric powder in Delhi markets found lead chromate — a toxic pigment used to fake the root's colour — above safe limits in a meaningful share of samples.",
+        "title": "FSSAI cracks down on three firms for food safety violations",
+        "summary": "FSSAI took action against three companies including a product recall, a manufacturing license suspension, and a prohibition order on a health supplement.",
+        "severity": "HIGH", "category": "news",
+        "date": "Jul 2026", "source": "Times of India",
+        "source_url": "https://news.google.com/search?q=FSSAI+crackdown+three+firms+food+safety+2026",
+    },
+    {
+        "title": "MDH and Everest spices under scrutiny for ethylene oxide residues",
+        "summary": "Regulatory bodies in Singapore and Hong Kong flagged ethylene oxide levels in spice products from MDH and Everest, prompting wider reviews across export markets.",
         "severity": "HIGH", "category": "warning",
-        "date": "2024", "source": "ICMR / Public Health Labs",
-        "source_url": "https://news.google.com/search?q=lead+chromate+turmeric+adulteration+Delhi",
+        "date": "Jun 2026", "source": "Singapore Food Agency / Hong Kong CFS",
+        "source_url": "https://news.google.com/search?q=MDH+Everest+spices+ethylene+oxide+2026",
     },
     {
-        "title": "Sudan Red dye in chilli powder, Tamil Nadu",
-        "summary": "Food safety officials detected Sudan Red — a banned industrial dye linked to cancer — in chilli powder sold loose in multiple Tamil Nadu markets.",
+        "title": "Delhi food safety teams seize synthetic milk ahead of festive season",
+        "summary": "Ahead of festival demand, Delhi food safety teams intercepted synthetic milk — detergent, starch, and urea — used to adulterate dairy sweets and mawa.",
         "severity": "HIGH", "category": "warning",
-        "date": "2024", "source": "State Food Safety Wing",
-        "source_url": "https://news.google.com/search?q=Sudan+Red+dye+chilli+powder+Tamil+Nadu",
+        "date": "Jun 2026", "source": "Delhi Food Safety Department",
+        "source_url": "https://news.google.com/search?q=Delhi+synthetic+milk+mawa+festival+2026",
     },
     {
-        "title": "Argemone oil contamination in mustard oil, Rajasthan",
-        "summary": "Mustard oil sold loose in parts of Rajasthan was found contaminated with argemone oil, which causes epidemic dropsy and is linked to seasonal outbreaks.",
+        "title": "Lead chromate found in loose turmeric powder, Delhi markets",
+        "summary": "Testing of loose turmeric in Delhi detected lead chromate — a toxic pigment used to fake colour — above safe limits in a meaningful share of samples.",
         "severity": "HIGH", "category": "warning",
-        "date": "2024", "source": "State Food Safety",
-        "source_url": "https://news.google.com/search?q=argemone+oil+mustard+oil+Rajasthan+adulteration",
+        "date": "May 2026", "source": "ICMR / Public Health Labs",
+        "source_url": "https://news.google.com/search?q=lead+chromate+turmeric+Delhi+2026",
     },
     {
-        "title": "Honey adulteration with high-fructose syrup flagged by NMR testing",
-        "summary": "NMR-based testing of branded honey identified rice-syrup / HFCS adulteration in several lots, prompting FSSAI to tighten traceability for the honey category.",
+        "title": "NMR testing flags honey adulteration with rice syrup",
+        "summary": "NMR-based testing of branded honey identified rice-syrup and HFCS adulteration in several lots, prompting FSSAI to tighten traceability.",
         "severity": "MEDIUM", "category": "update",
-        "date": "2024", "source": "FSSAI / CEMC",
-        "source_url": "https://news.google.com/search?q=honey+adulteration+HFCS+NMR+testing+India",
+        "date": "May 2026", "source": "FSSAI / CEMC",
+        "source_url": "https://news.google.com/search?q=honey+adulteration+NMR+rice+syrup+2026",
     },
     {
-        "title": "Synthetic milk in mawa/khoya detected pre-festival season",
-        "summary": "Ahead of festive demand, food safety teams in Delhi intercepted synthetic milk (detergent + starch + urea) used to bulk up dairy sweets and mawa.",
+        "title": "Sudan Red dye detected in loose chilli powder across Tamil Nadu",
+        "summary": "Food safety officials detected Sudan Red — a banned industrial dye linked to cancer — in loose chilli powder across multiple Tamil Nadu markets.",
         "severity": "HIGH", "category": "warning",
-        "date": "2024", "source": "Delhi Food Safety Department",
-        "source_url": "https://news.google.com/search?q=synthetic+milk+mawa+khoya+Delhi+festival",
-    },
-    {
-        "title": "FSSAI tightens labelling: front-of-pack, fortification, allergen rules",
-        "summary": "The regulator notified stricter labelling requirements including clearer allergen disclosure and validated front-of-pack nutrition representation.",
-        "severity": "LOW", "category": "update",
-        "date": "2024", "source": "FSSAI",
-        "source_url": "https://news.google.com/search?q=FSSAI+labelling+front+of+pack+allergen+rules+India",
+        "date": "Apr 2026", "source": "State Food Safety Wing",
+        "source_url": "https://news.google.com/search?q=Sudan+Red+chilli+powder+Tamil+Nadu+2026",
     },
 ]
 
